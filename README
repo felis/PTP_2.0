@@ -1,4 +1,6 @@
 This is Rev.2.0 of PTP Digital Camera Control Library compatible with Rev.2.0 of USB Host Shield library.
 Supports select Canon EOS and Powershot, as well as Nikon DSLRs and P&S cameras.
 
+This library depends on https://github.com/felis/USB_Host_Shield_2.0 library written to support USB Host Shield, see http://www.circuitsathome.com/arduino_usb_host_shield_projects .
+
 Project web site is http://www.circuitsathome.com
