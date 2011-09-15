@@ -19,7 +19,7 @@ e-mail   :  support@circuitsathome.com
 
 #include <inttypes.h>
 #include <avr/pgmspace.h>
-#include <Max3421e.h>
+#include <max3421e.h>
 #include <Usb.h>
 #include "ptpconst.h"
 #include "ptpmsgstr.h"

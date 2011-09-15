@@ -19,9 +19,9 @@ e-mail   :  support@circuitsathome.com
 
 #include <inttypes.h>
 #include <avr/pgmspace.h>
-#include "../USBHost/printhex.h"
-#include "../USBHost/hexdump.h"
-#include "../USBHost/message.h"
+#include "printhex.h"
+#include "hexdump.h"
+#include "message.h"
 
 #define PTPDEBUG
 
