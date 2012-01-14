@@ -20,7 +20,12 @@ e-mail   :  support@circuitsathome.com
 #include <inttypes.h> 
 #include <avr/eeprom.h> 
 #include <avr/pgmspace.h> 
+
+#if defined(ARDUINO) && ARDUINO >=100
+#include "Arduino.h"
+#else
 #include <WProgram.h>
+#endif
 
 template <class ValueType, const uint8_t TitleSize> 
 struct ValueTitle

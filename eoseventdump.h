@@ -21,7 +21,12 @@ e-mail   :  support@circuitsathome.com
 #include <avr/pgmspace.h>
 #include "ptpcallback.h"
 #include "parsetools.h"
+
+#if defined(ARDUINO) && ARDUINO >=100
+#include "Arduino.h"
+#else
 #include <WProgram.h>
+#endif
 
 class EOSEventDump : public PTPReadParser
 {

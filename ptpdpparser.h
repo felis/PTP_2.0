@@ -26,7 +26,12 @@ e-mail   :  support@circuitsathome.com
 #include "hexdump.h"
 #include "message.h"
 #include "parsetools.h"
+
+#if defined(ARDUINO) && ARDUINO >=100
+#include "Arduino.h"
+#else
 #include <WProgram.h>
+#endif
 
 template <class VALUE_TYPE>
 struct PTPDevicePropValue

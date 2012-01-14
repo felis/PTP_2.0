@@ -17,7 +17,12 @@ e-mail   :  support@circuitsathome.com
 #ifndef __CANONEOS_H__
 #define __CANONEOS_H__
 
-#include "WProgram.h"
+#if defined(ARDUINO) && ARDUINO >=100
+#include "Arduino.h"
+#else
+#include <WProgram.h>
+#endif
+
 #include "ptp.h"
 
 // PTP Operation Codes (EOS specific)
