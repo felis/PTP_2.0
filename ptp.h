@@ -96,7 +96,7 @@ protected:
 
 	void ZerroMemory(uint8_t size, uint8_t *mem) { for (uint8_t i=0; i<size; i++) mem[i] = 0; };
 
-	// waits for any event to occure
+	// waits for any event to occur
 	// returns event on success or error code if timeout elapsed
 	bool EventWait(uint8_t size, uint8_t *event_buf, uint16_t timeout);
 

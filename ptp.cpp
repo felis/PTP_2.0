@@ -292,7 +292,8 @@ void PTP::FillEPRecords(USB_ENDPOINT_DESCRIPTOR *pep)
 		epInfo[index].epAddr		= (pep[i].bEndpointAddress & 0x0F);
 		epInfo[index].maxPktSize	= (uint8_t)pep[i].wMaxPacketSize;
 		epInfo[index].epAttribs		= 0;
-		epInfo[index].bmNakPower	= (index == epInterruptIndex) ? 0 : USB_NAK_MAX_POWER;
+		//epInfo[index].bmNakPower	= (index == epInterruptIndex) ? 0 : USB_NAK_MAX_POWER;
+		epInfo[index].bmNakPower	= USB_NAK_MAX_POWER;
 	}	
 }
 
@@ -335,6 +336,7 @@ void PTP::Task()
 			stateMachine->OnSessionOpenedState(this);
 		break;
 	case PTP_STATE_DEVICE_INITIALIZED:
+	  //Serial.println(F("PTP State Dev.Init"));
 		if (stateMachine)
 			stateMachine->OnDeviceInitializedState(this);
 		break;
@@ -461,7 +463,7 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 
 			if (rcode)
 			{
-				PTPTRACE("Fatal USB Error\r\n");
+				PTPTRACE("PTP: Fatal USB Error\r\n");
 
 				// in some cases NAK handling might be necessary
 				PTPTRACE2("Transaction: Response recieve error", rcode);
