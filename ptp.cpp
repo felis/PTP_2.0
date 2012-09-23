@@ -1,19 +1,3 @@
-/* Copyright (C) 2011 Circuits At Home, LTD. All rights reserved.
-
-This software may be distributed and modified under the terms of the GNU
-General Public License version 2 (GPL2) as published by the Free Software
-Foundation and appearing in the file GPL2.TXT included in the packaging of
-this file. Please note that GPL2 Section 2[b] requires that all works based
-on this software must also be made publicly available under the terms of
-the GPL2 ("Copyleft").
-
-Contact information
--------------------
-
-Circuits At Home, LTD
-Web      :  http://www.circuitsathome.com
-e-mail   :  support@circuitsathome.com
-*/
 #include "ptpconst.h"
 #include "ptp.h"
 #include "ptpdebug.h"
@@ -21,7 +5,7 @@ e-mail   :  support@circuitsathome.com
 void PTP::SetInitialState()
 {
 	idSession = 0;
-	idTransaction = ~((transaction_id_t)0);
+	idTransaction = ~((trasaction_id_t)0);
 	SetState(PTP_STATE_SESSION_NOT_OPENED);
 }
 
@@ -76,7 +60,7 @@ const uint8_t		PTP::epInterruptIndex	= 3;
 PTP::PTP(USB *pusb, PTPStateHandlers *s) : 
 	pUsb(pusb),
 	theState(0),
-	idTransaction(~((transaction_id_t)0)), 
+	idTransaction(~((trasaction_id_t)0)), 
 	idSession(0), 
 	devAddress(0),
 	numConf(0),
@@ -147,41 +131,20 @@ uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed)
 	// Temporary assign new pointer to epInfo to p->epinfo in order to avoid toggle inconsistence
 	p->epinfo = epInfo;
 
-  //delay(100);
-  //Get device descriptor
-  //{
-  //uint8_t i;  
-  for( uint8_t i = 0; i < 16; i++ ) {
-    rcode = pUsb->getDevDescr( 0, 0, 8, (uint8_t*)buf );
-    if  (!rcode) {
-      len = (buf[0] > 32) ? 32 : buf[0];
-      break;
-    }
-    delay(100);
-  }
-  if( rcode ) {
-  // Restore p->epinfo
-  p->epinfo = oldep_ptr;
+	// Get device descriptor
+	rcode = pUsb->getDevDescr( 0, 0, 8, (uint8_t*)buf );
 
-  PTPTRACE("getDevDesc\r\n");
-  Serial.print(rcode, HEX);
-  return rcode;
-  }    
-//	// Get device descriptor
-//	rcode = pUsb->getDevDescr( 0, 0, 8, (uint8_t*)buf );
-//
-//	if  (!rcode)
-//		len = (buf[0] > 32) ? 32 : buf[0];
-//
-//	if( rcode ) 
-//	{
-//		// Restore p->epinfo
-//		p->epinfo = oldep_ptr;
-//
-//		PTPTRACE("getDevDesc\r\n");
-//		Serial.print(rcode, HEX);
-//		return rcode;
-//	}
+	if  (!rcode)
+		len = (buf[0] > 32) ? 32 : buf[0];
+
+	if( rcode ) 
+	{
+		// Restore p->epinfo
+		p->epinfo = oldep_ptr;
+
+		PTPTRACE("getDevDesc\r\n");
+		return rcode;
+	}
 
 	// Extract device class from device descriptor
 	// If device class is not a hub return
@@ -313,8 +276,7 @@ void PTP::FillEPRecords(USB_ENDPOINT_DESCRIPTOR *pep)
 		epInfo[index].epAddr		= (pep[i].bEndpointAddress & 0x0F);
 		epInfo[index].maxPktSize	= (uint8_t)pep[i].wMaxPacketSize;
 		epInfo[index].epAttribs		= 0;
-		/* Some cams need more NAKs on interrupt EP */
-		epInfo[index].bmNakPower	= (index == epInterruptIndex) ? 2 /* USB_NAK_NOWAIT */ : USB_NAK_NONAK;
+		epInfo[index].bmNakPower	= (index == epInterruptIndex) ? 0 : USB_NAK_MAX_POWER;
 	}	
 }
 
@@ -327,7 +289,7 @@ uint8_t PTP::Release()
 
 	devAddress = 0;
 	idSession = 0;
-	idTransaction = ~((transaction_id_t)0);
+	idTransaction = ~((trasaction_id_t)0);
 
 	return 0;
 }
@@ -344,7 +306,7 @@ void PTP::Task()
 	{
 	//case PTP_STATE_DEVICE_DISCONNECTED:
 //		idSession = 0;
-//		idTransaction = ~((transaction_id_t)0);
+//		idTransaction = ~((trasaction_id_t)0);
 //		if (stateMachine)
 	//		stateMachine->OnDeviceDisconnectedState(this);
 	//	break;
@@ -561,15 +523,9 @@ uint16_t PTP::EventCheck(PTPReadParser *pParser)
 
 		switch (rcode)
 		{
-		case 0x00:  //success
-		  break;  
 		// In case of no event occured
 		case 0xFF:
 				return PTP_EC_Undefined;
-				
-		case 0x04:  //NAK
-		
-		  return PTP_EC_Undefined;  		
 
 		default:
 			// in case of a usb error
@@ -594,23 +550,6 @@ uint16_t PTP::EventCheck(PTPReadParser *pParser)
 		delay(50);
 	} // while(1)
 }
-
-uint8_t PTP::CheckEvt(uint8_t size, uint8_t* buf)
-{
-	ZerroMemory(size, buf);
-
-	uint16_t	read = size;
-	uint8_t rcode = pUsb->inTransfer(devAddress, epInfo[epInterruptIndex].epAddr, &read, buf);
-	/* some Nikon P&S cams exhibit strange behaviour - last zero-byte packet may come after several retries */
-	/* therefore we may get NAK with good data. Next lines are meant to fix this */ 
-	//PTPTRACE2("\r\nRead: ", read );
-	if( rcode == hrNAK && ( read > 0 )) {
-	  rcode = 0;
-	}
-
-	return rcode;
-}
-
 
 bool PTP::CheckEvent(uint8_t size, uint8_t *buf)
 {
@@ -645,7 +584,7 @@ uint16_t PTP::OpenSession()
 	OperFlags	flags = { 1, 0, 0, 0, 0, 0 };
 
 	idSession		= 1;
-	idTransaction	= ~((transaction_id_t)0);
+	idTransaction	= ~((trasaction_id_t)0);
 
 	params[0]	= idSession;
 
@@ -811,7 +750,7 @@ uint16_t PTP::CloseSession()
 	if ( (ptp_error = Transaction(PTP_OC_CloseSession, &flags)) == PTP_RC_OK)
 	{
 		idSession = 0;
-		idTransaction = ~((transaction_id_t)0);
+		idTransaction = ~((trasaction_id_t)0);
 	}
 	return ptp_error;
 }

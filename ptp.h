@@ -1,19 +1,3 @@
-/* Copyright (C) 2011 Circuits At Home, LTD. All rights reserved.
-
-This software may be distributed and modified under the terms of the GNU
-General Public License version 2 (GPL2) as published by the Free Software
-Foundation and appearing in the file GPL2.TXT included in the packaging of
-this file. Please note that GPL2 Section 2[b] requires that all works based
-on this software must also be made publicly available under the terms of
-the GPL2 ("Copyleft").
-
-Contact information
--------------------
-
-Circuits At Home, LTD
-Web      :  http://www.circuitsathome.com
-e-mail   :  support@circuitsathome.com
-*/
 #ifndef __PTP_H__
 #define __PTP_H__
 
@@ -65,9 +49,9 @@ protected:
 	void Task();
 
 private:
-	typedef uint16_t transaction_id_t;
+	typedef uint16_t trasaction_id_t;
 
-	transaction_id_t		idTransaction;			// Transaction ID
+	trasaction_id_t		idTransaction;			// Transaction ID
 	uint16_t			idSession;				// Session ID
 
 	PTPStateHandlers	*stateMachine;
@@ -105,13 +89,13 @@ protected:
 
 	// returns true if event occured
 	// the actual data is stored in a buffer pointed by buf
-	//bool CheckEvent(uint8_t size, uint8_t *buf);
+	bool CheckEvent(uint8_t size, uint8_t *buf);
 
 	uint16_t Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params, void *pVoid);
 
 public:
 	PTP(USB *pusb, PTPStateHandlers *s);
-	
+
 	//void PrintTransactionId() { Serial.println(idTransaction,HEX); };
 
 	// USBDeviceConfig implementation
@@ -168,11 +152,6 @@ public:
 	uint16_t InitiateOpenCapture(uint32_t storage_id = 0, uint16_t format = 0);
 	uint16_t TerminateOpenCapture(uint32_t trans_id);
 	uint16_t InitiateCapture(uint32_t storage_id = 0, uint16_t format = 0);
-	
-		// returns true if event occured
-	// the actual data is stored in a buffer pointed by buf
-	bool CheckEvent(uint8_t size, uint8_t *buf);
-  uint8_t CheckEvt(uint8_t size, uint8_t* buf);
 
 	// To be implemented in future releases
 	//uint16_t GetPartialObject(uint32_t handle, PTPReadParser *parser);
