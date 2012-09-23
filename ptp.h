@@ -19,7 +19,7 @@ e-mail   :  support@circuitsathome.com
 
 #include <inttypes.h>
 #include <avr/pgmspace.h>
-#include <max3421e.h>
+#include <Max3421e.h>
 #include <Usb.h>
 #include "ptpconst.h"
 #include "ptpmsgstr.h"
@@ -55,6 +55,7 @@ public:
 	virtual void OnDeviceBusyState(PTP *ptp);
 };
 
+
 class PTP : public USBDeviceConfig
 {
 	uint8_t		theState;
@@ -64,7 +65,9 @@ protected:
 	void Task();
 
 private:
-	uint16_t			idTransaction;			// Transaction ID
+	typedef uint16_t transaction_id_t;
+
+	transaction_id_t		idTransaction;			// Transaction ID
 	uint16_t			idSession;				// Session ID
 
 	PTPStateHandlers	*stateMachine;
@@ -96,18 +99,20 @@ protected:
 
 	void ZerroMemory(uint8_t size, uint8_t *mem) { for (uint8_t i=0; i<size; i++) mem[i] = 0; };
 
-	// waits for any event to occur
+	// waits for any event to occure
 	// returns event on success or error code if timeout elapsed
 	bool EventWait(uint8_t size, uint8_t *event_buf, uint16_t timeout);
 
 	// returns true if event occured
 	// the actual data is stored in a buffer pointed by buf
-	bool CheckEvent(uint8_t size, uint8_t *buf);
+	//bool CheckEvent(uint8_t size, uint8_t *buf);
 
 	uint16_t Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params, void *pVoid);
 
 public:
 	PTP(USB *pusb, PTPStateHandlers *s);
+	
+	//void PrintTransactionId() { Serial.println(idTransaction,HEX); };
 
 	// USBDeviceConfig implementation
 	virtual uint8_t Init(uint8_t parent, uint8_t port, bool lowspeed);
@@ -163,6 +168,11 @@ public:
 	uint16_t InitiateOpenCapture(uint32_t storage_id = 0, uint16_t format = 0);
 	uint16_t TerminateOpenCapture(uint32_t trans_id);
 	uint16_t InitiateCapture(uint32_t storage_id = 0, uint16_t format = 0);
+	
+		// returns true if event occured
+	// the actual data is stored in a buffer pointed by buf
+	bool CheckEvent(uint8_t size, uint8_t *buf);
+  uint8_t CheckEvt(uint8_t size, uint8_t* buf);
 
 	// To be implemented in future releases
 	//uint16_t GetPartialObject(uint32_t handle, PTPReadParser *parser);

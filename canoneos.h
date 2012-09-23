@@ -61,6 +61,7 @@ e-mail   :  support@circuitsathome.com
 #define EOS_DPC_UnixTime					0xD113
 #define EOS_DPC_ImageQuality				0xD120
 #define EOS_DPC_LiveView					0xD1B0
+#define EOS_DPC_EVFRecordStatus     		0xD1B8
 #define EOS_DPC_AvailableShots  			0xD11B
 #define EOS_DPC_CaptureDestination    		0xD11C
 #define EOS_DPC_BracketMode           		0xD11D
