@@ -1,3 +1,19 @@
+/* Copyright (C) 2011 Circuits At Home, LTD. All rights reserved.
+
+This software may be distributed and modified under the terms of the GNU
+General Public License version 2 (GPL2) as published by the Free Software
+Foundation and appearing in the file GPL2.TXT included in the packaging of
+this file. Please note that GPL2 Section 2[b] requires that all works based
+on this software must also be made publicly available under the terms of
+the GPL2 ("Copyleft").
+
+Contact information
+-------------------
+
+Circuits At Home, LTD
+Web      :  http://www.circuitsathome.com
+e-mail   :  support@circuitsathome.com
+*/
 #include "ptpconst.h"
 #include "ptp.h"
 #include "ptpdebug.h"
@@ -5,7 +21,7 @@
 void PTP::SetInitialState()
 {
 	idSession = 0;
-	idTransaction = ~((trasaction_id_t)0);
+	idTransaction = ~((transaction_id_t)0);
 	SetState(PTP_STATE_SESSION_NOT_OPENED);
 }
 
@@ -60,7 +76,7 @@ const uint8_t		PTP::epInterruptIndex	= 3;
 PTP::PTP(USB *pusb, PTPStateHandlers *s) : 
 	pUsb(pusb),
 	theState(0),
-	idTransaction(~((trasaction_id_t)0)), 
+	idTransaction(~((transaction_id_t)0)), 
 	idSession(0), 
 	devAddress(0),
 	numConf(0),
@@ -289,7 +305,7 @@ uint8_t PTP::Release()
 
 	devAddress = 0;
 	idSession = 0;
-	idTransaction = ~((trasaction_id_t)0);
+	idTransaction = ~((transaction_id_t)0);
 
 	return 0;
 }
@@ -584,7 +600,7 @@ uint16_t PTP::OpenSession()
 	OperFlags	flags = { 1, 0, 0, 0, 0, 0 };
 
 	idSession		= 1;
-	idTransaction	= ~((trasaction_id_t)0);
+	idTransaction	= ~((transaction_id_t)0);
 
 	params[0]	= idSession;
 
@@ -750,7 +766,7 @@ uint16_t PTP::CloseSession()
 	if ( (ptp_error = Transaction(PTP_OC_CloseSession, &flags)) == PTP_RC_OK)
 	{
 		idSession = 0;
-		idTransaction = ~((trasaction_id_t)0);
+		idTransaction = ~((transaction_id_t)0);
 	}
 	return ptp_error;
 }
