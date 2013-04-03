@@ -35,7 +35,7 @@ void EOSEventDump::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t
 
 		for (uint8_t i=0; i<4; i++) 
 		{
-			PrintHex<uint8_t>(((uint8_t*)&ptppktSize)[i]);
+			PrintHex<uint8_t>(((uint8_t*)&ptppktSize)[i], 0x80);
 			Serial.print(" ");
 		}
 
@@ -64,7 +64,7 @@ void EOSEventDump::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t
 				recordSize = (uint32_t)theBuffer;
 				for (uint8_t i=0; i<4; i++) 
 				{
-					PrintHex<uint8_t>(((uint8_t*)&theBuffer)[i]);
+					PrintHex<uint8_t>(((uint8_t*)&theBuffer)[i], 0x80);
 					Serial.print(" ");
 				}
 				recordSize -= 4;
@@ -78,7 +78,7 @@ void EOSEventDump::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t
 
 				for (uint8_t i=0; i<4; i++) 
 				{
-					PrintHex<uint8_t>(((uint8_t*)&theBuffer)[i]);
+					PrintHex<uint8_t>(((uint8_t*)&theBuffer)[i], 0x80);
 					Serial.print(" ");
 				}
 				recordSize -= 4;
@@ -96,7 +96,7 @@ void EOSEventDump::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t
 			case 3:
 				for (; recordSize && cntdn; recordSize--, cntdn--, p++)
 				{
-					PrintHex<uint8_t>(*p);
+					PrintHex<uint8_t>(*p, 0x80);
 					Serial.print(" ");
 				}
 				if (!recordSize)

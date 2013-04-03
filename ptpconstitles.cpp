@@ -183,7 +183,7 @@ bool PrintPTPOperation(uint16_t op)
 {
 	if ((op & 0xFF) <= (PTP_OC_InitiateOpenCapture & 0xFF))
 	{
-		Notify((char*)pgm_read_word(&ptpopNames[(op & 0xFF)]));
+		Notify((char*)pgm_read_word(&ptpopNames[(op & 0xFF)]), 0x80);
 		return true;
 	}
 	return false;
@@ -192,19 +192,19 @@ bool PrintPTPOperation(uint16_t op)
 bool PrintMTPOperation(uint16_t op)
 {
 	if ((op & 0xFF) <= (MTP_OC_SendObjectPropList & 0xFF))
-		Notify((char*)pgm_read_word(&mtpopNames[(op & 0xFF)]));
+		Notify((char*)pgm_read_word(&mtpopNames[(op & 0xFF)]), 0x80);
 	else
 	{
 		switch (op)
 		{
 		case MTP_OC_GetObjectReferences:
-			Notify(msgGetObjectReferences);
+			Notify(msgGetObjectReferences, 0x80);
 			break;
 		case MTP_OC_SetObjectReferences:
-			Notify(msgSetObjectReferences);
+			Notify(msgSetObjectReferences, 0x80);
 			break;
 		case MTP_OC_Skip:
-			Notify(msgSkip);
+			Notify(msgSkip, 0x80);
 			break;
 		default:
 			return false;
@@ -216,97 +216,97 @@ bool PrintMTPOperation(uint16_t op)
 void PrintEvent(uint16_t op)
 {
 	if ((((op >> 8) & 0xFF) == 0x40) && ((op & 0xFF) <= (PTP_EC_UnreportedStatus & 0xFF)))
-		Notify((char*)pgm_read_word(&ptpevNames[(op & 0xFF)]));
+		Notify((char*)pgm_read_word(&ptpevNames[(op & 0xFF)]), 0x80);
 	else
 		if ((((op >> 8) & 0xFF) == 0xC8) && ((op & 0xFF) <= (MTP_EC_ObjectReferencesChanged & 0xFF)))
-			Notify((char*)pgm_read_word(&mtpevNames[(op & 0xFF)]));
+			Notify((char*)pgm_read_word(&mtpevNames[(op & 0xFF)]), 0x80);
 		else
-			Notify(msgVendorDefined);
+			Notify(msgVendorDefined, 0x80);
 }
 
 void PrintDevProp(uint16_t op)
 {
 	if ((((op >> 8) & 0xFF) == 0x50) && ((op & 0xFF) <= (PTP_DPC_CopyrightInfo & 0xFF)))
-		Notify((char*)pgm_read_word(&ptpprNames[(op & 0xFF)]));
+		Notify((char*)pgm_read_word(&ptpprNames[(op & 0xFF)]), 0x80);
 	else
 		if (((op >> 8) & 0xFF) == 0xD4) 
 		{
 			if ( (op & 0xFF) <= (MTP_DPC_Perceived_Device_Type & 0xFF) )
-				Notify((char*)pgm_read_word(&mtpprNames[(op & 0xFF)]));
+				Notify((char*)pgm_read_word(&mtpprNames[(op & 0xFF)]), 0x80);
 			else
 			{
 				switch (op)
 				{
 				case MTP_DPC_Playback_Rate:
-					Notify(msgPlayback_Rate);
+					Notify(msgPlayback_Rate, 0x80);
 					break;
 				case MTP_DPC_Playback_Object:
-					Notify(msgPlayback_Object);
+					Notify(msgPlayback_Object, 0x80);
 					break;
 				case MTP_DPC_Playback_Container:
-					Notify(msgPlayback_Container);
+					Notify(msgPlayback_Container, 0x80);
 					break;
 				default:
-					Notify(msgVendorDefined);
+					Notify(msgVendorDefined, 0x80);
 				}
 			}
 		}
 		else
-			Notify(msgVendorDefined);
+			Notify(msgVendorDefined, 0x80);
 }
 
 void PrintFormat(uint16_t op)
 {
 	if ((((op >> 8) & 0xFF) == 0x30) && ((op & 0xFF) <= (PTP_OFC_QT & 0xFF)))
-		Notify((char*)pgm_read_word(&acNames[(op & 0xFF)]));
+		Notify((char*)pgm_read_word(&acNames[(op & 0xFF)]), 0x80);
 	else
 		if ((((op >> 8) & 0xFF) == 0x38) && ((op & 0xFF) <= (PTP_OFC_JPX & 0xFF)))
-			Notify((char*)pgm_read_word(&imNames[(op & 0xFF)]));
+			Notify((char*)pgm_read_word(&imNames[(op & 0xFF)]), 0x80);
 		else
 		{
 			switch (op)
 			{
 			case MTP_OFC_Undefined_Firmware:
-				Notify(msgUndefined_Firmware);
+				Notify(msgUndefined_Firmware, 0x80);
 				break;
 			case MTP_OFC_Windows_Image_Format:	
-				Notify(msgWindows_Image_Format);
+				Notify(msgWindows_Image_Format, 0x80);
 				break;
 			case MTP_OFC_Undefined_Audio:			
-				Notify(msgUndefined_Audio);
+				Notify(msgUndefined_Audio, 0x80);
 				break;
 			case MTP_OFC_WMA:						
-				Notify(msgWMA);
+				Notify(msgWMA, 0x80);
 				break;
 			case MTP_OFC_OGG:						
-				Notify(msgOGG);
+				Notify(msgOGG, 0x80);
 				break;
 			case MTP_OFC_AAC:						
-				Notify(msgAAC);
+				Notify(msgAAC, 0x80);
 				break;
 			case MTP_OFC_Audible:					
-				Notify(msgAudible);
+				Notify(msgAudible, 0x80);
 				break;
 			case MTP_OFC_FLAC:					
-				Notify(msgFLAC);
+				Notify(msgFLAC, 0x80);
 				break;
 			case MTP_OFC_Undefined_Video:			
-				Notify(msgUndefined_Video);
+				Notify(msgUndefined_Video, 0x80);
 				break;
 			case MTP_OFC_WMV:						
-				Notify(msgWMV);
+				Notify(msgWMV, 0x80);
 				break;
 			case MTP_OFC_MP4_Container:			
-				Notify(msgMP4_Container);
+				Notify(msgMP4_Container, 0x80);
 				break;
 			case MTP_OFC_MP2:						
-				Notify(msgMP2);
+				Notify(msgMP2, 0x80);
 				break;
 			case MTP_OFC_3GP_Container:
-				Notify(msg3GP_Container);
+				Notify(msg3GP_Container, 0x80);
 				break;
 			default:
-				Notify(msgVendorDefined);
+				Notify(msgVendorDefined, 0x80);
 			}
 		}
 }
