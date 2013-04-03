@@ -16,7 +16,6 @@
 
 #include <ptp.h>
 #include <ptpdebug.h>
-#include "stinfoparser.h"
 
 class CamStateHandlers : public PTPStateHandlers
 {
@@ -39,7 +38,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
     if (stateConnected == stConnected || stateConnected == stInitial)
     {
         stateConnected = stDisconnected;
-        Notify(PSTR("Camera disconnected\r\n"));
+        Notify(PSTR("Camera disconnected\r\n"), 0x80);
     }
 }
 
@@ -48,29 +47,11 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (stateConnected == stDisconnected || stateConnected == stInitial)
     {
         stateConnected = stConnected;
-        Notify(PSTR("Camera connected\r\n"));
+        Notify(PSTR("Camera connected\r\n"), 0x80);
         
-        uint8_t    data[48];
-        
-        if (ptp->GetStorageIDs(48, data) == PTP_RC_OK)
-        {
-              uint32_t    cntdn = *((uint32_t*)(data+12)), *p = (uint32_t*)(data+16);
-              Serial.println(cntdn, DEC);
-              
-              for (; cntdn; cntdn--, p++)
-              {
-                    Notify(PSTR("Storage ID:\t"));
-                    PrintHex<uint32_t>(*p);
-                    Notify(PSTR("\n------------------------\n"));
-                    
-                    HexDump  hex;
-                    ptp->GetStorageInfo(*p, &hex);
-                    
-                    PTPStorageInfoParser  stiParser;
-                    ptp->GetStorageInfo(*p, &stiParser);
-                    Notify(PSTR("\n"));
-              }
-        }
+      	HexDump          dmp;
+      	ptp->GetStorageIDs(&dmp);
+        Notify(PSTR("\n"), 0x80);
     }
 }
 

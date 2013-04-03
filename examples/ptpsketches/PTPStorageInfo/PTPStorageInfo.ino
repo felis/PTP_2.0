@@ -9,15 +9,14 @@
 #include <usbhub.h>
 #include <address.h>
 
+#include <printhex.h>
 #include <message.h>
+#include <hexdump.h>
 #include <parsetools.h>
 
 #include <ptp.h>
 #include <ptpdebug.h>
-#include <canonps.h>
-#include <ptpdpparser.h>
-#include <psvaluetitles.h>
-#include "devpropparser.h"
+#include "stinfoparser.h"
 
 class CamStateHandlers : public PTPStateHandlers
 {
@@ -29,19 +28,18 @@ public:
       
       virtual void OnDeviceDisconnectedState(PTP *ptp);
       virtual void OnDeviceInitializedState(PTP *ptp);
-};
+} CamStates;
 
-CamStateHandlers  CamStates;
-USB                 Usb;
-USBHub              Hub1(&Usb);
-PTP                 Ptp(&Usb, &CamStates);
+USB      Usb;
+USBHub   Hub1(&Usb);
+PTP      Ptp(&Usb, &CamStates);
 
 void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
 {
     if (stateConnected == stConnected || stateConnected == stInitial)
     {
         stateConnected = stDisconnected;
-        Notify(PSTR("Camera disconnected\r\n"));
+        Notify(PSTR("Camera disconnected\r\n"), 0x80);
     }
 }
 
@@ -50,43 +48,41 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (stateConnected == stDisconnected || stateConnected == stInitial)
     {
         stateConnected = stConnected;
-        Notify(PSTR("Camera connected\r\n"));
+        Notify(PSTR("Camera connected\r\n"), 0x80);
         
-        uint16_t    prefix[3] = { 0x5000, 0xD000, 0xD100 };
-               
-        for (uint8_t i=0; i<3; i++)
+        uint8_t    data[48];
+        
+        if (ptp->GetStorageIDs(48, data) == PTP_RC_OK)
         {
-            for (uint8_t j=0; j<128; j++)
-            {
-                HexDump          dmp;
-                
-                if (Ptp.GetDevicePropDesc((prefix[i] | j), &dmp) == PTP_RC_OK)
-                {
-                    Notify(PSTR("\r\n"));
+              uint32_t    cntdn = *((uint32_t*)(data+12)), *p = (uint32_t*)(data+16);
+              Serial.println(cntdn, DEC);
+              
+              for (; cntdn; cntdn--, p++)
+              {
+                    Notify(PSTR("Storage ID:\t"), 0x80);
+                    PrintHex<uint32_t>(*p, 0x80);
+                    Notify(PSTR("\n------------------------\n"), 0x80);
                     
-                    DevPropParser    prs;
+                    HexDump  hex;
+                    ptp->GetStorageInfo(*p, &hex);
                     
-            	    if (Ptp.GetDevicePropDesc((prefix[i] | j), &prs) == PTP_RC_OK)
-                        Notify(PSTR("\r\n"));
-                }
-            }
-    
-            Notify(PSTR("\r\n"));
-
-        } // for (uint8_t i=0; i<2; i++)
-
-    }  // if (stateConnected == stDisconnected || stateConnected == stInitial)
+                    PTPStorageInfoParser  stiParser;
+                    ptp->GetStorageInfo(*p, &stiParser);
+                    Notify(PSTR("\n"), 0x80);
+              }
+        }
+    }
 }
 
 void setup() 
 {
-  Serial.begin( 115200 );
-  Serial.println("Start");
+    Serial.begin( 115200 );
+    Serial.println("Start");
 
     if (Usb.Init() == -1)
         Serial.println("OSC did not start.");
-
-  delay( 200 );
+    
+    delay( 200 );
 }
 
 void loop() 

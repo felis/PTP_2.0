@@ -103,27 +103,27 @@ class DevPropParser : public PTPReadParser
 	static void PrintByte(const MultiValueBuffer * const p, uint32_t count, const void *me)
 	{
 		if (count)
-			Notify(PSTR(","));
-		PrintHex<uint8_t>(((uint8_t*)p->pValue)[0]);
+			Notify(PSTR(","), 0x80);
+		PrintHex<uint8_t>(((uint8_t*)p->pValue)[0], 0x80);
 	};
 	static void PrintTwoBytes(const MultiValueBuffer * const p, uint32_t count, const void *me)
 	{
 		if (count)
-			Notify(PSTR(","));
-		PrintHex<uint16_t>(((uint16_t*)p->pValue)[0]);
+			Notify(PSTR(","), 0x80);
+		PrintHex<uint16_t>(((uint16_t*)p->pValue)[0], 0x80);
 	};
 	static void PrintFourBytes(const MultiValueBuffer * const p, uint32_t count, const void *me)
 	{
 		if (count)
-			Notify(PSTR(","));
-		PrintHex<uint32_t>(((uint32_t*)p->pValue)[0]);
+			Notify(PSTR(","), 0x80);
+		PrintHex<uint32_t>(((uint32_t*)p->pValue)[0], 0x80);
 	};
 	static void PrintEightBytes(const MultiValueBuffer * const p, uint32_t count, const void *me)
 	{
 		if (count)
-			Notify(PSTR(","));
+			Notify(PSTR(","), 0x80);
     		for (uint8_t i=p->valueSize; i; i--)
-    	  	    PrintHex<uint8_t>(((uint8_t*)p->pValue)[i-1]);
+    	  	    PrintHex<uint8_t>(((uint8_t*)p->pValue)[i-1], 0x80);
 	};
 	static void PrintEnumValue(const MultiValueBuffer * const p, uint32_t count, const void *me) 
         { 
@@ -133,17 +133,17 @@ class DevPropParser : public PTPReadParser
             switch (((MultiValueBuffer*)p)->valueSize)
             {
             case 1: 
-    		PrintHex<uint8_t>(*((uint8_t*)p->pValue)); 
+    		PrintHex<uint8_t>(*((uint8_t*)p->pValue), 0x80); 
                 break;
             case 2:  
-    		PrintHex<uint16_t>(*((uint16_t*)p->pValue)); 
+    		PrintHex<uint16_t>(*((uint16_t*)p->pValue), 0x80); 
                 break;
             case 4:  
-    		PrintHex<uint32_t>(*((uint32_t*)p->pValue)); 
+    		PrintHex<uint32_t>(*((uint32_t*)p->pValue), 0x80); 
                 break;
     	    default:
     		for (uint8_t i=p->valueSize; i; i--)
-    	  	    PrintHex<uint8_t>(((uint8_t*)p->pValue)[i-1]);
+    	  	    PrintHex<uint8_t>(((uint8_t*)p->pValue)[i-1], 0x80);
             }
             count++; 
         };
