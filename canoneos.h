@@ -65,6 +65,8 @@ e-mail   :  support@circuitsathome.com
 #define EOS_DPC_CaptureDestination    		0xD11C
 #define EOS_DPC_BracketMode           		0xD11D
 
+#define EOS_DPC_VideoRecord     		0xD1B8  // 4 - start, 0 or 3 - stop
+
 // Non-PTP Events
 #define EOS_EC_DevPropChanged				0xC189
 #define EOS_EC_ObjectCreated				0xC181
