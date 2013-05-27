@@ -15,7 +15,7 @@
 #include <ptp.h>
 #include <nkeventparser.h>
 #include <nikon.h>
-#include <qp_port.h>
+#include "qp_port.h"
 #include <valuelist.h>
 #include <nkvaluetitles.h>
 
@@ -35,7 +35,7 @@ void NKEventDump::OnEvent(const NKEvent *evt)
     {
     case PTP_EC_DevicePropChanged:
         //Fifo.Push(evt->wParam1);
-        PrintHex<uint16_t>(evt->wParam1);
+        PrintHex<uint16_t>(evt->wParam1, 0x80);
         Serial.println("");
         break;
     case PTP_EC_ObjectAdded:
@@ -72,12 +72,20 @@ NKEventDump         Dmp;
 QEvent            evtTick; 
 PSConsole         psConsole;
 
+void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
+    (void)file;                                   /* avoid compiler warning */
+    (void)line;                                   /* avoid compiler warning */
+    QF_INT_DISABLE();             /* make sure that interrupts are disabled */
+    for (;;) {
+    }
+}
+
 void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
 {
     if (stateConnected == stConnected || stateConnected == stInitial)
     {
         stateConnected = stDisconnected;
-        Notify(PSTR("Camera disconnected.\r\n"));
+        Notify(PSTR("Camera disconnected.\r\n"),0x80);
         
         if (stateConnected == stConnected)
             psConsole.dispatch(&evtTick);
@@ -89,7 +97,7 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (stateConnected == stDisconnected || stateConnected == stInitial)
     {
         stateConnected = stConnected;
-        Notify(PSTR("Camera connected.\r\n"));
+        Notify(PSTR("Camera connected.\r\n"),0x80);
         psConsole.dispatch(&evtTick);
         ptp->SetDevicePropValue(0xD1B0, (uint8_t)1);
     }
