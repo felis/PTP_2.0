@@ -72,7 +72,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
     if (stateConnected)
     {
         stateConnected = false;      
-        Notify(PSTR("Camera disconnected\r\n"));
+        Notify(PSTR("Camera disconnected\r\n"),0x80);
     }
 }
 

@@ -22,45 +22,45 @@ void EosEventHandlers::OnPropertyChanged(const EOSEvent *evt)
     {
     case EOS_DPC_Aperture:
         dpAperture = (uint8_t) evt->propValue;
-        Notify(PSTR("F:"));
-        Notify((char*)FindTitle<VT_APERTURE, VT_APT_TEXT_LEN>(VT_APT_COUNT, ApertureTitles, dpAperture));
-        Notify(PSTR("\r\n"));
+        Notify(PSTR("F:"),0x80);
+        Notify((char*)FindTitle<VT_APERTURE, VT_APT_TEXT_LEN>(VT_APT_COUNT, ApertureTitles, dpAperture),0x80);
+        Notify(PSTR("\r\n"),0x80);
         break;
     case EOS_DPC_ShutterSpeed:
         dpShutterSpeed = (uint8_t) evt->propValue;
-        Notify(PSTR("T:"));
-        Notify((char*)FindTitle<VT_SHSPEED, VT_SHSPEED_TEXT_LEN>(VT_SHSPEED_COUNT, ShutterSpeedTitles, dpShutterSpeed));
-        Notify(PSTR("\r\n"));
+        Notify(PSTR("T:"),0x80);
+        Notify((char*)FindTitle<VT_SHSPEED, VT_SHSPEED_TEXT_LEN>(VT_SHSPEED_COUNT, ShutterSpeedTitles, dpShutterSpeed),0x80);
+        Notify(PSTR("\r\n"),0x80);
         break;
     case EOS_DPC_ShootingMode:
         dpMode = (uint8_t) evt->propValue;
-        Notify(PSTR("Mode:"));
-        Notify((char*)FindTitle<VT_MODE, VT_MODE_TEXT_LEN>(VT_MODE_COUNT, ModeTitles, dpMode));
-        Notify(PSTR("\r\n"));
+        Notify(PSTR("Mode:"),0x80);
+        Notify((char*)FindTitle<VT_MODE, VT_MODE_TEXT_LEN>(VT_MODE_COUNT, ModeTitles, dpMode),0x80);
+        Notify(PSTR("\r\n"),0x80);
         break;
     case EOS_DPC_WhiteBalance:
         dpWb = (uint8_t) evt->propValue;
-        Notify(PSTR("WB:"));
-        Notify((char*)FindTitle<VT_WB, VT_WB_TEXT_LEN>(VT_WB_COUNT, WbTitles, dpWb));
-        Notify(PSTR("\r\n"));
+        Notify(PSTR("WB:"),0x80);
+        Notify((char*)FindTitle<VT_WB, VT_WB_TEXT_LEN>(VT_WB_COUNT, WbTitles, dpWb),0x80);
+        Notify(PSTR("\r\n"),0x80);
         break;
     case EOS_DPC_PictureStyle:
         dpPStyle = (uint8_t) evt->propValue;
-        Notify(PSTR("Pict Style:"));
-        Notify((char*)FindTitle<VT_PSTYLE, VT_PSTYLE_TEXT_LEN>(VT_PSTYLE_COUNT, PStyleTitles, dpPStyle));
-        Notify(PSTR("\r\n"));
+        Notify(PSTR("Pict Style:"),0x80);
+        Notify((char*)FindTitle<VT_PSTYLE, VT_PSTYLE_TEXT_LEN>(VT_PSTYLE_COUNT, PStyleTitles, dpPStyle),0x80);
+        Notify(PSTR("\r\n"),0x80);
         break;
     case EOS_DPC_Iso:
         dpIso = (uint8_t) evt->propValue;
-        Notify(PSTR("ISO:"));
-        Notify((char*)FindTitle<VT_ISO, VT_ISO_TEXT_LEN>(VT_ISO_COUNT, IsoTitles, dpIso));
-        Notify(PSTR("\r\n"));
+        Notify(PSTR("ISO:"),0x80);
+        Notify((char*)FindTitle<VT_ISO, VT_ISO_TEXT_LEN>(VT_ISO_COUNT, IsoTitles, dpIso),0x80);
+        Notify(PSTR("\r\n"),0x80);
         break;
     case EOS_DPC_ExposureCompensation:
         dpExpComp = (uint8_t) evt->propValue;
-        Notify(PSTR("Exp Comp:"));
-        Notify((char*)FindTitle<VT_EXPCOMP, VT_EXPCOMP_TEXT_LEN>(VT_EXPCOMP_COUNT, ExpCompTitles, dpExpComp));
-        Notify(PSTR("\r\n"));
+        Notify(PSTR("Exp Comp:"),0x80);
+        Notify((char*)FindTitle<VT_EXPCOMP, VT_EXPCOMP_TEXT_LEN>(VT_EXPCOMP_COUNT, ExpCompTitles, dpExpComp),0x80);
+        Notify(PSTR("\r\n"),0x80);
         break;
     };
 }

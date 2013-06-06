@@ -27,21 +27,21 @@ const char* menuUpDown[] = {"<<", ">>"};
 
 void EOSConsole::ShowParams()
 {
-    Notify(PSTR("\r\nMode:"));
-    Notify((char*)FindTitle<VT_MODE, VT_MODE_TEXT_LEN>(VT_MODE_COUNT, ModeTitles, dpMode));
-    Notify(PSTR("\r\nF:"));
-    Notify((char*)FindTitle<VT_APERTURE, VT_APT_TEXT_LEN>(VT_APT_COUNT, ApertureTitles, dpAperture));
-    Notify(PSTR("\r\nT:"));
-    Notify((char*)FindTitle<VT_SHSPEED, VT_SHSPEED_TEXT_LEN>(VT_SHSPEED_COUNT, ShutterSpeedTitles, dpShutterSpeed));
-    Notify(PSTR("\r\nWB:"));
-    Notify((char*)FindTitle<VT_WB, VT_WB_TEXT_LEN>(VT_WB_COUNT, WbTitles, dpWb));
-    Notify(PSTR("\r\nPict Style:"));
-    Notify((char*)FindTitle<VT_PSTYLE, VT_PSTYLE_TEXT_LEN>(VT_PSTYLE_COUNT, PStyleTitles, dpPStyle));
-    Notify(PSTR("\r\nISO:"));
-    Notify((char*)FindTitle<VT_ISO, VT_ISO_TEXT_LEN>(VT_ISO_COUNT, IsoTitles, dpIso));
-    Notify(PSTR("\r\nExp Comp:"));
-    Notify((char*)FindTitle<VT_EXPCOMP, VT_EXPCOMP_TEXT_LEN>(VT_EXPCOMP_COUNT, ExpCompTitles, dpExpComp));
-    Notify(PSTR("\r\n"));
+    Notify(PSTR("\r\nMode:"),0x80);
+    Notify((char*)FindTitle<VT_MODE, VT_MODE_TEXT_LEN>(VT_MODE_COUNT, ModeTitles, dpMode),0x80);
+    Notify(PSTR("\r\nF:"),0x80);
+    Notify((char*)FindTitle<VT_APERTURE, VT_APT_TEXT_LEN>(VT_APT_COUNT, ApertureTitles, dpAperture),0x80);
+    Notify(PSTR("\r\nT:"),0x80);
+    Notify((char*)FindTitle<VT_SHSPEED, VT_SHSPEED_TEXT_LEN>(VT_SHSPEED_COUNT, ShutterSpeedTitles, dpShutterSpeed),0x80);
+    Notify(PSTR("\r\nWB:"),0x80);
+    Notify((char*)FindTitle<VT_WB, VT_WB_TEXT_LEN>(VT_WB_COUNT, WbTitles, dpWb),0x80);
+    Notify(PSTR("\r\nPict Style:"),0x80);
+    Notify((char*)FindTitle<VT_PSTYLE, VT_PSTYLE_TEXT_LEN>(VT_PSTYLE_COUNT, PStyleTitles, dpPStyle),0x80);
+    Notify(PSTR("\r\nISO:"),0x80);
+    Notify((char*)FindTitle<VT_ISO, VT_ISO_TEXT_LEN>(VT_ISO_COUNT, IsoTitles, dpIso),0x80);
+    Notify(PSTR("\r\nExp Comp:"),0x80);
+    Notify((char*)FindTitle<VT_EXPCOMP, VT_EXPCOMP_TEXT_LEN>(VT_EXPCOMP_COUNT, ExpCompTitles, dpExpComp),0x80);
+    Notify(PSTR("\r\n"),0x80);
 }
 
 QState EOSConsole::Initial(EOSConsole *me, QEvent const *e) 

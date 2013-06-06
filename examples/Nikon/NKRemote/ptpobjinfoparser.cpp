@@ -43,7 +43,7 @@ void PTPObjInfoParser::PrintFormat(uint16_t op)
 {
 	Serial.print(op, HEX);
 	Serial.print("\t");
-	//Notify(msgTab);
+	//Notify(msgTab,0x80);
 
 	if ((((op >> 8) & 0xFF) == 0x30) && ((op & 0xFF) <= (PTP_OFC_QT & 0xFF)))
 		Notify((char*)pgm_read_word(&acNames[(op & 0xFF)]),0x80);

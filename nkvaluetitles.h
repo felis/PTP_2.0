@@ -21,7 +21,7 @@ e-mail   :  support@circuitsathome.com
 #include <avr/pgmspace.h>
 #include <valuelist.h>
 
-typedef uint8_t			VT_APERTURE;
+typedef uint16_t			VT_APERTURE;
 typedef uint8_t			VT_MODE;
 typedef uint16_t		VT_WB;
 typedef uint32_t		VT_SHSPEED;

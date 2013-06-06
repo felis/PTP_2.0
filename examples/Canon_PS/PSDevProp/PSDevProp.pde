@@ -41,7 +41,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
     if (stateConnected == stConnected || stateConnected == stInitial)
     {
         stateConnected = stDisconnected;
-        Notify(PSTR("Camera disconnected\r\n"));
+        Notify(PSTR("Camera disconnected\r\n"),0x80);
     }
 }
 
@@ -50,7 +50,7 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (stateConnected == stDisconnected || stateConnected == stInitial)
     {
         stateConnected = stConnected;
-        Notify(PSTR("Camera connected\r\n"));
+        Notify(PSTR("Camera connected\r\n"),0x80);
         
         uint16_t    prefix = 0xD000;
                
@@ -61,9 +61,9 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
             Ps.SetDevicePropValue(PS_DPC_ShootingMode, (uint16_t)shoot_mode[i]);
             delay(10);
 
-            Notify(PSTR("Mode:"));
+            Notify(PSTR("Mode:"),0x80);
             PrintValueTitle<uint8_t, VT_MODE, VT_MODE_COUNT, VT_MODE_TEXT_LEN>((PTP*)ptp, PS_DPC_ShootingMode, ModeTitles);
-            Notify(PSTR("\r\n"));
+            Notify(PSTR("\r\n"),0x80);
             
             for (uint8_t j=0; j<128; j++)
             {
@@ -71,16 +71,16 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
                 
                 if (Ps.GetDevicePropDesc((prefix | j), &dmp) == PTP_RC_OK)
                 {
-                    Notify(PSTR("\r\n"));
+                    Notify(PSTR("\r\n"),0x80);
                     
                     DevPropParser    prs;
                     
             	    if (Ps.GetDevicePropDesc((prefix | j), &prs) == PTP_RC_OK)
-                        Notify(PSTR("\r\n"));
+                        Notify(PSTR("\r\n"),0x80);
                 }
             }
     
-            Notify(PSTR("\r\n"));
+            Notify(PSTR("\r\n"),0x80);
 
         } // for (uint8_t i=0; i<4; i++)
 

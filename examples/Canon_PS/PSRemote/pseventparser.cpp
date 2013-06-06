@@ -26,7 +26,7 @@ void PSEventParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_
 		//PrintHex<uint32_t>(*((uint32_t*)theBuffer.pValue));
 		nStage ++;
 	case 3:
-		//Notify(PSTR("\r\nNumber of Fields:\t"));
+		//Notify(PSTR("\r\nNumber of Fields:\t"),0x80);
 		theBuffer.valueSize = 2;
 		valueParser.Initialize(&theBuffer);
 		nStage ++;
@@ -37,7 +37,7 @@ void PSEventParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_
 		//PrintHex<uint16_t>(*((uint16_t*)theBuffer.pValue));
 		nStage ++;
 	case 5:
-		//Notify(PSTR("\r\nEvent Code:\t"));
+		//Notify(PSTR("\r\nEvent Code:\t"),0x80);
 		theBuffer.valueSize = 2;
 		valueParser.Initialize(&theBuffer);
 		nStage ++;
@@ -49,7 +49,7 @@ void PSEventParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_
 		//PrintHex<uint16_t>(*((uint16_t*)theBuffer.pValue));
 		nStage ++;
 	case 7:
-		//Notify(PSTR("\r\nTransaction ID:\t"));
+		//Notify(PSTR("\r\nTransaction ID:\t"),0x80);
 		theBuffer.valueSize = 4;
 		valueParser.Initialize(&theBuffer);
 		nStage ++;
@@ -61,7 +61,7 @@ void PSEventParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_
 		nStage ++;
     case 9:
         if (eventCode == PTP_EC_ObjectAdded)
-			Notify(PSTR("\r\nObject Added:\t\t"));
+			Notify(PSTR("\r\nObject Added:\t\t"),0x80);
 
 		theBuffer.valueSize = 4;
 		valueParser.Initialize(&theBuffer);
@@ -74,10 +74,10 @@ void PSEventParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_
 
 			objHandle = *((uint32_t*)theBuffer.pValue);
 			PrintHex<uint32_t>(*((uint32_t*)theBuffer.pValue));
-			Notify(PSTR("\r\n"));
+			Notify(PSTR("\r\n"),0x80);
         }
 		if (eventCode == PTP_EC_CaptureComplete)
-			Notify(PSTR("\r\nCapture complete.\r\n"));
+			Notify(PSTR("\r\nCapture complete.\r\n"),0x80);
 		nStage ++;
     case 11:
 		nStage = 0;

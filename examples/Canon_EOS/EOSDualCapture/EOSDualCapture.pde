@@ -46,9 +46,9 @@ void EOSCamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
     if (stateConnected)
     {
         stateConnected = false;
-        Notify(PSTR("Camera at: "));
+        Notify(PSTR("Camera at: "),0x80);
         Serial.print(ptp->GetAddress(),HEX);
-        Notify(PSTR(" disconnected\r\n"));
+        Notify(PSTR(" disconnected\r\n"),0x80);
     }
 }
 
@@ -57,9 +57,9 @@ void PTPCamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
     if (stateConnected)
     {
         stateConnected = false;
-        Notify(PSTR("Camera at: "));
+        Notify(PSTR("Camera at: "),0x80);
         Serial.print(ptp->GetAddress(),HEX);
-        Notify(PSTR(" disconnected\r\n"));
+        Notify(PSTR(" disconnected\r\n"),0x80);
     }
 }
 
@@ -70,9 +70,9 @@ void EOSCamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (!stateConnected)
     {
         stateConnected = true;
-        Notify(PSTR("Camera at: "));
+        Notify(PSTR("Camera at: "),0x80);
         Serial.print(ptp->GetAddress(),HEX);
-        Notify(PSTR(" connected\r\n"));
+        Notify(PSTR(" connected\r\n"),0x80);
     }
 
     uint32_t  time_now = millis();
@@ -95,9 +95,9 @@ void PTPCamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (!stateConnected)
     {
         stateConnected = true;
-        Notify(PSTR("Camera at: "));
+        Notify(PSTR("Camera at: "),0x80);
         Serial.print(ptp->GetAddress(),HEX);
-        Notify(PSTR(" connected\r\n"));
+        Notify(PSTR(" connected\r\n"),0x80);
     }
 
     uint32_t  time_now = millis();

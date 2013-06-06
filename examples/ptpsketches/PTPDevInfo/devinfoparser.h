@@ -3,9 +3,9 @@
 
 #include <inttypes.h>
 #include <avr/pgmspace.h>
-#include <../ptp/ptpconst.h>
-#include <../ptp/mtpconst.h>
-#include <../ptp/ptp.h>
+#include <ptpconst.h>
+#include <mtpconst.h>
+#include <ptp.h>
 
 const char msgVendorDefined			[] PROGMEM = "Vendor defined";			
 const char msgTab					[] PROGMEM = "\t";			

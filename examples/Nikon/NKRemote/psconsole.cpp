@@ -74,12 +74,12 @@ void PrintFocusArea()
 //void PrintZoom()
 //{
 //    uint16_t    val = 0;
-//    Notify(PSTR("Zoom:"));
+//    Notify(PSTR("Zoom:"),0x80);
 //    
 //    if (Nk.GetDevicePropValue(PS_DPC_Zoom, (uint16_t&)val) == PTP_RC_OK)
 //        PrintHex<uint16_t>(val); 
 //        
-//    Notify(PSTR("\r\n"));
+//    Notify(PSTR("\r\n"),0x80);
 //}
 
 void PSConsole::ShowParams()

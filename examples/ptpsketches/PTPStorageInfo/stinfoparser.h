@@ -3,8 +3,8 @@
 
 #include <inttypes.h>
 #include <avr/pgmspace.h>
-#include <../ptp/ptpconst.h>
-#include <../ptp/ptp.h>
+#include <ptpconst.h>
+#include <ptp.h>
 
 // Storage Types
 const char msgUndefined		[] PROGMEM = "Undefined";
