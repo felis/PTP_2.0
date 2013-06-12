@@ -28,7 +28,7 @@ void PrintPropValues(PTP *ptp)
         uint16_t prop = Fifo.Pop();
         
         Serial.println("");
-        PrintHex<uint16_t>(prop);
+        PrintHex<uint16_t>(prop,0x80);
         Serial.println("");
         
         HexDump    hex;

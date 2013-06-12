@@ -77,7 +77,7 @@ void PrintFocusArea()
 //    E_Notify(PSTR("Zoom:"),0x80);
 //    
 //    if (Nk.GetDevicePropValue(PS_DPC_Zoom, (uint16_t&)val) == PTP_RC_OK)
-//        PrintHex<uint16_t>(val); 
+//        PrintHex<uint16_t>(val,0x80); 
 //        
 //    E_Notify(PSTR("\r\n"),0x80);
 //}
