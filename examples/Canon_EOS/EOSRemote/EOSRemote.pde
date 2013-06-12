@@ -80,7 +80,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
     {
         stateConnected = stDisconnected;
         //PTPPollTimer.Disable();
-        Notify(PSTR("Camera disconnected.\r\n"),0x80);
+        E_Notify(PSTR("Camera disconnected.\r\n"),0x80);
         
         if (stateConnected == stConnected)
             eosConsole.dispatch(&evtTick);

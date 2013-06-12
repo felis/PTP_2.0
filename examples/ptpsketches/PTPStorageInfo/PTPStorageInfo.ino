@@ -39,7 +39,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
     if (stateConnected == stConnected || stateConnected == stInitial)
     {
         stateConnected = stDisconnected;
-        Notify(PSTR("Camera disconnected\r\n"), 0x80);
+        E_Notify(PSTR("Camera disconnected\r\n"), 0x80);
     }
 }
 
@@ -48,7 +48,7 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (stateConnected == stDisconnected || stateConnected == stInitial)
     {
         stateConnected = stConnected;
-        Notify(PSTR("Camera connected\r\n"), 0x80);
+        E_Notify(PSTR("Camera connected\r\n"), 0x80);
         
         uint8_t    data[48];
         
@@ -59,16 +59,16 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
               
               for (; cntdn; cntdn--, p++)
               {
-                    Notify(PSTR("Storage ID:\t"), 0x80);
+                    E_Notify(PSTR("Storage ID:\t"), 0x80);
                     PrintHex<uint32_t>(*p, 0x80);
-                    Notify(PSTR("\n------------------------\n"), 0x80);
+                    E_Notify(PSTR("\n------------------------\n"), 0x80);
                     
                     HexDump  hex;
                     ptp->GetStorageInfo(*p, &hex);
                     
                     PTPStorageInfoParser  stiParser;
                     ptp->GetStorageInfo(*p, &stiParser);
-                    Notify(PSTR("\n"), 0x80);
+                    E_Notify(PSTR("\n"), 0x80);
               }
         }
     }

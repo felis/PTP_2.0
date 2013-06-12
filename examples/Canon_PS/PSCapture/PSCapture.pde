@@ -45,7 +45,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
         eventTimer.Disable();
         captureTimer.Disable();
         
-        Notify(PSTR("Camera disconnected\r\n"),0x80);
+        E_Notify(PSTR("Camera disconnected\r\n"),0x80);
     }
 }
 
@@ -54,7 +54,7 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (stateConnected == stDisconnected || stateConnected == stInitial)
     {
         stateConnected = stConnected;
-        Notify(PSTR("Camera connected\r\n"),0x80);
+        E_Notify(PSTR("Camera connected\r\n"),0x80);
         eventTimer.Enable();
         captureTimer.Enable();
     }

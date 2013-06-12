@@ -28,7 +28,7 @@ e-mail   :  support@circuitsathome.com
 //#define Message(m,r) (ErrorMessage<uint16_t>((m),(r)))
 
 #if defined( PTPDEBUG )
-#define PTPTRACE(s)(Notify(PSTR((s))),0x80)
+#define PTPTRACE(s)(E_Notify(PSTR((s))),0x80)
 #define PTPTRACE2(s,r)(ErrorMessage<uint16_t>(PSTR((s)),(r)))
 #else
 #define PTPTRACE(s)((void)0)

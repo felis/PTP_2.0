@@ -71,25 +71,25 @@ void DevPropParser::PrintDataType(uint8_t **pp, uint16_t *pcntdn)
 	dataType = *((uint16_t*)(*pp));
         bytesSize = GetDataSize();
         
-	Notify(PSTR("Data Type:\t\t"),0x80);
+	E_Notify(PSTR("Data Type:\t\t"),0x80);
 
 	switch (((dataType >> 8) & 0xFF))
 	{
 	case 0x00:
 		if ((dataType & 0xFF) <= (PTP_DTC_UINT128 & 0xFF))
-			Notify((char*)pgm_read_word(&dtNames1[(dataType & 0xFF)]),0x80);
+			E_Notify((char*)pgm_read_word(&dtNames1[(dataType & 0xFF)]),0x80);
 		break;
 	case 0x40:
 		if ((dataType & 0xFF) <= (PTP_DTC_AUINT128 & 0xFF))
-			Notify((char*)pgm_read_word(&dtNames2[(dataType & 0xFF)]),0x80);
+			E_Notify((char*)pgm_read_word(&dtNames2[(dataType & 0xFF)]),0x80);
 		break;
 	case 0xFF:
-		Notify(PSTR("STR"),0x80);
+		E_Notify(PSTR("STR"),0x80);
 		break;
 	default:
-		Notify(PSTR("Unknown"),0x80);
+		E_Notify(PSTR("Unknown"),0x80);
 	}
-	Notify(PSTR("\r\n"),0x80);
+	E_Notify(PSTR("\r\n"),0x80);
 	(*pp)		+= 2;		
 	(*pcntdn)	-= 2;
 }
@@ -98,19 +98,19 @@ void DevPropParser::PrintDevProp(uint8_t **pp, uint16_t *pcntdn)
 {
 	uint16_t	op = *((uint16_t*)(*pp));
 
-	Notify(PSTR("\r\nDevice Property:\t"),0x80);
+	E_Notify(PSTR("\r\nDevice Property:\t"),0x80);
 
 	if ((((op >> 8) & 0xFF) == 0x50) && ((op & 0xFF) <= (PTP_DPC_CopyrightInfo & 0xFF)))
 	{
-		PrintHex<uint16_t>(op);
-		Notify(PSTR("\t"),0x80);
-		Notify((char*)pgm_read_word(&prNames[(op & 0xFF)]),0x80);
-		Notify(PSTR("\r\n"),0x80);
+		PrintHex<uint16_t>(op,0x80);
+		E_Notify(PSTR("\t"),0x80);
+		E_Notify((char*)pgm_read_word(&prNames[(op & 0xFF)]),0x80);
+		E_Notify(PSTR("\r\n"),0x80);
 	}
 	else
 	{
-		PrintHex<uint16_t>(op);
-		Notify(PSTR(" (Vendor defined)\r\n"),0x80);
+		PrintHex<uint16_t>(op,0x80);
+		E_Notify(PSTR(" (Vendor defined)\r\n"),0x80);
 	}
 	(*pp)		+= 2;		
 	(*pcntdn)	-= 2;
@@ -118,9 +118,9 @@ void DevPropParser::PrintDevProp(uint8_t **pp, uint16_t *pcntdn)
 
 void DevPropParser::PrintGetSet(uint8_t **pp, uint16_t *pcntdn)
 {
-	Notify(PSTR("Get/Set:\t\t"),0x80);
-	//Notify(((**pp) == 0x01) ? PSTR("Get/Set\r\n") : (!(**pp)) ? PSTR("Get\r\n") : PSTR("Illegal\r\n"));
-	Notify(((**pp) == 0x01) ? PSTR("Get/Set\r\n"),0x80 : (!(**pp)) ? PSTR("Get\r\n"),0x80 : PSTR("Illegal\r\n"),0x80);
+	E_Notify(PSTR("Get/Set:\t\t"),0x80);
+	//E_Notify(((**pp) == 0x01) ? PSTR("Get/Set\r\n") : (!(**pp)) ? PSTR("Get\r\n") : PSTR("Illegal\r\n"));
+	E_Notify(((**pp) == 0x01) ? PSTR("Get/Set\r\n"),0x80 : (!(**pp)) ? PSTR("Get\r\n"),0x80 : PSTR("Illegal\r\n"),0x80);
 	(*pp) ++;		
 	(*pcntdn) --;
 }
@@ -188,7 +188,7 @@ bool DevPropParser::PrintValue(uint8_t **pp, uint16_t *pcntdn)
 	{
 	case PTP_DTC_INT8:	
 	case PTP_DTC_UINT8:	
-		PrintHex<uint8_t>(**pp);
+		PrintHex<uint8_t>(**pp,0x80);
 		(*pp) ++;
 		(*pcntdn) --;
 		break;
@@ -199,7 +199,7 @@ bool DevPropParser::PrintValue(uint8_t **pp, uint16_t *pcntdn)
 		break;
 	case PTP_DTC_INT16:	
 	case PTP_DTC_UINT16:	
-		PrintHex<uint16_t>(*((uint16_t*)*pp));
+		PrintHex<uint16_t>(*((uint16_t*)*pp),0x80);
 		(*pp)		+= 2;
 		(*pcntdn)	-= 2;
 		break;
@@ -210,7 +210,7 @@ bool DevPropParser::PrintValue(uint8_t **pp, uint16_t *pcntdn)
 		break;
 	case PTP_DTC_INT32:	
 	case PTP_DTC_UINT32:	
-		PrintHex<uint32_t>(*((uint32_t*)*pp));
+		PrintHex<uint32_t>(*((uint32_t*)*pp),0x80);
 		(*pp)		+= 4;
 		(*pcntdn)	-= 4;
 		break;
@@ -277,7 +277,7 @@ bool DevPropParser::ParseEnumArray(uint8_t **pp, uint16_t *pcntdn)
             if (!enumParser.Parse(pp, pcntdn, (PTP_ARRAY_EL_FUNC)&PrintEnumValue), PTPListParser::modeArray, this)
                 return false;
                 
-            Notify(PSTR("\r\n"),0x80);
+            E_Notify(PSTR("\r\n"),0x80);
             enumParser.Initialize(4, bytesSize, &theBuffer);
         }
         enStage = 0;
@@ -322,20 +322,20 @@ void DevPropParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_
 		PrintGetSet(&p, &cntdn);
 		nStage = 4; //++;
 	case 4:
-		Notify(PSTR("Default Value:\t\t"),0x80);
+		E_Notify(PSTR("Default Value:\t\t"),0x80);
 		nStage = 5; //++;
 	case 5:
 		if (!PrintValue(&p, &cntdn))
 			return;
-		Notify(PSTR("\r\n"),0x80);
+		E_Notify(PSTR("\r\n"),0x80);
 		nStage = 6; //++;
 	case 6:
-		Notify(PSTR("Current Value:\t\t"),0x80);
+		E_Notify(PSTR("Current Value:\t\t"),0x80);
 		nStage = 7; //++;
 	case 7:
 		if (!PrintValue(&p, &cntdn))
 			return;
-		Notify(PSTR("\r\n"),0x80);
+		E_Notify(PSTR("\r\n"),0x80);
 		nStage = 8; //++;
 	case 8:
 		formFlag = (*p);
@@ -345,11 +345,11 @@ void DevPropParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_
 	case 9:
 		if (formFlag == 1)
 		{
-			Notify(PSTR("Range (Min,Max,Step):\t\t{"),0x80);
+			E_Notify(PSTR("Range (Min,Max,Step):\t\t{"),0x80);
 			enumParser.Initialize(2, bytesSize, &theBuffer, PTPListParser::modeRange);
 		}
 		if (formFlag == 2)
-			Notify(PSTR("Enumeration:\t\t{"),0x80);
+			E_Notify(PSTR("Enumeration:\t\t{"),0x80);
                 nStage = 10; //++;
 	case 10:
 		if (formFlag == 1)
@@ -361,7 +361,7 @@ void DevPropParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_
 				return;
 
                 if (formFlag)
-			Notify(PSTR("}\r\n"),0x80);
+			E_Notify(PSTR("}\r\n"),0x80);
 		
 		nStage = 0;
 	}

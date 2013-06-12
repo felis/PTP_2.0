@@ -20,9 +20,9 @@ class PTPObjHandleParser : public PTPReadParser
 	static void PrintHandle(MultiValueBuffer *p, uint32_t count) 
 	{ 
 		Serial.print(count, DEC); 
-		Notify(PSTR("\t"), 0x80); 
+		E_Notify(PSTR("\t"), 0x80); 
 		PrintHex<uint32_t>(*((uint32_t*)p->pValue), 0x80);
-		Notify(PSTR("\r\n"), 0x80); 
+		E_Notify(PSTR("\r\n"), 0x80); 
 	};
 
 public:

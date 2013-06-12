@@ -40,7 +40,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
     if (stateConnected == stConnected || stateConnected == stInitial)
     {
         stateConnected = stDisconnected;
-        Notify(PSTR("Camera disconnected\r\n"), 0x80);
+        E_Notify(PSTR("Camera disconnected\r\n"), 0x80);
     }
 }
 
@@ -49,15 +49,15 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (stateConnected == stDisconnected || stateConnected == stInitial)
     {
         stateConnected = stConnected;
-        Notify(PSTR("Camera connected\r\n"), 0x80);
+        E_Notify(PSTR("Camera connected\r\n"), 0x80);
         
       	HexDump          dmp;
       	ptp->GetObjectHandles(0xFFFFFFFF, 0, 0, &dmp);
-        Notify(PSTR("\n"), 0x80);
+        E_Notify(PSTR("\n"), 0x80);
               
         PTPObjHandleParser  prs;
       	ptp->GetObjectHandles(0xFFFFFFFF, 0, 0, &prs);
-        Notify(PSTR("\n"), 0x80);
+        E_Notify(PSTR("\n"), 0x80);
     }
 }
 

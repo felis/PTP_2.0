@@ -103,25 +103,25 @@ class DevPropParser : public PTPReadParser
 	static void PrintByte(const MultiValueBuffer * const p, uint32_t count, const void *me)
 	{
 		if (count)
-			Notify(PSTR(","), 0x80);
+			E_Notify(PSTR(","), 0x80);
 		PrintHex<uint8_t>(((uint8_t*)p->pValue)[0], 0x80);
 	};
 	static void PrintTwoBytes(const MultiValueBuffer * const p, uint32_t count, const void *me)
 	{
 		if (count)
-			Notify(PSTR(","), 0x80);
+			E_Notify(PSTR(","), 0x80);
 		PrintHex<uint16_t>(((uint16_t*)p->pValue)[0], 0x80);
 	};
 	static void PrintFourBytes(const MultiValueBuffer * const p, uint32_t count, const void *me)
 	{
 		if (count)
-			Notify(PSTR(","), 0x80);
+			E_Notify(PSTR(","), 0x80);
 		PrintHex<uint32_t>(((uint32_t*)p->pValue)[0], 0x80);
 	};
 	static void PrintEightBytes(const MultiValueBuffer * const p, uint32_t count, const void *me)
 	{
 		if (count)
-			Notify(PSTR(","), 0x80);
+			E_Notify(PSTR(","), 0x80);
     		for (uint8_t i=p->valueSize; i; i--)
     	  	    PrintHex<uint8_t>(((uint8_t*)p->pValue)[i-1], 0x80);
 	};

@@ -17,62 +17,62 @@ const char* menuUpDown[] = {"<<", ">>"};
 
 void PrintMode()
 {
-    Notify(PSTR("Mode:"),0x80);
+    E_Notify(PSTR("Mode:"),0x80);
     PrintValueTitle<uint8_t, VT_MODE, VT_MODE_COUNT, VT_MODE_TEXT_LEN>((PTP*)&Ps, PS_DPC_ShootingMode, ModeTitles);
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 void PrintAperture()
 {
-    Notify(PSTR("F:"),0x80);
+    E_Notify(PSTR("F:"),0x80);
     PrintValueTitle<uint16_t, VT_APERTURE, VT_APT_COUNT, VT_APT_TEXT_LEN>((PTP*)&Ps, PS_DPC_Aperture, ApertureTitles);
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 void PrintShutterSpeed()
 {
-    Notify(PSTR("T:"),0x80);
+    E_Notify(PSTR("T:"),0x80);
     PrintValueTitle<uint16_t, VT_SHSPEED, VT_SHSPEED_COUNT, VT_SHSPEED_TEXT_LEN>((PTP*)&Ps, PS_DPC_ShutterSpeed, ShutterSpeedTitles);
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 void PrintWB()
 {
-    Notify(PSTR("WB:"),0x80);
+    E_Notify(PSTR("WB:"),0x80);
     PrintValueTitle<uint8_t, VT_WB, VT_WB_COUNT, VT_WB_TEXT_LEN>((PTP*)&Ps, PS_DPC_WhiteBalance, WbTitles);
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 void PrintIso()
 {
-    Notify(PSTR("ISO:"),0x80);
+    E_Notify(PSTR("ISO:"),0x80);
     PrintValueTitle<uint16_t, VT_ISO, VT_ISO_COUNT, VT_ISO_TEXT_LEN>((PTP*)&Ps, PS_DPC_ISOSpeed, IsoTitles);
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 void PrintExpCompensation()
 {
-    Notify(PSTR("ExpComp:"),0x80);
+    E_Notify(PSTR("ExpComp:"),0x80);
     PrintValueTitle<uint8_t, VT_EXPCOMP, VT_EXPCOMP_COUNT, VT_EXPCOMP_TEXT_LEN>((PTP*)&Ps, PS_DPC_ExpCompensation, ExpCompTitles);
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 void PrintCamOutput()
 {
-    Notify(PSTR("CamOutput:"),0x80);
+    E_Notify(PSTR("CamOutput:"),0x80);
     PrintValueTitle<uint8_t, VT_CAMOUTPUT, VT_CAMOUTPUT_COUNT, VT_CAMOUTPUT_TEXT_LEN>((PTP*)&Ps, PS_DPC_CameraOutput, CamOutputTitles);
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 void PrintZoom()
 {
     uint16_t    val = 0;
-    Notify(PSTR("Zoom:"),0x80);
+    E_Notify(PSTR("Zoom:"),0x80);
     
     if (Ps.GetDevicePropValue(PS_DPC_Zoom, (uint16_t&)val) == PTP_RC_OK)
-        PrintHex<uint16_t>(val); 
+        PrintHex<uint16_t>(val,0x80); 
         
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 void PSConsole::ShowParams()
@@ -97,7 +97,7 @@ QState PSConsole::Inactive(PSConsole *me, QEvent const *e)
     switch (e->sig) 
     {
         case Q_ENTRY_SIG: 
-            Notify(PSTR("Inactive\r\n"),0x80);
+            E_Notify(PSTR("Inactive\r\n"),0x80);
             return Q_HANDLED();
         case TICK_SIG: 
             return Q_TRAN(&PSConsole::Active);
@@ -110,7 +110,7 @@ QState PSConsole::Active(PSConsole *me, QEvent const *e)
     switch (e->sig) 
     {
         case Q_ENTRY_SIG: 
-            Notify(PSTR("Active\r\n"),0x80);
+            E_Notify(PSTR("Active\r\n"),0x80);
             return Q_HANDLED();
         case Q_INIT_SIG: 
             return Q_TRAN(&PSConsole::MainMenu);

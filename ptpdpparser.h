@@ -254,7 +254,7 @@ uint16_t PrintValueTitle(PTP *ptp, uint16_t prop, const ValueTitle<LIST_VALUE_TY
 	const char	*title;
 
 	if (GetValueTitle<LIST_VALUE_TYPE, LIST_VALUE_TYPE, TABLE_SIZE, TEXT_SIZE>(ptp, prop, p, &title) == PTP_RC_OK)
-		Notify(title, 0x80);
+		E_Notify(title, 0x80);
 }
 
 #endif // __PTPDPPARSER_H__

@@ -78,7 +78,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
     {
         ((Nikon*)ptp)->bPollEnabled = false;
         stateConnected = stDisconnected;
-        Notify(PSTR("\r\nDevice disconnected.\r\n"),0x80);
+        E_Notify(PSTR("\r\nDevice disconnected.\r\n"),0x80);
     }
 }
 
@@ -87,7 +87,7 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (stateConnected == stDisconnected || stateConnected == stInitial)
     {
         stateConnected = stConnected;
-        Notify(PSTR("\r\nDevice connected.\r\n"),0x80);
+        E_Notify(PSTR("\r\nDevice connected.\r\n"),0x80);
         ((Nikon*)ptp)->bPollEnabled = true;
         
         uint16_t  ret = ptp->Operation(PTP_OC_NIKON_StartLiveView, 0, NULL);

@@ -17,69 +17,69 @@ const char* menuUpDown[] = {"<<", ">>"};
 
 void PrintAperture()
 {
-    Notify(PSTR("F:"),0x80);
+    E_Notify(PSTR("F:"),0x80);
     PrintValueTitle<uint16_t, VT_APERTURE, VT_APT_COUNT, VT_APT_TEXT_LEN>((PTP*)&Nk, PTP_DPC_FNumber, ApertureTitles);
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 void PrintShutterSpeed()
 {
-    Notify(PSTR("T:"),0x80);
+    E_Notify(PSTR("T:"),0x80);
     PrintValueTitle<VT_SHSPEED, VT_SHSPEED, VT_SHSPEED_COUNT, VT_SHSPEED_TEXT_LEN>((PTP*)&Nk, PTP_DPC_ExposureTime, ShutterSpeedTitles);
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 void PrintWB()
 {
-    Notify(PSTR("WB:"),0x80);
+    E_Notify(PSTR("WB:"),0x80);
     PrintValueTitle<VT_WB, VT_WB, VT_WB_COUNT, VT_WB_TEXT_LEN>((PTP*)&Nk, PTP_DPC_WhiteBalance, WbTitles);
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 void PrintIso()
 {
-    Notify(PSTR("ISO:"),0x80);
+    E_Notify(PSTR("ISO:"),0x80);
     PrintValueTitle<VT_ISO, VT_ISO, VT_ISO_COUNT, VT_ISO_TEXT_LEN>((PTP*)&Nk, PTP_DPC_ExposureIndex, IsoTitles);
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 void PrintExpCompensation()
 {
-    Notify(PSTR("ExpComp:"),0x80);
+    E_Notify(PSTR("ExpComp:"),0x80);
     PrintValueTitle<VT_EXPCOMP, VT_EXPCOMP, VT_EXPCOMP_COUNT, VT_EXPCOMP_TEXT_LEN>((PTP*)&Nk, PTP_DPC_ExposureBiasCompensation, ExpCompTitles);
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 void PrintCompression()
 {
-    Notify(PSTR("Compression:"),0x80);
+    E_Notify(PSTR("Compression:"),0x80);
     PrintValueTitle<VT_COMPRESSION, VT_COMPRESSION, VT_COMPRESSION_COUNT, VT_COMPRESSION_TEXT_LEN>((PTP*)&Nk, PTP_DPC_CompressionSetting, CompressionTitles);
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 void PrintFocusMode()
 {
-    Notify(PSTR("FocusMode:"),0x80);
+    E_Notify(PSTR("FocusMode:"),0x80);
     PrintValueTitle<VT_FOCUSMODE, VT_FOCUSMODE, VT_FOCUSMODE_COUNT, VT_FOCUSMODE_TEXT_LEN>((PTP*)&Nk, NK_DPC_AutofocusMode, FocusModeTitles);
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 void PrintFocusArea()
 {
-    Notify(PSTR("FocusPoint:"),0x80);
+    E_Notify(PSTR("FocusPoint:"),0x80);
     PrintValueTitle<VT_FOCUSAREA, VT_FOCUSAREA, VT_FOCUSAREA_COUNT, VT_FOCUSAREA_TEXT_LEN>((PTP*)&Nk, NK_DPC_AutofocusArea, FocusAreaTitles);
-    Notify(PSTR("\r\n"),0x80);
+    E_Notify(PSTR("\r\n"),0x80);
 }
 
 //void PrintZoom()
 //{
 //    uint16_t    val = 0;
-//    Notify(PSTR("Zoom:"),0x80);
+//    E_Notify(PSTR("Zoom:"),0x80);
 //    
 //    if (Nk.GetDevicePropValue(PS_DPC_Zoom, (uint16_t&)val) == PTP_RC_OK)
 //        PrintHex<uint16_t>(val); 
 //        
-//    Notify(PSTR("\r\n"),0x80);
+//    E_Notify(PSTR("\r\n"),0x80);
 //}
 
 void PSConsole::ShowParams()
@@ -105,7 +105,7 @@ QState PSConsole::Inactive(PSConsole *me, QEvent const *e)
     switch (e->sig) 
     {
         case Q_ENTRY_SIG: 
-            Notify(PSTR("Inactive\r\n"),0x80);
+            E_Notify(PSTR("Inactive\r\n"),0x80);
             return Q_HANDLED();
         case TICK_SIG: 
             return Q_TRAN(&PSConsole::Active);
@@ -118,7 +118,7 @@ QState PSConsole::Active(PSConsole *me, QEvent const *e)
     switch (e->sig) 
     {
         case Q_ENTRY_SIG: 
-            Notify(PSTR("Active\r\n"),0x80);
+            E_Notify(PSTR("Active\r\n"),0x80);
             return Q_HANDLED();
         case Q_INIT_SIG: 
             return Q_TRAN(&PSConsole::MainMenu);
