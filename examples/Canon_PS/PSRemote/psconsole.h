@@ -3,7 +3,7 @@
 
 #include <inttypes.h>
 #include <avr/pgmspace.h>
-#include <qp_port.h>
+#include "qp_port.h"
 
 #if defined(ARDUINO) && ARDUINO >=100
 #include "Arduino.h"
@@ -14,6 +14,8 @@
 #include <canonps.h>
 
 #include "ptpdpparser.h"
+
+using namespace QP;
 
 enum TextMenuSignals 
 {

@@ -14,7 +14,7 @@
 
 #include <ptp.h>
 #include <canonps.h>
-#include <qp_port.h>
+#include "qp_port.h"
 #include <valuelist.h>
 #include <psvaluetitles.h>
 
@@ -22,6 +22,16 @@
 #include "ptpobjinfoparser.h"
 #include "pseventparser.h"
 #include "psconsole.h"
+
+using namespace QP;
+
+//............................................................................
+void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
+    QF_INT_DISABLE();                                // disable all interrupts
+//    USER_LED_ON();                                  // User LED permanently ON
+    asm volatile ("jmp 0x0000");    // perform a software reset of the Arduino
+}
+
 
 class CamStateHandlers : public PSStateHandlers
 {
