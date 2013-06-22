@@ -100,7 +100,7 @@ class DevPropParser : public PTPReadParser
 	static void PrintChar(const MultiValueBuffer * const p, uint32_t count, const void *me)
 	{
 		if (((unsigned char*)p->pValue)[0])
-			Serial.print(((unsigned char*)p->pValue)[0]);
+			Serial.write(((unsigned char*)p->pValue)[0]);
 	};
 	static void PrintByte(const MultiValueBuffer * const p, uint32_t count, const void *me)
 	{

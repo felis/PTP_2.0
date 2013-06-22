@@ -74,7 +74,7 @@ void PSEventParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_
 				return;
 
 			objHandle = *((uint32_t*)theBuffer.pValue);
-			PrintHex<uint32_t>(*((uint32_t*)theBuffer.pValue));
+			PrintHex<uint32_t>(*((uint32_t*)theBuffer.pValue),0x80);
 			E_Notify(PSTR("\r\n"),0x80);
         }
 		if (eventCode == PTP_EC_CaptureComplete)

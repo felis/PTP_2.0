@@ -120,7 +120,7 @@ void DevPropParser::PrintGetSet(uint8_t **pp, uint16_t *pcntdn)
 {
 	E_Notify(PSTR("Get/Set:\t\t"),0x80);
 	//E_Notify(((**pp) == 0x01) ? PSTR("Get/Set\r\n") : (!(**pp)) ? PSTR("Get\r\n") : PSTR("Illegal\r\n"));
-	E_Notify(((**pp) == 0x01) ? PSTR("Get/Set\r\n"),0x80 : (!(**pp)) ? PSTR("Get\r\n"),0x80 : PSTR("Illegal\r\n"),0x80);
+	E_Notify((((**pp) == 0x01) ? PSTR("Get/Set\r\n") : (!(**pp)) ? PSTR("Get\r\n") : PSTR("Illegal\r\n")),0x80);
 	(*pp) ++;		
 	(*pcntdn) --;
 }

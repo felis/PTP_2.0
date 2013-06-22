@@ -278,7 +278,7 @@ void PTPObjInfoParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint
 			return;
 		nStage	++;
 	case 35:
-		E_Notify(PSTR("\r\nModification Date:\t"));
+		E_Notify(PSTR("\r\nModification Date:\t"),0x80);
 		arrayParser.Initialize(1, 2, &theBuffer);
 		nStage	++;
 	case 36:

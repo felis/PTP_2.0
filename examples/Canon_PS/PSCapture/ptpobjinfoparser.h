@@ -73,7 +73,7 @@ class PTPObjInfoParser : public PTPReadParser
 	static void PrintChar(MultiValueBuffer *p)
 	{
 		if (((unsigned char*)p->pValue)[0])
-			Serial.print(((unsigned char*)p->pValue)[0]);
+			Serial.write(((unsigned char*)p->pValue)[0]);
 	};
 	void PrintFormat(uint16_t op);
 
