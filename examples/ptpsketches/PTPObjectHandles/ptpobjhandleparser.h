@@ -3,10 +3,7 @@
 
 #include <inttypes.h>
 #include <avr/pgmspace.h>
-#include <printhex.h>
-#include <message.h>
-#include <hexdump.h>
-#include <parsetools.h>
+#include <Usb.h>
 #include "ptpcallback.h"
 #include "ptpdebug.h"
 
@@ -17,12 +14,12 @@ class PTPObjHandleParser : public PTPReadParser
 	uint8_t							nStage;
 	PTPListParser						arrayParser;
 
-	static void PrintHandle(MultiValueBuffer *p, uint32_t count) 
-	{ 
-		Serial.print(count, DEC); 
-		E_Notify(PSTR("\t"), 0x80); 
+	static void PrintHandle(MultiValueBuffer *p, uint32_t count)
+	{
+		Serial.print(count, DEC);
+		E_Notify(PSTR("\t"), 0x80);
 		PrintHex<uint32_t>(*((uint32_t*)p->pValue), 0x80);
-		E_Notify(PSTR("\r\n"), 0x80); 
+		E_Notify(PSTR("\r\n"), 0x80);
 	};
 
 public:

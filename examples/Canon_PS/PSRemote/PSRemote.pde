@@ -1,16 +1,7 @@
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 
-#include <avrpins.h>
-#include <max3421e.h>
-#include <usbhost.h>
-#include <usb_ch9.h>
-#include <Usb.h>
 #include <usbhub.h>
-#include <address.h>
-
-#include <message.h>
-#include <parsetools.h>
 
 #include <ptp.h>
 #include <canonps.h>
@@ -37,14 +28,14 @@ class CamStateHandlers : public PSStateHandlers
 {
       enum CamStates { stInitial, stDisconnected, stConnected };
       CamStates stateConnected;
-    
+
       uint32_t nextPollTime;
-      
+
 public:
       CamStateHandlers() : stateConnected(stInitial), nextPollTime(0)
       {
       };
-      
+
       virtual void OnDeviceDisconnectedState(PTP *ptp);
       virtual void OnDeviceInitializedState(PTP *ptp);
 };
@@ -64,7 +55,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
     {
         stateConnected = stDisconnected;
         E_Notify(PSTR("Camera disconnected.\r\n"),0x80);
-        
+
         if (stateConnected == stConnected)
             psConsole.dispatch(&evtTick);
     }
@@ -79,7 +70,7 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
         psConsole.dispatch(&evtTick);
     }
     int8_t  index = psConsole.MenuSelect();
-    
+
     if (index >= 0)
     {
         MenuSelectEvt     menu_sel_evt;
@@ -88,14 +79,14 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
         psConsole.dispatch(&menu_sel_evt);      // dispatch the event
     }
     uint32_t time_now = millis();
-    
+
     if (time_now >= nextPollTime)
     {
         nextPollTime = time_now + 300;
-        
+
         PSEventParser  prs;
         Ps.EventCheck(&prs);
-        
+
         if (uint32_t handle = prs.GetObjHandle())
         {
                     PTPObjInfoParser     inf;
@@ -112,7 +103,7 @@ void setup()
         Serial.println("OSC did not start.");
 
     delay( 200 );
-  
+
     evtTick.sig = TICK_SIG;
 //    evtAbort.sig = ABORT_SIG;
     psConsole.init();
@@ -124,4 +115,4 @@ void loop()
 {
     Usb.Task();
 }
- 
+

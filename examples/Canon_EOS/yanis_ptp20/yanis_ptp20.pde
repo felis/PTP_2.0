@@ -8,34 +8,25 @@ version: v.1.0 28 August 2011
 
 Author: Manishi Barosee (manis404)
 
-Includes code derivatives of Sandro Benigno(ArducamOSD) 
+Includes code derivatives of Sandro Benigno(ArducamOSD)
 
 (USB host and PTP library from Oleg Mazurov - circuitsathome.com)
-(PTP 2.0 adaptation - Oleg Mazurov - circuitsathome.com 
+(PTP 2.0 adaptation - Oleg Mazurov - circuitsathome.com
 
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
- This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  See the GNU General Public License for more details.
- You should have received a copy of the GNU General Public License along with this program. 
+ You should have received a copy of the GNU General Public License along with this program.
  If not, see <http://www.gnu.org/licenses/>.
- 
+
 */
 
-#include <avrpins.h>
-#include <max3421e.h>
-#include <usbhost.h>
-#include <usb_ch9.h>
-#include <Usb.h>
 #include <usbhub.h>
-#include <address.h>
-
-#include <message.h>
-#include <parsetools.h>
 
 #include <ptp.h>
 #include <canoneos.h>
@@ -53,10 +44,10 @@ class CamStateHandlers : public EOSStateHandlers
       //enum CamStates { stInitial, stDisconnected, stConnected };
       //CamStates stateConnected;
       bool stateConnected;
-    
+
 public:
       CamStateHandlers() : stateConnected(false) {};
-      
+
       virtual void OnDeviceDisconnectedState(PTP *ptp);
       virtual void OnDeviceInitializedState(PTP *ptp);
 } CamStates;
@@ -71,7 +62,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
     //    stateConnected = stDisconnected;
     if (stateConnected)
     {
-        stateConnected = false;      
+        stateConnected = false;
         E_Notify(PSTR("Camera disconnected\r\n"),0x80);
     }
 }
@@ -79,8 +70,8 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
 void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
 {
       if (!stateConnected)
-        stateConnected = true;  
-  
+        stateConnected = true;
+
     //if (stateConnected == stDisconnected || stateConnected == stInitial) {
     //    stateConnected = stConnected;
     //}
@@ -93,11 +84,11 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
 
    // if (rc != PTP_RC_OK)
      //   Message(PSTR("Error: "), rc);
-    
+
     delay(5000);
 }
 
-void setup() 
+void setup()
 {
   Serial.begin( 9600 );
   Serial.println("Start");
@@ -108,10 +99,10 @@ void setup()
   delay( 200 );
 }
 
-void loop() 
+void loop()
 {
     Usb.Task();
-    
+
 }
 
 void readSerialCommand() {
@@ -119,19 +110,19 @@ void readSerialCommand() {
   if ( Serial.available()) {
     queryType = Serial.read();
     switch (queryType) {
-   
+
     case 'C': //Capture!!!
       Serial.println("Capture!");
       Eos.Capture();
       delay(500);
       break;
-      
-    
+
+
     case 'O': //ViewFinder Output. 1 = LCD. 2 = AV.
       //Eos.SetDevicePropValue(EOS_DPC_CameraOutput, (uint16_t)readFloatSerial());
       delay(1000);
       break;
-    
+
     case 'V': //Liveview ON/OFF
       if((uint16_t)readFloatSerial() == 0){
         //((CanonEOS*)ptp)->SwitchLiveView(false);
@@ -165,22 +156,22 @@ void readSerialCommand() {
       delay(1000);
        Serial.println("Aperture value Changed!");
       break;
-      
-      
-      
+
+
+
       case 'F': //MoveFocus
-       
+
       Eos.MoveFocus(3);
-      
+
       break;
-      
+
       case 'B': //MoveFocus
-      
-       
+
+
       Eos.MoveFocus(0x8003);
-     
+
       break;
-      
+
     }
   }
 }
@@ -201,7 +192,7 @@ float readFloatSerial() {
       timeout = 0;
       index++;
     }
-  }  
+  }
   while ((data[constrain(index-1, 0, 128)] != ';') && (timeout < 5) && (index < 128));
   return atof(data);
 }

@@ -3,8 +3,7 @@
 
 #include <inttypes.h>
 #include <avr/pgmspace.h>
-#include <message.h>
-#include <parsetools.h>
+#include <Usb.h>
 #include <canoneos.h>
 #include <eoseventparser.h>
 

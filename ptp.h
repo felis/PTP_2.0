@@ -19,7 +19,6 @@ e-mail   :  support@circuitsathome.com
 
 #include <inttypes.h>
 #include <avr/pgmspace.h>
-#include <Max3421e.h>
 #include <Usb.h>
 #include "ptpconst.h"
 #include "ptpmsgstr.h"
@@ -91,7 +90,7 @@ protected:
 		uint16_t	txOperation	:	1;			// I->R operation if the flag is set
 		uint16_t	dataStage	:	1;			// operation has data stage if the flag is set
 		uint16_t	typeOfVoid	:	2;			// 0 - NULL, 1 - PTPReadParser/PTPDataSupplyer, 2 - WRITEPARSER, 3 - buffer pointer
-		uint16_t	dataSize	:	6;			// size of data buffer (64 bytes maximum)		
+		uint16_t	dataSize	:	6;			// size of data buffer (64 bytes maximum)
 	};
 	typedef void (*READPARSER)(const uint16_t len, const uint8_t *pbuf, const uint32_t &offset);
 

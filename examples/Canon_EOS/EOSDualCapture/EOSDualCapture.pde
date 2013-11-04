@@ -1,15 +1,7 @@
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 
-#include <message.h>
-
-#include <avrpins.h>
-#include <max3421e.h>
-#include <usbhost.h>
-#include <usb_ch9.h>
-#include <Usb.h>
 #include <usbhub.h>
-#include <address.h>
 
 #include <ptp.h>
 #include <canoneos.h>
@@ -17,10 +9,10 @@
 class EOSCamStateHandlers : public PTPStateHandlers
 {
       bool stateConnected;
-    
+
 public:
       EOSCamStateHandlers() : stateConnected(false) {};
-      
+
       virtual void OnDeviceDisconnectedState(PTP *ptp);
       virtual void OnDeviceInitializedState(PTP *ptp);
 } EOSStates;
@@ -28,10 +20,10 @@ public:
 class PTPCamStateHandlers : public PTPStateHandlers
 {
       bool stateConnected;
-    
+
 public:
       PTPCamStateHandlers() : stateConnected(false) {};
-      
+
       virtual void OnDeviceDisconnectedState(PTP *ptp);
       virtual void OnDeviceInitializedState(PTP *ptp);
 } PTPStates;
@@ -66,7 +58,7 @@ void PTPCamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
 void EOSCamStateHandlers::OnDeviceInitializedState(PTP *ptp)
 {
     static uint32_t next_time = 0;
-    
+
     if (!stateConnected)
     {
         stateConnected = true;
@@ -80,9 +72,9 @@ void EOSCamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (time_now > next_time)
     {
         next_time = time_now + 5000;
-        
+
         uint16_t rc = Eos.Capture();
-    
+
         if (rc != PTP_RC_OK)
             ErrorMessage<uint16_t>("Error", rc);
     }
@@ -91,7 +83,7 @@ void EOSCamStateHandlers::OnDeviceInitializedState(PTP *ptp)
 void PTPCamStateHandlers::OnDeviceInitializedState(PTP *ptp)
 {
     static uint32_t next_time = 0;
-    
+
     if (!stateConnected)
     {
         stateConnected = true;
@@ -105,17 +97,17 @@ void PTPCamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (time_now > next_time)
     {
         next_time = time_now + 10000;
-        
+
         Serial.println("CaptureImage");
-        
+
         uint16_t rc = ptp->CaptureImage();
-    
+
         if (rc != PTP_RC_OK)
             ErrorMessage<uint16_t>("Error", rc);
     }
 }
 
-void setup() 
+void setup()
 {
     Serial.begin( 115200 );
     Serial.println("Start");
@@ -126,7 +118,7 @@ void setup()
     delay( 200 );
 }
 
-void loop() 
+void loop()
 {
     Usb.Task();
 }
