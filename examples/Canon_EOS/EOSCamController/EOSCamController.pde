@@ -1,14 +1,6 @@
 /* Digital camera controller board test sketch */
-#include <avrpins.h>
-#include <max3421e.h>
-#include <usbhost.h>
-#include <usb_ch9.h>
-#include <Usb.h>
 #include <usbhub.h>
-#include <address.h>
 
-#include <message.h>
-#include <parsetools.h>
 #include <eoseventparser.h>
 
 #include <valuelist.h>
@@ -56,23 +48,23 @@ class CamStateHandlers : public EOSStateHandlers
 {
       enum CamStates { stInitial, stDisconnected, stConnected };
       CamStates stateConnected;
-    
+
       uint32_t      pollTime, ctrlTime;
       uint8_t       bmPollEnable;
 
 public:
       CamStateHandlers() : stateConnected(stInitial), pollTime(0), ctrlTime(0), bmPollEnable(0) {};
-      
+
       virtual void OnDeviceDisconnectedState(PTP *ptp);
       virtual void OnDeviceInitializedState(PTP *ptp);
 };
 
 class CamHDRCapture : public HDRCapture
 {
-public:  
+public:
     CamHDRCapture(CanonEOS &eos) : HDRCapture(eos) {};
-protected:  
-    virtual void OnFrameCaptured(uint16_t left); 
+protected:
+    virtual void OnFrameCaptured(uint16_t left);
     virtual void OnSelfTimerProgress(uint32_t left);
     virtual void OnIntrTimerProgress(uint32_t left);
 };
@@ -268,24 +260,24 @@ SRAMListIntSpin<EXP_COMP_DATA_ITEM, VT_EXPCOMP, BKT_STEP_VALUE_LIST>      spinBk
 void SpinUpdateBktStepValues(DataItemBase *data_item)
 {
     uint8_t cur_value = ((EXP_COMP_DATA_ITEM*)data_item)->Get();
-    
+
     vlExpCompStep.SetSize(0);
-    
+
     // Check value for zerro. Exit on zerro.
     if (cur_value == 0)
         return;
-    
+
     // Calculate negative and positive values of expo compensation
     uint8_t negative_value = (cur_value & 0x80) ? cur_value : ~(cur_value - 1);
     uint8_t positive_value = (cur_value & 0x80) ? ~(cur_value - 1) : cur_value;
-    
+
     // Get indices of negative and positive expo compensation values
     uint16_t negative_index = vlExpCompensation.GetValueIndex(negative_value);
     uint16_t positive_index = vlExpCompensation.GetValueIndex(positive_value);
 
     nBktNegativeIndex = negative_index;
     nBktPositiveIndex = positive_index;
-    
+
     // Calculate interval length
     uint16_t len = positive_index - negative_index;
 
@@ -294,7 +286,7 @@ void SpinUpdateBktStepValues(DataItemBase *data_item)
 
     // Calculate positive index offset
     uint16_t zerro_based_offset = positive_index - zerro_index;
-     
+
    // Calculate all possible interval indices
     for (uint16_t i = zerro_based_offset, j = positive_index; i>0; i--, j--)
     {
@@ -309,7 +301,7 @@ void SpinUpdateBktStepValues(DataItemBase *data_item)
 void SpinUpdateBktStep(DataItemBase *data_item)
 {
     uint8_t cur_value = ((EXP_COMP_DATA_ITEM*)data_item)->Get();
-    
+
     nBktStep = vlExpCompensation.GetValueIndex(cur_value) - vlExpCompensation.GetValueIndex(0);
 };
 
@@ -337,7 +329,7 @@ void MenuSetWb(){ spinWb.SetReturnState(&settingsMenu); StateMachine::SetState(&
 void MenuSetPStyle(){ spinPStyle.SetReturnState(&settingsMenu); StateMachine::SetState(&spinPStyle); };
 void MenuSetIso(){ spinIso.SetReturnState(&settingsMenu); StateMachine::SetState(&spinIso); };
 void MenuSetExpComp(){ spinExpComp.SetReturnState(&mainMenu); StateMachine::SetState(&spinExpComp); };
-#endif 
+#endif
 
 //--- Self Timer Menu ----------------------------------------------------------------------
 void MenuSelfSetH();
@@ -376,29 +368,29 @@ void MenuSelf()     { StateMachine::SetState(&selfSetMenu); };
 void MenuBktSetStep();
 void MenuBktStepExit();
 
-MenuItem              bktSetMenuItems[] = { {&siBktEV, &MenuBktSetStep}, {&siBktStep, &MenuBktStepExit} }; 
+MenuItem              bktSetMenuItems[] = { {&siBktEV, &MenuBktSetStep}, {&siBktStep, &MenuBktStepExit} };
 Menu                  bktSetMenu(5, 2, bktSetMenuItems, 0, &timerSettingsMenu);
 
-void MenuBktSetStep() 
-{ 
-    spinBktEV.SetReturnState(&bktSetMenu); 
+void MenuBktSetStep()
+{
+    spinBktEV.SetReturnState(&bktSetMenu);
 
     if (vlExpCompensation.GetSize())
-        StateMachine::SetState(&spinBktEV); 
+        StateMachine::SetState(&spinBktEV);
 };
 
 void MenuBktStepExit()
-{ 
-    spinBktStep.SetReturnState(&timerSettingsMenu); 
+{
+    spinBktStep.SetReturnState(&timerSettingsMenu);
 
     if (vlExpCompensation.GetSize())
-        StateMachine::SetState(&spinBktStep); 
+        StateMachine::SetState(&spinBktStep);
 };
 
-void MenuBkt()      
-{ 
+void MenuBkt()
+{
     if (vlExpCompensation.GetSize())
-        StateMachine::SetState(&bktSetMenu); 
+        StateMachine::SetState(&bktSetMenu);
 };
 
 
@@ -419,21 +411,21 @@ void MenuIntSetS() { secSpinInt.SetReturnState(&timerSettingsMenu); StateMachine
 
 void MenuInterval() { StateMachine::SetState(&intSetMenu); };
 
-void MenuRunAbort() 
-{ 
-    hdrCapture.PostEvent(&evtAbort);    
+void MenuRunAbort()
+{
+    hdrCapture.PostEvent(&evtAbort);
     diFramesLeft.Set(0);
-    StateMachine::SetState(&timerSettingsMenu); 
+    StateMachine::SetState(&timerSettingsMenu);
 };
 
 MenuItem              runMenuItems[] = { {&siAbort, &MenuRunAbort} };
 Menu                  runMenu(7, 1, runMenuItems, 0);
 
-void MenuRun()      
-{ 
+void MenuRun()
+{
     if (!diFramesCount.Get())
         return;
-        
+
     uint32_t  intr_timeout = ((uint32_t)diHourInt.Get()  * 3600 + (uint32_t)diMinInt.Get()  * 60 + (uint32_t)diSecInt.Get());
     uint32_t  self_timeout = ((uint32_t)diHourSelf.Get() * 3600 + (uint32_t)diMinSelf.Get() * 60 + (uint32_t)diSecSelf.Get());
 
@@ -442,32 +434,32 @@ void MenuRun()
     diIntTimer.Set(intr_timeout);
 
     SetEvt  setEvt;
-    
+
     setEvt.sig          = SET_FRAMES_SIG;
     setEvt.value        = diFramesCount.Get();
-    
+
     hdrCapture.dispatch(&setEvt);
-    
+
     setEvt.sig          = SET_FRAME_TIMEOUT_SIG;
     setEvt.value        = intr_timeout;
-    
+
     hdrCapture.dispatch(&setEvt);
-    
+
     setEvt.sig          = SET_SELF_TIMEOUT_SIG;
     setEvt.value        = self_timeout;
-    
+
     hdrCapture.dispatch(&setEvt);
-    
+
     SetBktEvt          setBktEvt;
     setBktEvt.sig       = SET_BRACKETING_SIG;
     setBktEvt.step      = nBktStep;
     setBktEvt.negative  = nBktNegativeIndex;
     setBktEvt.positive  = nBktPositiveIndex;
-    
+
     hdrCapture.dispatch(&setBktEvt);
-    
-    StateMachine::SetState(&runMenu); 
-    
+
+    StateMachine::SetState(&runMenu);
+
     setEvt.sig         = RUN_SIG;
     hdrCapture.dispatch(&setEvt);
 };
@@ -476,9 +468,9 @@ void MenuRun()
 //--- Main Menu ----------------------------------------------------------------------------
 void MenuIntervalometer() { StateMachine::SetState(&timerSettingsMenu); };
 
-void MenuSettings() 
-{ 
-    StateMachine::SetState(&settingsMenu); 
+void MenuSettings()
+{
+    StateMachine::SetState(&settingsMenu);
 };
 
 MenuItem              mainMenuItems[] = { {&siIntervalometer, &MenuIntervalometer}, {&siSettings, &MenuSettings} };
@@ -489,11 +481,11 @@ void MenuExit()     { StateMachine::SetState(&mainMenu); };
 
 class DummyMenu : public StateMachine
 {
-public:    
-    virtual bool OnInitialState() 
-    { 
+public:
+    virtual bool OnInitialState()
+    {
         Screen::Set(0);
-        return true; 
+        return true;
     };
 } DisconnectedState;
 
@@ -503,7 +495,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
     {
         stateConnected = stDisconnected;
         bmPollEnable = 1;
-        StateMachine::SetState(&DisconnectedState); 
+        StateMachine::SetState(&DisconnectedState);
         Screen::Run(&LCD);
     }
 }
@@ -516,19 +508,19 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
         bmPollEnable = 3;
 
 #ifndef NO_SETTINGS_SCREEN
-        StateMachine::SetState(&mainMenu); 
-#else        
-        StateMachine::SetState(&timerSettingsMenu); 
-#endif        
+        StateMachine::SetState(&mainMenu);
+#else
+        StateMachine::SetState(&timerSettingsMenu);
+#endif
     }
     uint32_t current_time = millis();
-    
+
     if ((bmPollEnable & 1) && current_time >= ctrlTime)
     {
         ExtControls.CheckControls();
         hdrCapture.PostEvent(&evtTick);
         Screen::Run(&LCD);
-        
+
         ctrlTime = current_time + 1;
     }
     if ((bmPollEnable & 2) && current_time >= pollTime)
@@ -538,7 +530,7 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
         Eos.EventCheck(&prs);
         diLeftTimer.SetUpdated(true);
         diIntTimer.SetUpdated(true);
-        
+
         pollTime = current_time + 300;
     }
     hdrCapture.Run();
@@ -549,7 +541,7 @@ void CamHDRCapture::OnFrameCaptured(uint16_t left)
     diFramesLeft.Set(left);
 
     if (!left)
-        StateMachine::SetState(&timerSettingsMenu); 
+        StateMachine::SetState(&timerSettingsMenu);
 }
 
 void CamHDRCapture::OnSelfTimerProgress(uint32_t left)
@@ -565,31 +557,31 @@ void CamHDRCapture::OnIntrTimerProgress(uint32_t left)
 void setup()
 {
     StateMachine::SetState(&DisconnectedState);
- 
-#ifdef PTPDEBUG 
+
+#ifdef PTPDEBUG
     Serial.begin(115200);
 #endif
 
     Usb.Init();
     delay( 200 );
-  
-    // set up the LCD's number of rows and columns: 
+
+    // set up the LCD's number of rows and columns:
     LCD.begin(16, 2);
     LCD.clear();
     LCD.home();
     LCD.setCursor(0,0);
-    
+
     evtTick.sig = TICK_MILLIS_SIG;
     evtAbort.sig = ABORT_SIG;
     hdrCapture.init();
 
-#ifdef PTPDEBUG 
+#ifdef PTPDEBUG
     Serial.println("Start");
-#endif    
+#endif
 }
 
 void loop()
 {
     Usb.Task();
 }
- 
+

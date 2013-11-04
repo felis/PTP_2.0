@@ -18,7 +18,7 @@ e-mail   :  support@circuitsathome.com
 #define __PTPCALLBACK_H__
 
 #include <inttypes.h>
-#include <hexdump.h>
+#include <Usb.h>
 
 // Base class for incomming data parser
 class PTPReadParser

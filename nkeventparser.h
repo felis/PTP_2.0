@@ -18,7 +18,7 @@ e-mail   :  support@circuitsathome.com
 #define __NKEVENTPARSER_H__
 
 #include <inttypes.h>
-#include <parsetools.h>
+#include <Usb.h>
 #include <nikon.h>
 
 struct NKEvent
@@ -27,7 +27,7 @@ struct NKEvent
 
 	union
 	{
-		struct 
+		struct
 		{
 			uint16_t	wParam1;
 			uint16_t	wParam2;
@@ -81,16 +81,16 @@ class NKEventParser : public PTPReadParser
 	//ByteSkipper				byteSkipper;
 
 public:
-	NKEventParser(NKEventHandlers *p) : 
+	NKEventParser(NKEventHandlers *p) :
 		pHandler(p),
 		constInitialEventCode(0xFFFF),
 		nStage(0),
 		numEvents(0)
-		{ 
+		{
 			for (uint8_t i=0; i<3; i++)
 				varBuffer[i] = 0;
 
-			theBuffer.pValue = &varBuffer; 
+			theBuffer.pValue = &varBuffer;
 		};
 
 	void Reset()

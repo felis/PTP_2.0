@@ -1,15 +1,7 @@
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 
-#include <avrpins.h>
-#include <max3421e.h>
-#include <usbhost.h>
-#include <usb_ch9.h>
-#include <Usb.h>
 #include <usbhub.h>
-#include <address.h>
-
-#include <message.h>
 
 #include <ptp.h>
 #include <canoneos.h>
@@ -21,10 +13,10 @@ class CamStateHandlers : public EOSStateHandlers
 {
       enum CamStates { stInitial, stDisconnected, stConnected };
       CamStates stateConnected;
-    
+
 public:
       CamStateHandlers() : stateConnected(stInitial) {};
-      
+
       virtual void OnDeviceDisconnectedState(PTP *ptp);
       virtual void OnDeviceInitializedState(PTP *ptp);
 };
@@ -51,12 +43,12 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (stateConnected == stDisconnected || stateConnected == stInitial)
     {
         stateConnected = stConnected;
-        
+
         E_Notify(PSTR("Camera connected\r\n"),0x80);
 
         SetEvt         setEvt;
         setEvt.sig     = RUN_SIG;
-        
+
         hdrCapture.PostEvent(&setEvt);
     }
     hdrCapture.Run();
@@ -74,30 +66,30 @@ void setup()
     delay( 200 );
 
     hdrCapture.init();
-    
+
     SetEvt  setEvt;
-    
+
     setEvt.sig     = SET_FRAMES_SIG;
     setEvt.value   = 3;
-    
+
     hdrCapture.dispatch(&setEvt);
-    
+
     setEvt.sig     = SET_FRAME_TIMEOUT_SIG;
     setEvt.value   = 5;
-    
+
     hdrCapture.dispatch(&setEvt);
-    
+
     setEvt.sig     = SET_SELF_TIMEOUT_SIG;
     setEvt.value   = 3;
-    
+
     hdrCapture.dispatch(&setEvt);
-    
+
     SetBktEvt          setBktEvt;
     setBktEvt.sig       = SET_BRACKETING_SIG;
     setBktEvt.step      = 2;
     setBktEvt.negative  = 3;
     setBktEvt.positive  = 9;
-    
+
     hdrCapture.dispatch(&setBktEvt);
     msTick.sig = TICK_MILLIS_SIG;
 }

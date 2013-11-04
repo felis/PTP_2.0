@@ -1,16 +1,7 @@
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 
-#include <avrpins.h>
-#include <max3421e.h>
-#include <usbhost.h>
-#include <usb_ch9.h>
-#include <Usb.h>
 #include <usbhub.h>
-#include <address.h>
-
-#include <message.h>
-#include <parsetools.h>
 
 #include <ptp.h>
 #include <nkeventparser.h>
@@ -23,12 +14,12 @@
 #include "ptpobjinfoparser.h"
 #include "psconsole.h"
 
-class NKEventDump : public NKEventHandlers 
+class NKEventDump : public NKEventHandlers
 {
 public:
 	virtual void OnEvent(const NKEvent *evt);
 };
- 
+
 void NKEventDump::OnEvent(const NKEvent *evt)
 {
     switch (evt->eventCode)
@@ -51,14 +42,14 @@ class CamStateHandlers : public PTPStateHandlers
 {
       enum CamStates { stInitial, stDisconnected, stConnected };
       CamStates stateConnected;
-    
+
       uint32_t nextPollTime;
-      
+
 public:
       CamStateHandlers() : stateConnected(stInitial), nextPollTime(0)
       {
       };
-      
+
       virtual void OnDeviceDisconnectedState(PTP *ptp);
       virtual void OnDeviceInitializedState(PTP *ptp);
 };
@@ -69,7 +60,7 @@ USB                 Usb;
 NikonDSLR           Nk(&Usb, &CamStates);
 NKEventDump         Dmp;
 
-QEvent            evtTick; 
+QEvent            evtTick;
 PSConsole         psConsole;
 
 void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
@@ -86,7 +77,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
     {
         stateConnected = stDisconnected;
         E_Notify(PSTR("Camera disconnected.\r\n"),0x80);
-        
+
         if (stateConnected == stConnected)
             psConsole.dispatch(&evtTick);
     }
@@ -102,7 +93,7 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
         ptp->SetDevicePropValue(0xD1B0, (uint8_t)1);
     }
     int8_t  index = psConsole.MenuSelect();
-    
+
     if (index >= 0)
     {
         MenuSelectEvt     menu_sel_evt;
@@ -111,11 +102,11 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
         psConsole.dispatch(&menu_sel_evt);      // dispatch the event
     }
     uint32_t time_now = millis();
-    
+
     if (time_now >= nextPollTime)
     {
         nextPollTime = time_now + 300;
-        
+
         NKEventParser  prs(&Dmp);
         Nk.EventCheck(&prs);
     }
@@ -129,7 +120,7 @@ void setup()
         Serial.println("OSC did not start.");
 
     delay( 200 );
-  
+
     evtTick.sig = TICK_SIG;
 //    evtAbort.sig = ABORT_SIG;
     psConsole.init();
@@ -141,4 +132,4 @@ void loop()
 {
     Usb.Task();
 }
- 
+

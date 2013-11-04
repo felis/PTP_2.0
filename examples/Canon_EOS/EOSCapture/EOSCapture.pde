@@ -1,15 +1,7 @@
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 
-#include <avrpins.h>
-#include <max3421e.h>
-#include <usbhost.h>
-#include <usb_ch9.h>
-#include <Usb.h>
 #include <usbhub.h>
-#include <address.h>
-
-#include <message.h>
 
 #include <ptp.h>
 #include <canoneos.h>
@@ -17,10 +9,10 @@
 class CamStateHandlers : public PTPStateHandlers
 {
       bool stateConnected;
-    
+
 public:
       CamStateHandlers() : stateConnected(false) {};
-      
+
       virtual void OnDeviceDisconnectedState(PTP *ptp);
       virtual void OnDeviceInitializedState(PTP *ptp);
 } CamStates;
@@ -41,7 +33,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
 void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
 {
     static uint32_t next_time = 0;
-    
+
     if (!stateConnected)
         stateConnected = true;
 
@@ -50,15 +42,15 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (time_now > next_time)
     {
         next_time = time_now + 5000;
-        
+
         uint16_t rc = Eos.Capture();
-    
+
         if (rc != PTP_RC_OK)
             ErrorMessage<uint16_t>("Error", rc);
     }
 }
 
-void setup() 
+void setup()
 {
     Serial.begin( 115200 );
     Serial.println("Start");
@@ -69,7 +61,7 @@ void setup()
     delay( 200 );
 }
 
-void loop() 
+void loop()
 {
     Usb.Task();
 }

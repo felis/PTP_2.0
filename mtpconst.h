@@ -101,13 +101,13 @@ e-mail   :  support@circuitsathome.com
 #define MTP_OPC_Date_Authored						0xDC47
 #define MTP_OPC_Description							0xDC48
 #define MTP_OPC_URL_Reference						0xDC49
-#define MTP_OPC_Language-Locale						0xDC4A
+#define MTP_OPC_Language_Locale						0xDC4A
 #define MTP_OPC_Copyright_Information				0xDC4B
 #define MTP_OPC_Source								0xDC4C
 #define MTP_OPC_Origin_Location						0xDC4D
 #define MTP_OPC_Date_Added							0xDC4E
-#define MTP_OPC_Non-Consumable						0xDC4F
-#define MTP_OPC_Corrupt/Unplayable					0xDC50
+#define MTP_OPC_Non_Consumable						0xDC4F
+#define MTP_OPC_Corrupt_Unplayable					0xDC50
 #define MTP_OPC_ProducerSerialNumber				0xDC51
 #define MTP_OPC_Representative_Sample_Format		0xDC81
 #define MTP_OPC_Representative_Sample_Size			0xDC82

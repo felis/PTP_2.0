@@ -17,33 +17,31 @@ e-mail   :  support@circuitsathome.com
 #ifndef __PTPDPPARSER_H__
 #define __PTPDPPARSER_H__
 
-#include <inttypes.h>
-#include <avr/pgmspace.h>
-#include <ptpconst.h>
-#include <ptp.h>
-#include <valuelist.h>
-#include "printhex.h"
-#include "hexdump.h"
-#include "message.h"
-#include "parsetools.h"
-
 #if defined(ARDUINO) && ARDUINO >=100
 #include <Arduino.h>
 #else
 #include <WProgram.h>
 #endif
 
+#include <inttypes.h>
+#include <avr/pgmspace.h>
+#include <ptpconst.h>
+#include <ptp.h>
+#include <valuelist.h>
+#include <Usb.h>
+
+
 template <class VALUE_TYPE>
 struct PTPDevicePropValue
 {
-    VALUE_TYPE        valCurrent;    
+    VALUE_TYPE        valCurrent;
     uint8_t           listForm;
     VALUE_TYPE        arrValues[3];
 
-    static void SaveEnumValue(MultiValueBuffer *p, uint32_t count, void *me) 
-    { 
+    static void SaveEnumValue(MultiValueBuffer *p, uint32_t count, void *me)
+    {
           PTPDevicePropValue<VALUE_TYPE>    *dp = (PTPDevicePropValue<VALUE_TYPE>*)me;
-          
+
           if (!dp)
           {
               PTPTRACE("NULL pointer!!!\r\n");
@@ -52,7 +50,7 @@ struct PTPDevicePropValue
           switch (dp->listForm)
           {
           case 2:
-              if (dp->arrValues[1] != dp->valCurrent || (dp->arrValues[1] == dp->valCurrent && dp->arrValues[2] <= dp->valCurrent)) 
+              if (dp->arrValues[1] != dp->valCurrent || (dp->arrValues[1] == dp->valCurrent && dp->arrValues[2] <= dp->valCurrent))
               {
                   dp->arrValues[0] = dp->arrValues[1];
                   dp->arrValues[1] = dp->arrValues[2];
@@ -76,17 +74,17 @@ class PTPDevPropParser : public PTPReadParser
     uint8_t				varBuffer[sizeof(VALUE_TYPE)];
     uint16_t            enLen;
     uint16_t            enLenCntdn;
-        
+
 	MultiByteValueParser				valParser;
     PTPDevicePropValue<VALUE_TYPE>     *pDPValue;
-        
-	bool ParseValue		(uint8_t **pp, uint16_t *pcntdn, VALUE_TYPE&);       
-	bool ParseEnumSingle(uint8_t **pp, uint16_t *pcntdn);       
-    
+
+	bool ParseValue		(uint8_t **pp, uint16_t *pcntdn, VALUE_TYPE&);
+	bool ParseEnumSingle(uint8_t **pp, uint16_t *pcntdn);
+
     PTPListParser      enumParser;
-    
+
     uint8_t GetDataSize();
-        
+
 public:
 	PTPDevPropParser(PTPDevicePropValue<VALUE_TYPE> *p) :
         pDPValue(p),
@@ -152,10 +150,10 @@ void PTPDevPropParser<VALUE_TYPE>::Parse(const uint16_t len, const uint8_t *pbuf
 	case 3:
                 for (uint8_t i=0; i<3; i++)
                     pDPValue->arrValues[i] = pDPValue->valCurrent;
-                    
+
 		formFlag = (*p);
                 pDPValue->listForm = formFlag;
-		p ++;		
+		p ++;
 		cntdn --;
 		nStage = 4;
 	case 4:
@@ -166,11 +164,11 @@ void PTPDevPropParser<VALUE_TYPE>::Parse(const uint16_t len, const uint8_t *pbuf
 		if (formFlag == 1)
 			if (!enumParser.Parse(&p, &cntdn, (PTP_ARRAY_EL_FUNC)&PTPDevicePropValue<VALUE_TYPE>::SaveEnumValue, pDPValue))
                               return;
-                
+
 		if (formFlag == 2)
 			if (!ParseEnumSingle(&p, &cntdn))
 				return;
-                
+
 //        for (uint8_t i=0; i<3; i++)
 //		{
 //            PrintHex<VALUE_TYPE>(pDPValue->arrValues[i]);
@@ -189,18 +187,18 @@ uint16_t StepUp(PTP *ptp, uint16_t prop)
     PTPDevPropParser<VALUE_TYPE>    prs(&val);
 
     uint16_t ret = ptp->GetDevicePropDesc(prop, &prs);
-    
+
     if (ret != PTP_RC_OK)
         return ret;
 
     if (val.listForm == 2)
         if (val.arrValues[1] == val.valCurrent)
             return ptp->SetDevicePropValue(prop, (VALUE_TYPE)val.arrValues[2]);
-            
+
     if (val.listForm == 1)
         if (val.valCurrent + val.arrValues[2] <= val.arrValues[1])
             return ptp->SetDevicePropValue(prop, (VALUE_TYPE)(val.valCurrent + val.arrValues[2]));
-    
+
     return PTP_RC_OK;
 }
 
@@ -209,26 +207,26 @@ uint16_t StepDown(PTP *ptp, uint16_t prop)
 {
     PTPDevicePropValue<VALUE_TYPE>  val;
     PTPDevPropParser<VALUE_TYPE>    prs(&val);
-    
+
     uint16_t ret = ptp->GetDevicePropDesc(prop, &prs);
-    
+
     if (ret != PTP_RC_OK)
         return ret;
-        
+
     if (val.listForm == 2)
-    {    
+    {
         if (val.arrValues[1] == val.valCurrent && val.arrValues[0] < val.arrValues[1])
             return ptp->SetDevicePropValue(prop, (VALUE_TYPE)val.arrValues[0]);
-        
+
         if (val.arrValues[2] == val.valCurrent)
             return ptp->SetDevicePropValue(prop, (VALUE_TYPE)val.arrValues[1]);
     }
     if (val.listForm == 1)
     {
-        VALUE_TYPE new_val = val.valCurrent - val.arrValues[2]; 
+        VALUE_TYPE new_val = val.valCurrent - val.arrValues[2];
         if (new_val >= val.arrValues[0] && new_val < val.valCurrent)
             return ptp->SetDevicePropValue(prop, (VALUE_TYPE)(val.valCurrent - val.arrValues[2]));
-    }       
+    }
     return PTP_RC_OK;
 }
 
@@ -237,7 +235,7 @@ uint16_t GetValueTitle(PTP *ptp, uint16_t prop, const ValueTitle<LIST_VALUE_TYPE
 {
     VALUE_TYPE  val;
     uint16_t ret = ptp->GetDevicePropValue(prop, val);
-    
+
     if (ret != PTP_RC_OK)
         return ret;
 

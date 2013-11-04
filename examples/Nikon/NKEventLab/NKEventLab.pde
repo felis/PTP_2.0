@@ -1,16 +1,8 @@
 #include <inttypes.h>
 #include <avr/pgmspace.h>
 
-#include <avrpins.h>
-#include <max3421e.h>
-#include <usbhost.h>
-#include <usb_ch9.h>
-#include <Usb.h>
 #include <usbhub.h>
-#include <address.h>
 
-#include <message.h>
-#include <parsetools.h>
 #include <eoseventdump.h>
 
 #include <ptp.h>
@@ -26,22 +18,22 @@ void PrintPropValues(PTP *ptp)
     while (Fifo.Size())
     {
         uint16_t prop = Fifo.Pop();
-        
+
         Serial.println("");
         PrintHex<uint16_t>(prop,0x80);
         Serial.println("");
-        
+
         HexDump    hex;
         uint16_t ret = ptp->GetDevicePropValue(prop, &hex);
     }
 }
 
-class NKEventDump : public NKEventHandlers 
+class NKEventDump : public NKEventHandlers
 {
 public:
 	virtual void OnEvent(const NKEvent *evt);
 };
- 
+
 void NKEventDump::OnEvent(const NKEvent *evt)
 {
     switch (evt->eventCode)
@@ -60,10 +52,10 @@ class CamStateHandlers : public PTPStateHandlers
 {
       enum CamStates { stInitial, stDisconnected, stConnected };
       CamStates stateConnected;
-    
+
 public:
       CamStateHandlers() : stateConnected(stInitial){};
-      
+
       virtual void OnDeviceDisconnectedState(PTP *ptp);
       virtual void OnDeviceInitializedState(PTP *ptp);
 };
@@ -71,36 +63,36 @@ public:
 class Nikon : public NikonDSLR
 {
     uint32_t     nextPollTime;   // Time of the next poll to occure
-    
+
 public:
     bool         bPollEnabled;   // Enables or disables camera poll
 
-    Nikon(USB *pusb, PTPStateHandlers *pstates) : NikonDSLR(pusb, pstates), nextPollTime(0), bPollEnabled(false) 
-    { 
+    Nikon(USB *pusb, PTPStateHandlers *pstates) : NikonDSLR(pusb, pstates), nextPollTime(0), bPollEnabled(false)
+    {
     };
-    
+
     virtual uint8_t Poll()
     {
         static bool first_time = true;
         PTP::Poll();
-        
+
         if (!bPollEnabled)
             return 0;
-        
+
 //        if (first_time)
 //            InitiateCapture();
-        
+
         uint32_t  current_time = millis();
-        
+
         if (current_time >= nextPollTime)
         {
             //Serial.println("\r\n");
-            
+
             NKEventParser  prs(&dmp);
             EventCheck(&prs);
-            
+
             PrintPropValues(this);
-            
+
             nextPollTime = current_time + 350;
         }
         first_time = false;
@@ -134,7 +126,7 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     }
 }
 
-void setup() 
+void setup()
 {
     Serial.begin( 115200 );
     Serial.println("Start");
@@ -145,7 +137,7 @@ void setup()
     delay( 200 );
 }
 
-void loop() 
+void loop()
 {
     Usb.Task();
 }

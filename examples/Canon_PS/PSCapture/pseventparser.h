@@ -3,8 +3,7 @@
 
 #include <inttypes.h>
 #include <avr/pgmspace.h>
-#include <message.h>
-#include <parsetools.h>
+#include <Usb.h>
 #include "ptpdebug.h"
 #include "canonps.h"
 
@@ -19,8 +18,8 @@ class PSEventParser : public PTPReadParser
 	MultiByteValueParser				valueParser;
 
 public:
-	PSEventParser() : nStage(0), varBuffer(0), objHandle(0) 
-	{ 
+	PSEventParser() : nStage(0), varBuffer(0), objHandle(0)
+	{
 		theBuffer.pValue = &varBuffer;
 	};
 	uint32_t GetObjHandle() { return objHandle; };
