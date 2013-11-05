@@ -1,14 +1,8 @@
 #ifndef __DEVPROPPARSER_H__
 #define __DEVPROPPARSER_H__
 
-#include <inttypes.h>
-#include <avr/pgmspace.h>
-//#include <../ptp/ptpconst.h>
-//#include <../ptp/ptp.h>
-//#include <../ParseTools/parsetools.h>
 #include <ptpconst.h>
 #include <ptp.h>
-#include <Usb.h>
 
 // Device properties
 const char msgUndefined					[] PROGMEM = "Undefined";

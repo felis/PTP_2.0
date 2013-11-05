@@ -17,7 +17,6 @@ e-mail   :  support@circuitsathome.com
 #ifndef __EOSEVENTPARSER_H__
 #define __EOSEVENTPARSER_H__
 
-#include <inttypes.h>
 #include <Usb.h>
 #include <canoneos.h>
 

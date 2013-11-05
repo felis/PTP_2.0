@@ -17,7 +17,6 @@ e-mail   :  support@circuitsathome.com
 #ifndef __NKEVENTPARSER_H__
 #define __NKEVENTPARSER_H__
 
-#include <inttypes.h>
 #include <Usb.h>
 #include <nikon.h>
 

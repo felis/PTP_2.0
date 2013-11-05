@@ -17,15 +17,8 @@ e-mail   :  support@circuitsathome.com
 #if !defined(__EOSEVENTDUMP_H__)
 #define __EOSEVENTDUMP_H__
 
-#if defined(ARDUINO) && ARDUINO >=100
-#include <Arduino.h>
-#else
-#include <WProgram.h>
-#endif
-#include <inttypes.h>
-#include <avr/pgmspace.h>
-#include "ptpcallback.h"
 #include "Usb.h"
+#include "ptpcallback.h"
 
 
 class EOSEventDump : public PTPReadParser

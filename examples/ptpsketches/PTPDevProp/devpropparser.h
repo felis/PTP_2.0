@@ -1,9 +1,6 @@
 #ifndef __DEVPROPPARSER_H__
 #define __DEVPROPPARSER_H__
 
-#include <inttypes.h>
-#include <avr/pgmspace.h>
-
 #include <ptpconst.h>
 #include <ptp.h>
 #include <Usb.h>

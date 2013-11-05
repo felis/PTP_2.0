@@ -17,8 +17,6 @@ e-mail   :  support@circuitsathome.com
 #ifndef __PTPDEBUG_H__
 #define __PTPDEBUG_H__
 
-#include <inttypes.h>
-#include <avr/pgmspace.h>
 #include <Usb.h>
 
 //#define PTPDEBUG

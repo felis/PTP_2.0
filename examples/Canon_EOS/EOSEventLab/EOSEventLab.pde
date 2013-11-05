@@ -1,6 +1,3 @@
-#include <inttypes.h>
-#include <avr/pgmspace.h>
-
 #include <usbhub.h>
 
 #include <ptp.h>

@@ -1,8 +1,6 @@
 #ifndef __PTPOBJHANDLEPARSER_H__
 #define __PTPOBJHANDLEPARSER_H__
 
-#include <inttypes.h>
-#include <avr/pgmspace.h>
 #include <Usb.h>
 #include "ptpcallback.h"
 #include "ptpdebug.h"

@@ -1,8 +1,6 @@
 #ifndef __STINFOPARSER_H__
 #define __STINFOPARSER_H__
 
-#include <inttypes.h>
-#include <avr/pgmspace.h>
 #include <ptpconst.h>
 #include <ptp.h>
 
@@ -14,14 +12,14 @@ const char msgFixedRAM		[] PROGMEM = "FixedRAM";
 const char msgRemovableRAM	[] PROGMEM = "RemovableRAM";
 
 // File System Types
-const char msgGenericFlat			[] PROGMEM = "GenericFlat";			
-const char msgGenericHierarchical	[] PROGMEM = "GenericHierarchical";	
-const char msgDCF					[] PROGMEM = "DCF";					
+const char msgGenericFlat			[] PROGMEM = "GenericFlat";
+const char msgGenericHierarchical	[] PROGMEM = "GenericHierarchical";
+const char msgDCF					[] PROGMEM = "DCF";
 
 // Access Capability
-const char msgReadWrite						[] PROGMEM = "ReadWrite";						
-const char msgReadOnly						[] PROGMEM = "ReadOnly";						
-const char msgReadOnly_with_Object_Deletion	[] PROGMEM = "ReadOnly with Object Deletion";	
+const char msgReadWrite						[] PROGMEM = "ReadWrite";
+const char msgReadOnly						[] PROGMEM = "ReadOnly";
+const char msgReadOnly_with_Object_Deletion	[] PROGMEM = "ReadOnly with Object Deletion";
 
 
 class PTPStorageInfoParser : public PTPReadParser
