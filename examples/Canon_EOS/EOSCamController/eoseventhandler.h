@@ -1,11 +1,8 @@
 #ifndef __EOSEVENTHANDLERS_H__
 #define __EOSEVENTHANDLERS_H__
 
-#include <inttypes.h>
-#include <avr/pgmspace.h>
-#include <Max_LCD.h>
-#include <message.h>
 #include <Usb.h>
+#include <Max_LCD.h>
 #include <canoneos.h>
 #include <eoseventparser.h>
 

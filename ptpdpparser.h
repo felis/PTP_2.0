@@ -17,18 +17,9 @@ e-mail   :  support@circuitsathome.com
 #ifndef __PTPDPPARSER_H__
 #define __PTPDPPARSER_H__
 
-#if defined(ARDUINO) && ARDUINO >=100
-#include <Arduino.h>
-#else
-#include <WProgram.h>
-#endif
-
-#include <inttypes.h>
-#include <avr/pgmspace.h>
 #include <ptpconst.h>
 #include <ptp.h>
 #include <valuelist.h>
-#include <Usb.h>
 
 
 template <class VALUE_TYPE>

@@ -1,8 +1,6 @@
 #ifndef __PSEVENTPARSER_H__
 #define __PSEVENTPARSER_H__
 
-#include <inttypes.h>
-#include <avr/pgmspace.h>
 #include <Usb.h>
 #include "ptpdebug.h"
 #include "canonps.h"

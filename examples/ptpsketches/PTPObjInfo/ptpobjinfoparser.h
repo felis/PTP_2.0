@@ -1,8 +1,6 @@
 #ifndef __PTPOBJINFOPARSER_H__
 #define __PTPOBJINFOPARSER_H__
 
-#include <Usb.h>
-
 #include <ptp.h>
 #include <mtpconst.h>
 #include <ptpcallback.h>

@@ -17,8 +17,6 @@ e-mail   :  support@circuitsathome.com
 #ifndef __PTP_H__
 #define __PTP_H__
 
-#include <inttypes.h>
-#include <avr/pgmspace.h>
 #include <Usb.h>
 #include "ptpconst.h"
 #include "ptpmsgstr.h"

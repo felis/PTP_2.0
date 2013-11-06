@@ -17,7 +17,6 @@ e-mail   :  support@circuitsathome.com
 #if !defined(__NIKON_H__)
 #define __NIKON_H__
 
-#include <inttypes.h>
 #include "ptp.h"
 
 // Nikon Extension Operation Codes
@@ -34,7 +33,7 @@ e-mail   :  support@circuitsathome.com
 #define NK_OC_CheckEvent							0x90C7
 #define NK_OC_DeviceReady							0x90C8
 #define NK_OC_CaptureInSDRAM						0x90CB
-#define NK_OC_GetDevicePTPIPInfo					0x90E0 
+#define NK_OC_GetDevicePTPIPInfo					0x90E0
 
 #define PTP_OC_NIKON_GetPreviewImg					0x9200
 #define PTP_OC_NIKON_StartLiveView					0x9201
@@ -61,10 +60,10 @@ e-mail   :  support@circuitsathome.com
 #define NK_RC_MfDriveStepInsufficiency				0xA00E
 #define NK_RC_AdvancedTransferCancel				0xA022
 
-// Nikon extension Event Codes 
+// Nikon extension Event Codes
 #define NK_EC_ObjectAddedInSDRAM					0xC101
 #define NK_EC_CaptureOverflow						0xC102
-#define NK_EC_AdvancedTransfer						0xC103 
+#define NK_EC_AdvancedTransfer						0xC103
 
 /* Nikon extension device property codes */
 #define NK_DPC_ShootingBank							0xD010
@@ -125,7 +124,7 @@ e-mail   :  support@circuitsathome.com
 #define NK_DPC_E3AAFlashMode						0xD076
 #define NK_DPC_E4ModelingFlash						0xD077
 #define NK_DPC_BracketSet							0xD078
-#define NK_DPC_E6ManualModeBracketing				0xD079	
+#define NK_DPC_E6ManualModeBracketing				0xD079
 #define NK_DPC_BracketOrder							0xD07A
 #define NK_DPC_E8AutoBracketSelection				0xD07B
 #define NK_DPC_BracketingSet						0xD07C
@@ -184,7 +183,7 @@ e-mail   :  support@circuitsathome.com
 #define NK_DPC_LowLight								0xD1B0
 #define NK_DPC_FlashOpen							0xD1C0
 #define NK_DPC_FlashCharged							0xD1C1
-													
+
 class NikonDSLR : public PTP
 {
 public:

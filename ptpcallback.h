@@ -17,7 +17,6 @@ e-mail   :  support@circuitsathome.com
 #if !defined(__PTPCALLBACK_H__)
 #define __PTPCALLBACK_H__
 
-#include <inttypes.h>
 #include <Usb.h>
 
 // Base class for incomming data parser

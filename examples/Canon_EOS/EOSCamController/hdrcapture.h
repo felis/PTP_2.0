@@ -1,10 +1,8 @@
 #if !defined(__HDRCAPTURE_H__)
 #define __HDRCAPTURE_H__
 
-#include <inttypes.h>
-#include <avr/pgmspace.h>
-#include <qp_port.h>
 #include <ptp.h>
+#include <qp_port.h>
 #include <canoneos.h>
 #include <simplefifo.h>
 #include <valuelist.h>
@@ -16,7 +14,7 @@
 #define TA_INTR_TIMER    0x05
 #define TA_BULB_TIMER    0x07
 
-enum HDRCaptureSignals 
+enum HDRCaptureSignals
 {
     TICK_MILLIS_SIG = Q_USER_SIG,
     SET_FRAMES_SIG,
@@ -31,13 +29,13 @@ enum HDRCaptureSignals
     PTP_RC_OK_SIG
 };
 
-struct SetTimeoutEvt : public QEvent 
+struct SetTimeoutEvt : public QEvent
 {
     uint32_t   timeout;
     uint8_t    attribs;
 };
 
-struct SetEvt : public QEvent 
+struct SetEvt : public QEvent
 {
     uint32_t    value;
 };
@@ -54,7 +52,7 @@ struct PTP_RC_Evt : public QEvent
     uint16_t  rc;
 };
 
-class HDRCapture : public QHsm 
+class HDRCapture : public QHsm
 {
     uint16_t    frmCntdn;
     uint16_t    frmCount;
@@ -66,19 +64,19 @@ class HDRCapture : public QHsm
     uint8_t     bktCntdn;
     uint8_t     bktPos;
     uint8_t     bktOldVal;
-    
+
     CanonEOS    &Eos;
-    
+
     SetTimeoutEvt  toEvt;
     PTP_RC_Evt     rcEvt;
     QEvent         qpEvt;
-    
+
     QStateHandler  activeHistory;
 
     SimpleFIFO<QEvent*, 4>  theQueue;
-    
+
 public:
-    HDRCapture(CanonEOS &eos) : 
+    HDRCapture(CanonEOS &eos) :
         QHsm((QStateHandler)&HDRCapture::Initial),
         frmCount(0),
         frmCntdn(0),
@@ -103,7 +101,7 @@ public:
     void Run()
     {
         QEvent *e = NULL;
-        
+
         while ( (e = theQueue.Pop()) )
             dispatch(e);
     };
@@ -120,7 +118,7 @@ protected:
     static QState SaveSettings(HDRCapture *me, QEvent const *e);
     static QState RestoreSettings(HDRCapture *me, QEvent const *e);
     static QState Timeout(HDRCapture *me, QEvent const *e);
-    
+
     virtual void OnFrameCaptured(uint16_t left) {};
     virtual void OnBktFrameCaptured(uint16_t left) {};
     virtual void OnSelfTimerProgress(uint32_t left) {};
