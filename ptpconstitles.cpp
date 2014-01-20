@@ -14,9 +14,10 @@ Circuits At Home, LTD
 Web      :  http://www.circuitsathome.com
 e-mail   :  support@circuitsathome.com
 */
+
 #include "ptpconstitles.h"
 
-const char* ptpopNames[] PROGMEM = 
+const char* const ptpopNames[] PROGMEM = 
 {
 	msgUndefined,				
 	msgGetDeviceInfo,			
@@ -49,7 +50,7 @@ const char* ptpopNames[] PROGMEM =
 	msgInitiateOpenCapture	
 };
 
-const char* mtpopNames[] PROGMEM = 
+const char* const mtpopNames[] PROGMEM = 
 {
 	msgUndefined,				
 	msgGetObjectPropsSupported,	
@@ -62,7 +63,7 @@ const char* mtpopNames[] PROGMEM =
 	msgSendObjectPropList		
 };
 
-const char* ptpevNames[] PROGMEM = 
+const char* const ptpevNames[] PROGMEM = 
 {
 	msgUndefined,
 	msgCancelTransaction,
@@ -81,7 +82,7 @@ const char* ptpevNames[] PROGMEM =
 	msgUnreportedStatus
 };
 
-const char* mtpevNames[] PROGMEM = 
+const char* const mtpevNames[] PROGMEM = 
 {
 	msgUndefined,
 	msgObjectPropChanged,		
@@ -89,7 +90,7 @@ const char* mtpevNames[] PROGMEM =
 	msgObjectReferencesChanged
 };
 
-const char* ptpprNames[] PROGMEM = 
+const char* const ptpprNames[] PROGMEM = 
 {
 	msgUndefined,					
 	msgBatteryLevel,				
@@ -125,7 +126,7 @@ const char* ptpprNames[] PROGMEM =
 	msgCopyrightInfo				
 };
 
-const char* mtpprNames[] PROGMEM = 
+const char* const mtpprNames[] PROGMEM = 
 {
 	msgUndefined,					
 	msgSynchronization_Partner,		
@@ -140,7 +141,7 @@ const char* mtpprNames[] PROGMEM =
 	msgPlayback_Container			
 };
 
-const char* acNames[] PROGMEM = 
+const char* const acNames[] PROGMEM = 
 {
 	msgUndefined,
 	msgAssociation,	
@@ -158,7 +159,7 @@ const char* acNames[] PROGMEM =
 	msgQT			
 };
 
-const char* imNames[] PROGMEM = 
+const char* const imNames[] PROGMEM = 
 {
 	msgUndefined,
 	msgEXIF_JPEG,			
