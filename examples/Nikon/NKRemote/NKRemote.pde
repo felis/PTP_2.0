@@ -60,13 +60,13 @@ NKEventDump         Dmp;
 QEvent            evtTick;
 PSConsole         psConsole;
 
-void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
-    (void)file;                                   /* avoid compiler warning */
-    (void)line;                                   /* avoid compiler warning */
-    QF_INT_DISABLE();             /* make sure that interrupts are disabled */
-    for (;;) {
-    }
-}
+//void Q_onAssert(char const Q_ROM * const Q_ROM_VAR file, int line) {
+//    (void)file;                                   /* avoid compiler warning */
+//    (void)line;                                   /* avoid compiler warning */
+//    noInterrupts(); //QF_INT_DISABLE();             /* make sure that interrupts are disabled */
+//    for (;;) {
+//    }
+//}
 
 void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
 {
