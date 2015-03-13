@@ -1,6 +1,6 @@
 #include "devpropparser.h"
 
-const char* DevPropParser::dtNames1[] PROGMEM = 
+const char* const DevPropParser::dtNames1[] PROGMEM = 
 {
 	msgUNDEF,
 	msgINT8,	
@@ -15,7 +15,7 @@ const char* DevPropParser::dtNames1[] PROGMEM =
 	msgUINT128
 };
 
-const char* DevPropParser::dtNames2[] PROGMEM = 
+const char* const DevPropParser::dtNames2[] PROGMEM = 
 {
 	msgUNDEF,
 	msgAINT8,
@@ -30,7 +30,7 @@ const char* DevPropParser::dtNames2[] PROGMEM =
 	msgAUINT128
 };
 
-const char* DevPropParser::prNames[] PROGMEM = 
+const char* const DevPropParser::prNames[] PROGMEM = 
 {
 	msgUndefined,					
 	msgBatteryLevel,				

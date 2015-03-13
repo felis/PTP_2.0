@@ -27,9 +27,9 @@ class PTPStorageInfoParser : public PTPReadParser
 	uint8_t							nStage;
 	uint8_t							strByteCountDown;
 
-	static const char*				stNames[];
-	static const char*				fstNames[];
-	static const char*				acNames[];
+	static const char* const				stNames[];
+	static const char* const				fstNames[];
+	static const char* const				acNames[];
 
 	void PrintStorageType(uint8_t **pp, uint16_t *pcntdn);
 	void PrintFileSystemType(uint8_t **pp, uint16_t *pcntdn);

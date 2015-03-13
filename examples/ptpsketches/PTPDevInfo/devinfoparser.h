@@ -234,14 +234,14 @@ const char msg3GP_Container						[] PROGMEM = "3GP_Container";
 
 class DevInfoParser : public PTPReadParser
 {
-	static const char* ptpopNames[];
-	static const char* mtpopNames[];
-	static const char* ptpevNames[];
-	static const char* mtpevNames[];
-	static const char* acNames[];
-	static const char* imNames[];
-	static const char* ptpprNames[];
-	static const char* mtpprNames[];
+	static const char* const ptpopNames[];
+	static const char* const mtpopNames[];
+	static const char* const ptpevNames[];
+	static const char* const mtpevNames[];
+	static const char* const acNames[];
+	static const char* const imNames[];
+	static const char* const ptpprNames[];
+	static const char* const mtpprNames[];
 
 	uint8_t		nStage;
 
