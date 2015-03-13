@@ -11,6 +11,7 @@ public:
 	virtual void OnPropertyChanged(const EOSEvent *evt);
 	virtual void OnAcceptedListSize(const EOSEvent *evt, const uint16_t size);
 	virtual void OnPropertyValuesAccepted(const EOSEvent *evt, const uint16_t index, const uint32_t &val);
+        virtual void OnObjectCreated(const EOSEvent *evt) {};
 };
 
 #endif // __EOSEVENTHANDLERS_H__
