@@ -6,6 +6,12 @@
 #include <valuelist.h>
 #include <canoneos.h>
 #include <qp_port.h>
+#include <Wire.h>  // Comes with Arduino IDE
+// Get the LCD I2C Library here: 
+// https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads
+// Move any other LCD libraries to another folder or delete them
+// See Library "Docs" folder for possible commands etc.
+#include <LiquidCrystal_I2C.h> 
 
 #include "camcontroller.h"
 #include "controls.h"
@@ -72,6 +78,7 @@ protected:
 CamStateHandlers      CamStates;
 
 USB                   Usb;
+//LiquidCrystal_I2C LCD(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Set the LCD I2C address 
 Max_LCD               LCD(&Usb);
 CanonEOS              Eos(&Usb, &CamStates);
 
@@ -86,7 +93,7 @@ PgmStringDataItem     diSecond(msgDisconnected);
 ScreenItem            siFirst     (5, 0, 16, false, &diFirst);
 ScreenItem            siSecond    (2, 1, 16, false, &diSecond);
 
-ScreenItem            *messageScreenItems[]  PROGMEM = { &siFirst, &siSecond };
+const ScreenItem * const messageScreenItems[]  PROGMEM = { &siFirst, &siSecond };
 Screen                messageScreen(2, (ScreenItem*)messageScreenItems);
 
 #ifndef NO_SETTINGS_SCREEN
@@ -94,7 +101,7 @@ Screen                messageScreen(2, (ScreenItem*)messageScreenItems);
 ScreenItem            siIntervalometer (1,  0, 8, true,  (const char*)&msgIntervalometer);
 ScreenItem            siSettings       (1,  1, 8, false, (const char*)&msgSettings);
 
-ScreenItem            *mainMenuScreenItems[]  PROGMEM = { &siIntervalometer, &siSettings };
+const ScreenItem * const mainMenuScreenItems[]  PROGMEM = { &siIntervalometer, &siSettings };
 Screen                scrMainMenu(2, (ScreenItem*)mainMenuScreenItems);
 #endif
 
@@ -108,10 +115,10 @@ ScreenItem            siRun      (10, 0, 4, false, (const char*)&msgSetRun);
 #ifndef NO_SETTINGS_SCREEN
 ScreenItem            siExit     (10, 1, 4, false, (const char*)&msgExit);
 
-ScreenItem            *timerSettingsScreenItems[]  PROGMEM = { &siSelf, &siFrames, &siBkt, &siInterval, &siRun, &siExit };
+const ScreenItem * const timerSettingsScreenItems[]  PROGMEM = { &siSelf, &siFrames, &siBkt, &siInterval, &siRun, &siExit };
 Screen                timerSettingsScreen(6, (ScreenItem*)timerSettingsScreenItems);
 #else
-ScreenItem            *timerSettingsScreenItems[]  PROGMEM = { &siSelf, &siFrames, &siBkt, &siInterval, &siRun };
+const ScreenItem * const timerSettingsScreenItems[]  PROGMEM = { &siSelf, &siFrames, &siBkt, &siInterval, &siRun };
 Screen                timerSettingsScreen(5, (ScreenItem*)timerSettingsScreenItems);
 #endif
 
@@ -125,7 +132,7 @@ ScreenItem            siHourSelf (3, 1, 2, false, &diHourSelf);
 ScreenItem            siMinSelf  (6, 1, 2, false, &diMinSelf);
 ScreenItem            siSecSelf  (9, 1, 2, false, &diSecSelf);
 
-ScreenItem            *scitmSelfTimerSet[]  PROGMEM = { &siSelfTimer, &siHourSelf, &siMinSelf, &siSecSelf };
+const ScreenItem * const scitmSelfTimerSet[]  PROGMEM = { &siSelfTimer, &siHourSelf, &siMinSelf, &siSecSelf };
 Screen                scrSelfTimerSet(4, (ScreenItem*)scitmSelfTimerSet);
 
 //--- (4) Number of Frames Screen -------------------------------------------------------------
@@ -135,7 +142,7 @@ IntDataItem<uint16_t, 5>         diFramesLeft(0);
 ScreenItem            siFramesText  (5, 0,  6, false, (const char*)&msgCntFrames);
 ScreenItem            siFramesCount (6, 1,  4, false, &diFramesCount);
 
-ScreenItem            *scitmFramesSet[]  PROGMEM = { &siFramesText, &siFramesCount };
+const ScreenItem * const scitmFramesSet[]  PROGMEM = { &siFramesText, &siFramesCount };
 Screen                scrFramesSet(2, (ScreenItem*)scitmFramesSet);
 
 //--- (5) Bracketing Screen -------------------------------------------------------------------
@@ -149,7 +156,7 @@ ScreenItem            siBracketing(0, 0, 15, false,  (const char*)&msgBracketing
 ScreenItem            siBktEV     (1, 1,  6, false,  &diBktEV);
 ScreenItem            siBktStep   (9, 1,  6, false,  &diBktStep);
 
-ScreenItem            *scitmBkt[]  PROGMEM = { &siBracketing, &siBktEV, &siBktStep };
+const ScreenItem * const scitmBkt[]  PROGMEM = { &siBracketing, &siBktEV, &siBktStep };
 Screen                scrBktSet(3, (ScreenItem*)scitmBkt);
 
 //--- (6) Interval Timer Screen ---------------------------------------------------------------
@@ -158,7 +165,7 @@ ScreenItem            siHourInt (3, 1, 2, false, &diHourInt);
 ScreenItem            siMinInt  (6, 1, 2, false, &diMinInt);
 ScreenItem            siSecInt  (9, 1, 2, false, &diSecInt);
 
-ScreenItem            *scitmIntTimerSet[]  PROGMEM = { &siIntTimer, &siHourInt, &siMinInt, &siSecInt };
+const ScreenItem * const scitmIntTimerSet[]  PROGMEM = { &siIntTimer, &siHourInt, &siMinInt, &siSecInt };
 Screen                scrIntTimerSet(4, (ScreenItem*)scitmIntTimerSet);
 
 //--- (7) Run Screen ---------------------------------------------------------------------------
@@ -170,7 +177,7 @@ ScreenItem            siRunIntTime( 0, 1, 8, false,  &diIntTimer);
 ScreenItem            siRunFramesLeft ( 10, 0, 4, false,  &diFramesLeft);
 ScreenItem            siAbort(10, 1, 5, false,  (const char*)&msgAbort);
 
-ScreenItem            *scitmRun[]  PROGMEM = { &siRunLeftTime, &siRunIntTime, &siRunFramesLeft, &siAbort };
+const ScreenItem * const scitmRun[]  PROGMEM = { &siRunLeftTime, &siRunIntTime, &siRunFramesLeft, &siAbort };
 Screen                scrRun(4, (ScreenItem*)scitmRun);
 
 #ifndef NO_SETTINGS_SCREEN
@@ -194,7 +201,7 @@ ScreenItem            siPStyle      ( 8, 0, 3, false,  &diPStyle);
 ScreenItem            siIso         (12, 0, 4, false,  &diIso);
 ScreenItem            siExpComp     ( 9, 1, 6, false,  &diExpComp);
 
-ScreenItem            *scitmSettings[]  PROGMEM = { &siMode, &siAperture, &siWb, &siShutterSpeed, &siPStyle, &siIso, &siExpComp };
+const ScreenItem * const scitmSettings[]  PROGMEM = { &siMode, &siAperture, &siWb, &siShutterSpeed, &siPStyle, &siIso, &siExpComp };
 Screen                scrSettings(7, (ScreenItem*)scitmSettings);
 #endif
 
@@ -566,7 +573,8 @@ void setup()
     delay( 200 );
 
     // set up the LCD's number of rows and columns:
-    LCD.begin(16, 2);
+    LCD.begin(20, 4);
+//    LCD.begin(16, 2);
     LCD.clear();
     LCD.home();
     LCD.setCursor(0,0);
