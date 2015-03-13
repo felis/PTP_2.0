@@ -59,8 +59,8 @@ const char msg3GP_Container						[] PROGMEM = "3GP_Container";
 
 class PTPObjInfoParser : public PTPReadParser
 {
-	static const char* acNames[];
-	static const char* imNames[];
+	static const char* const acNames[];
+	static const char* const imNames[];
 
 	MultiValueBuffer				theBuffer;
 	uint32_t						varBuffer;

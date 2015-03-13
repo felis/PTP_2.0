@@ -1,6 +1,6 @@
 #include "ptpobjinfoparser.h"
 
-const char* PTPObjInfoParser::acNames[] PROGMEM = 
+const char* const PTPObjInfoParser::acNames[] PROGMEM = 
 {
 	msgUndefined,
 	msgAssociation,	
@@ -18,7 +18,7 @@ const char* PTPObjInfoParser::acNames[] PROGMEM =
 	msgQT			
 };
 
-const char* PTPObjInfoParser::imNames[] PROGMEM = 
+const char* const PTPObjInfoParser::imNames[] PROGMEM = 
 {
 	msgUndefined,
 	msgEXIF_JPEG,			
@@ -36,7 +36,7 @@ const char* PTPObjInfoParser::imNames[] PROGMEM =
 	msgTIFF,				
 	msgTIFF_IT,			
 	msgJP2,				
-	msgJPX,				
+	msgJPX				
 };
 
 void PTPObjInfoParser::PrintFormat(uint16_t op)
