@@ -15,7 +15,7 @@
 
 #include "ptpdpparser.h"
 
-using namespace QP;
+//using namespace QP;
 
 enum TextMenuSignals 
 {
