@@ -65,9 +65,9 @@ const char msgSTR	[] PROGMEM = "STR";
 
 class DevPropParser : public PTPReadParser
 {
-	static const char* dtNames1[];
-	static const char* dtNames2[];
-	static const char* prNames[];
+	static const char* const dtNames1[];
+	static const char* const dtNames2[];
+	static const char* const prNames[];
 
 	uint8_t				nStage;
         uint8_t                         enStage;
