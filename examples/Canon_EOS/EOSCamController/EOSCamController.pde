@@ -6,12 +6,6 @@
 #include <valuelist.h>
 #include <canoneos.h>
 #include <qp_port.h>
-#include <Wire.h>  // Comes with Arduino IDE
-// Get the LCD I2C Library here: 
-// https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads
-// Move any other LCD libraries to another folder or delete them
-// See Library "Docs" folder for possible commands etc.
-#include <LiquidCrystal_I2C.h> 
 
 #include "camcontroller.h"
 #include "controls.h"
@@ -78,7 +72,6 @@ protected:
 CamStateHandlers      CamStates;
 
 USB                   Usb;
-//LiquidCrystal_I2C LCD(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);  // Set the LCD I2C address 
 Max_LCD               LCD(&Usb);
 CanonEOS              Eos(&Usb, &CamStates);
 
@@ -573,8 +566,7 @@ void setup()
     delay( 200 );
 
     // set up the LCD's number of rows and columns:
-    LCD.begin(20, 4);
-//    LCD.begin(16, 2);
+    LCD.begin(16, 2);
     LCD.clear();
     LCD.home();
     LCD.setCursor(0,0);
