@@ -98,6 +98,7 @@ void EOSEventParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32
 {
 	uint8_t		*p	= (uint8_t*) pbuf;
 	uint16_t	cntdn	= len;
+    (void)offset;
 
 	switch (nStage)
 	{

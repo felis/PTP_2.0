@@ -81,8 +81,8 @@ class NKEventParser : public PTPReadParser
 
 public:
 	NKEventParser(NKEventHandlers *p) :
-		pHandler(p),
-		constInitialEventCode(0xFFFF),
+        constInitialEventCode(0xFFFF),		
+        pHandler(p),
 		nStage(0),
 		numEvents(0)
 		{

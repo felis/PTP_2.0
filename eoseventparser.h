@@ -63,14 +63,14 @@ class EOSEventParser : public PTPReadParser
 
 public:
 	EOSEventParser(EOSEventHandlers *p) :
-		pHandler(p),
-		constInitialEventCode(0xFFFF),
+        constInitialEventCode(0xFFFF),		
+        pHandler(p),
+        paramsChanged(0),
 		nStage(0),
 		nRecStage(0),
 		nRecSize(0),
 		varBuffer(0),
-		paramCountdown(0),
-		paramsChanged(0)
+		paramCountdown(0)
 		{
 			theBuffer.pValue = &varBuffer;
 		};

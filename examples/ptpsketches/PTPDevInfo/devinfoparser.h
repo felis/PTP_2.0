@@ -4,8 +4,6 @@
 #include <ptpconst.h>
 #include <mtpconst.h>
 #include <ptp.h>
-// #include <Arduino.h>
-// #include <avr/pgmspace.h>
 
 const char msgVendorDefined			[] PROGMEM = "Vendor defined";
 const char msgTab					[] PROGMEM = "\t";

@@ -20,6 +20,7 @@ void EOSEventDump::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t
 {
 	uint8_t		*p		= (uint8_t*)pbuf;
 	uint16_t	cntdn	= (uint16_t)len;
+    (void)offset;
 
 	switch (parseStage)
 	{

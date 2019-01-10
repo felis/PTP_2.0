@@ -24,6 +24,8 @@ NikonDSLR::NikonDSLR(USB *pusb, PTPStateHandlers *s)
 uint8_t NikonDSLR::Init(uint8_t parent, uint8_t port, bool lowspeed)
 {
 	uint8_t		buf[10];
+    // uint32_t *pb32 = reinterpret_cast<uint32_t*>(buf);
+    USB_DEVICE_DESCRIPTOR *udd = reinterpret_cast<USB_DEVICE_DESCRIPTOR*>(buf);
 	uint8_t		rcode;
 	UsbDevice	*p = NULL;
 	EpInfo		*oldep_ptr = NULL;
@@ -32,8 +34,9 @@ uint8_t NikonDSLR::Init(uint8_t parent, uint8_t port, bool lowspeed)
 
 	AddressPool	&addrPool = pUsb->GetAddressPool();
 
-	if (devAddress)
+	if (devAddress) {
 		return USB_ERROR_CLASS_INSTANCE_ALREADY_IN_USE;
+    }
 
 	// Get pointer to pseudo device with address 0 assigned
 	p = addrPool.GetUsbDevicePtr(0);
@@ -65,10 +68,10 @@ uint8_t NikonDSLR::Init(uint8_t parent, uint8_t port, bool lowspeed)
 		return rcode;
 	}
 
-	if (((USB_DEVICE_DESCRIPTOR*)buf)->idVendor == 0x04B0)
+	if (udd->idVendor == 0x04B0) {
 		return PTP::Init(parent, port, lowspeed);
-	else 
-	{
+    }
+	else {
 		PTPTRACE("Camera isn't Nikon\r\n");
 		return USB_DEV_CONFIG_ERROR_DEVICE_NOT_SUPPORTED;
 	}

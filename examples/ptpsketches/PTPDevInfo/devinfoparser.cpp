@@ -172,7 +172,7 @@ DevInfoParser::DevInfoParser() :
 	fmByteCountDown(0),
 	idVendor(0)
 {
-	for (uint8_t i=0; i<4; i++) waLen[i];
+//	for (uint8_t i=0; i<4; i++) waLen[i];
 	waWord.word = 0;
 	fmBytes[0] = 0;
 	fmBytes[1] = 0;
@@ -566,8 +566,9 @@ bool DevInfoParser::PrintString(uint8_t **pp, uint16_t &count)
 
 bool DevInfoParser::PrintWordArray(uint8_t **pp, uint16_t &count, PRINTFUNC pf = NULL)
 {
-	switch (waStage)
-	{
+    uint32_t* pw32 = reinterpret_cast<uint32_t*>(waLen);
+
+	switch (waStage) {
 	case 0:
 		if (!waLenCountDown)
 			waLenCountDown = 4;
@@ -581,7 +582,7 @@ bool DevInfoParser::PrintWordArray(uint8_t **pp, uint16_t &count, PRINTFUNC pf =
 		waStage ++;
 
 	case 1:
-		for (waByteCountDown = (waByteCountDown) ? waByteCountDown : ((*((uint32_t*)waLen) << 1)); 
+		for (waByteCountDown = (waByteCountDown) ? waByteCountDown : ((*(pw32) << 1)); 
 			 waByteCountDown && count; waByteCountDown--, count--, (*pp)++)
 		{
 			if (waByteCountDown & 1)
@@ -607,6 +608,7 @@ void DevInfoParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_
 {
 	uint16_t	count	= (uint16_t)len;
 	uint8_t		*p		= (uint8_t*)pbuf;
+    (void)offset;
 
 	switch (nStage)
 	{

@@ -53,6 +53,7 @@ uint32_t ImgQualitySupplier::GetDataSize()
 void ImgQualitySupplier::GetData(const uint16_t len, uint8_t *pbuf)
 {
 	uint8_t		num_files = (pictFormat & 0xFFFF0000) ? 2 : 1;
+    (void)len;
 
 	((uint32_t*)pbuf)[0] =  (num_files == 2) ? 0x0000002C : 0x0000001C;
 	((uint32_t*)pbuf)[1] =	(uint32_t) EOS_DPC_ImageQuality;
@@ -70,13 +71,12 @@ void ImgQualitySupplier::GetData(const uint16_t len, uint8_t *pbuf)
 }
 
 CanonEOS::CanonEOS(USB *pusb, PTPStateHandlers *s)
-: PTP(pusb, s)
-{
-}
+: PTP(pusb, s) {}
 
 uint8_t CanonEOS::Init(uint8_t parent, uint8_t port, bool lowspeed)
 {
 	uint8_t		buf[10];
+    USB_DEVICE_DESCRIPTOR *udd = reinterpret_cast<USB_DEVICE_DESCRIPTOR*>(buf);
 	uint8_t		rcode;
 	UsbDevice	*p = NULL;
 	EpInfo		*oldep_ptr = NULL;
@@ -85,17 +85,18 @@ uint8_t CanonEOS::Init(uint8_t parent, uint8_t port, bool lowspeed)
 
 	AddressPool	&addrPool = pUsb->GetAddressPool();
 
-	if (devAddress)
+	if (devAddress) {
 		return USB_ERROR_CLASS_INSTANCE_ALREADY_IN_USE;
+    }
 
 	// Get pointer to pseudo device with address 0 assigned
 	p = addrPool.GetUsbDevicePtr(0);
 
-	if (!p)
+	if (!p) {
 		return USB_ERROR_ADDRESS_NOT_FOUND_IN_POOL;
+    }
 
-	if (!p->epinfo)
-	{
+	if (!p->epinfo) {
 		PTPTRACE("epinfo\r\n");
 		return USB_ERROR_EPINFO_IS_NULL;
 	}
@@ -118,8 +119,9 @@ uint8_t CanonEOS::Init(uint8_t parent, uint8_t port, bool lowspeed)
 		return rcode;
 	}
 
-	if (((USB_DEVICE_DESCRIPTOR*)buf)->idVendor == 0x04A9)
+	if (udd->idVendor == 0x04A9) {
 		return PTP::Init(parent, port, lowspeed);
+    }
 	else 
 	{
 		PTPTRACE("Camera isn't Canon\r\n");
