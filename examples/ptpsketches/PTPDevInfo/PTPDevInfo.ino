@@ -2,6 +2,7 @@
 
 #include <ptp.h>
 #include <ptpdebug.h>
+// #include <Arduino.h>
 #include "devinfoparser.h"
 
 class CamStateHandlers : public PTPStateHandlers
@@ -63,4 +64,3 @@ void loop()
 {
     Usb.Task();
 }
-

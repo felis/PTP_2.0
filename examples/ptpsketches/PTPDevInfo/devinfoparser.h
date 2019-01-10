@@ -4,6 +4,8 @@
 #include <ptpconst.h>
 #include <mtpconst.h>
 #include <ptp.h>
+// #include <Arduino.h>
+// #include <avr/pgmspace.h>
 
 const char msgVendorDefined			[] PROGMEM = "Vendor defined";
 const char msgTab					[] PROGMEM = "\t";
@@ -11,6 +13,7 @@ const char msgCRLF					[] PROGMEM = "\r\n";
 
 // PTP Operations
 const char msgUndefined				[] PROGMEM = "Undefined";
+//PGM_P msgUndefined = PSTR("Undefined");
 const char msgGetDeviceInfo			[] PROGMEM = "GetDeviceInfo";
 const char msgOpenSession			[] PROGMEM = "OpenSession";
 const char msgCloseSession			[] PROGMEM = "CloseSession";
@@ -234,14 +237,14 @@ const char msg3GP_Container						[] PROGMEM = "3GP_Container";
 
 class DevInfoParser : public PTPReadParser
 {
-	static const char* ptpopNames[];
-	static const char* mtpopNames[];
-	static const char* ptpevNames[];
-	static const char* mtpevNames[];
-	static const char* acNames[];
-	static const char* imNames[];
-	static const char* ptpprNames[];
-	static const char* mtpprNames[];
+	static const char* const ptpopNames[];
+	static const char* const mtpopNames[];
+	static const char* const ptpevNames[];
+	static const char* const mtpevNames[];
+	static const char* const acNames[];
+	static const char* const imNames[];
+	static const char* const ptpprNames[];
+	static const char* const mtpprNames[];
 
 	uint8_t		nStage;
 
