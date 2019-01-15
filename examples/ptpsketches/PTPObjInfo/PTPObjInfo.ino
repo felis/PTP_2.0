@@ -38,12 +38,12 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
         E_Notify(PSTR("Camera connected\r\n"), 0x80);
 
         // Before running the sketch make sure you set the obj to the handle value of existing object.
-        uint32_t  objs[] = {0x00020001, 0x00020002, 0x00020003, 0x00020004, 0x00020005, 0x00020006, 0x00020007, 0x00020008, 0x00020009 /*0x30040000, 0x00000003, 0x00000004, 0x00000005, 0x00000006*/};
+        uint32_t  objs[] = { 0x00000002, 0x00000003, 0x00000004, 0x00000005, 0x00000006, 0x00000007, 0x00000008, 0x00000009, 0x0000000A, 0x0000000B };
 
         HexDump              dmp;
         PTPObjInfoParser     prs;
 
-        for (uint8_t i=0; i<9; i++)
+        for (uint8_t i=0; i<10; i++)
         {
             E_Notify(PSTR("\r\n"), 0x80);
             PrintHex<uint32_t>(objs[i], 0x80);

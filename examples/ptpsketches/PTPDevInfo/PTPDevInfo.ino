@@ -17,7 +17,7 @@ public:
 } CamStates;
 
 USB      Usb;
-USBHub   Hub1(&Usb);
+// USBHub   Hub1(&Usb);
 PTP      Ptp(&Usb, &CamStates);
 
 void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)

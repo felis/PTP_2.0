@@ -1,6 +1,6 @@
 #include "stinfoparser.h"
 
-const char* PTPStorageInfoParser::stNames[] PROGMEM =
+const char* const PTPStorageInfoParser::stNames[] PROGMEM =
 {
 	msgUndefined,
 	msgFixedROM,
@@ -9,7 +9,7 @@ const char* PTPStorageInfoParser::stNames[] PROGMEM =
 	msgRemovableRAM	
 };
 
-const char* PTPStorageInfoParser::fstNames[] PROGMEM =
+const char* const PTPStorageInfoParser::fstNames[] PROGMEM =
 {
 	msgUndefined,
 	msgGenericFlat,			
@@ -17,7 +17,7 @@ const char* PTPStorageInfoParser::fstNames[] PROGMEM =
 	msgDCF					
 };
 
-const char* PTPStorageInfoParser::acNames[] PROGMEM =
+const char* const PTPStorageInfoParser::acNames[] PROGMEM =
 {
 	msgUndefined,
 	msgReadWrite,						
