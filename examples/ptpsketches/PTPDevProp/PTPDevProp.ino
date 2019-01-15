@@ -40,12 +40,13 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
         stateConnected = stConnected;
         E_Notify(PSTR("Camera connected\r\n"), 0x80);
 
-        uint16_t    prefix[3] = { 0x5000, 0xD000, 0xD100 };
+        uint16_t    prefix[3] = { /* 0x5000 */ 0xD400, 0xD300, 0x5000 };
 
         for (uint8_t i=0; i<3; i++)
         {
             for (uint8_t j=0; j<128; j++)
             {
+
                 HexDump          dmp;
 
                 if (Ptp.GetDevicePropDesc((prefix[i] | j), &dmp) == PTP_RC_OK)

@@ -1,6 +1,6 @@
 #include "devinfoparser.h"
 
-const char* DevInfoParser::ptpopNames[] PROGMEM = 
+const char* const DevInfoParser::ptpopNames[] PROGMEM = 
 {
 	msgUndefined,				
 	msgGetDeviceInfo,			
@@ -33,7 +33,7 @@ const char* DevInfoParser::ptpopNames[] PROGMEM =
 	msgInitiateOpenCapture	
 };
 
-const char* DevInfoParser::mtpopNames[] PROGMEM = 
+const char* const DevInfoParser::mtpopNames[] PROGMEM = 
 {
 	msgUndefined,				
 	msgGetObjectPropsSupported,	
@@ -46,7 +46,7 @@ const char* DevInfoParser::mtpopNames[] PROGMEM =
 	msgSendObjectPropList		
 };
 
-const char* DevInfoParser::ptpevNames[] PROGMEM = 
+const char* const DevInfoParser::ptpevNames[] PROGMEM = 
 {
 	msgUndefined,
 	msgCancelTransaction,
@@ -65,7 +65,7 @@ const char* DevInfoParser::ptpevNames[] PROGMEM =
 	msgUnreportedStatus
 };
 
-const char* DevInfoParser::mtpevNames[] PROGMEM = 
+const char* const DevInfoParser::mtpevNames[] PROGMEM = 
 {
 	msgUndefined,
 	msgObjectPropChanged,		
@@ -73,7 +73,7 @@ const char* DevInfoParser::mtpevNames[] PROGMEM =
 	msgObjectReferencesChanged
 };
 
-const char* DevInfoParser::ptpprNames[] PROGMEM = 
+const char* const DevInfoParser::ptpprNames[] PROGMEM = 
 {
 	msgUndefined,					
 	msgBatteryLevel,				
@@ -109,7 +109,7 @@ const char* DevInfoParser::ptpprNames[] PROGMEM =
 	msgCopyrightInfo				
 };
 
-const char* DevInfoParser::mtpprNames[] PROGMEM = 
+const char* const DevInfoParser::mtpprNames[] PROGMEM = 
 {
 	msgUndefined,					
 	msgSynchronization_Partner,		
@@ -124,7 +124,7 @@ const char* DevInfoParser::mtpprNames[] PROGMEM =
 	msgPlayback_Container			
 };
 
-const char* DevInfoParser::acNames[] PROGMEM = 
+const char* const DevInfoParser::acNames[] PROGMEM = 
 {
 	msgUndefined,
 	msgAssociation,	
@@ -142,7 +142,7 @@ const char* DevInfoParser::acNames[] PROGMEM =
 	msgQT			
 };
 
-const char* DevInfoParser::imNames[] PROGMEM = 
+const char* const DevInfoParser::imNames[] PROGMEM = 
 {
 	msgUndefined,
 	msgEXIF_JPEG,			
