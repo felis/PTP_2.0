@@ -625,11 +625,7 @@ uint16_t PTP::OpenSession()
 
 	params[0]	= idSession;
         
-<<<<<<< HEAD
         delay(10);   // kludge
-=======
-        delay(10); // kludge
->>>>>>> 5b26e083ca3ddc13c2b2a052f1ccd392bad9e09a
 
 	while (1)
 	{
