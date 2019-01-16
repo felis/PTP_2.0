@@ -20,7 +20,8 @@ USB      Usb;
 USBHub   Hub1(&Usb);
 PTP      Ptp(&Usb, &CamStates);
 
-void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp __attribute__((unused)))
+void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp
+    __attribute__((unused)))
 {
     if (stateConnected == stConnected || stateConnected == stInitial)
     {
