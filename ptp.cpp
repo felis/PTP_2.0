@@ -69,9 +69,9 @@ void uint32_to_char(uint32_t integer, unsigned char *data)
 	data[3] = ((integer >> 24) & 0xff);
 }
 
-const uint8_t		PTP::epDataInIndex		= 1;
-const uint8_t		PTP::epDataOutIndex		= 2;
-const uint8_t		PTP::epInterruptIndex	= 3;
+const uint8_t PTP::epDataInIndex = 1;
+const uint8_t PTP::epDataOutIndex = 2;
+const uint8_t PTP::epInterruptIndex = 3;
 
 PTP::PTP(USB *pusb, PTPStateHandlers *s) : 
     theState(0),
@@ -82,26 +82,29 @@ PTP::PTP(USB *pusb, PTPStateHandlers *s) :
     numConf(0),
     pUsb(pusb)
 {
-    // Control EP
-	epInfo[0].epAddr		= 0;
-	epInfo[0].maxPktSize	= 8;
-	epInfo[0].epAttribs		= 0;
-	epInfo[0].bmNakPower	= USB_NAK_MAX_POWER;
+        // Control EP
+	epInfo[0].epAddr = 0;
+	epInfo[0].maxPktSize = 8;
+	epInfo[0].epAttribs = 0;
+	epInfo[0].bmNakPower = USB_NAK_MAX_POWER;
 
 	// Data-In EP
-	epInfo[1].epAddr		= 0;
-	epInfo[1].maxPktSize	= 8;
-	epInfo[1].epAttribs		= 0;
+	epInfo[1].epAddr = 0;
+	epInfo[1].maxPktSize = 8;
+	epInfo[1].epAttribs = 0;
+        epInfo[1].bmNakPower = USB_NAK_MAX_POWER;
     
-    // Data-Out EP
-	epInfo[2].epAddr		= 0;
-	epInfo[2].maxPktSize	= 8;
-	epInfo[2].epAttribs		= 0;
+        // Data-Out EP
+	epInfo[2].epAddr = 0;
+	epInfo[2].maxPktSize = 8;
+	epInfo[2].epAttribs = 0;
+        epInfo[2].bmNakPower = USB_NAK_MAX_POWER;
     
-    // Interrupt EP
-	epInfo[3].epAddr		= 0;
-	epInfo[3].maxPktSize	= 8;
-	epInfo[3].epAttribs		= 0;
+        // Interrupt EP
+	epInfo[3].epAddr = 0;
+	epInfo[3].maxPktSize = 8;
+	epInfo[3].epAttribs = 0;
+        epInfo[3].bmNakPower = USB_NAK_MAX_POWER;
 
 	if (pUsb)
 		pUsb->RegisterDeviceClass(this);
@@ -385,7 +388,7 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 		}
 		else
 			*((uint8_t*)cmd) = len = PTP_USB_BULK_HDR_LEN;
-		
+                
 		rcode = pUsb->outTransfer(devAddress, epInfo[epDataOutIndex].epAddr, len, cmd);
 
 		if (rcode)
@@ -455,7 +458,7 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 			}
 		}
 
-		// Because inTransfer does not return the actual number of bytes recieved, it should be 
+		// Because inTransfer does not return the actual number of bytes received, it should be 
 		// calculated here.
 		uint32_t	total = 0, data_off = 0; 	// Total PTP data packet size, Data offset
 		uint8_t		inbuffer = 0;			// Number of bytes read into buffer
@@ -467,6 +470,7 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 			ZerroMemory(PTP_MAX_RX_BUFFER_LEN, data);
 
 			uint16_t	read = PTP_MAX_RX_BUFFER_LEN;
+                        
 			rcode = pUsb->inTransfer(devAddress, epInfo[epDataInIndex].epAddr, &read, data);
 
 			if (rcode)
@@ -474,11 +478,15 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 				PTPTRACE("Fatal USB Error\r\n");
 
 				// in some cases NAK handling might be necessary
+<<<<<<< HEAD
 				PTPTRACE2("Transaction: Response receive error", rcode);
+=======
+				PTPTRACE2("Transaction: Response receive error 1", rcode);
+>>>>>>> 5b26e083ca3ddc13c2b2a052f1ccd392bad9e09a
 				return PTP_RC_GeneralError;
 			}
 
-			// This can occure in case of unsupported operation or successive response after data reception stage
+			// This can occur in case of unsupported operation or successive response after data reception stage
 			if ((!loops || total == data_off) && *((uint16_t*)(data + PTP_CONTAINER_CONTYPE_OFF)) == PTP_USB_CONTAINER_RESPONSE)
 			{
 				uint16_t	response = *((uint16_t*)(data + PTP_CONTAINER_OPCODE_OFF));
@@ -496,7 +504,7 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 				}
 				if (response != PTP_RC_OK)
 				{
-					PTPTRACE2("Transaction: Response recieve error", response);
+					PTPTRACE2("Transaction: Response receive error 2", response);
 					data_off = 0;
 				}
 				return response;
@@ -546,6 +554,7 @@ uint16_t PTP::EventCheck(PTPReadParser *pParser)
 		ZerroMemory(PTP_MAX_EV_BUFFER_LEN, data);
 
 		uint16_t	read = PTP_MAX_EV_BUFFER_LEN;
+                
 		rcode = pUsb->inTransfer(devAddress, epInfo[epInterruptIndex].epAddr, &read, data);
 
 		switch (rcode)
@@ -583,6 +592,7 @@ bool PTP::CheckEvent(uint8_t size, uint8_t *buf)
 	ZerroMemory(size, buf);
 
 	uint16_t	read = size;
+        
 	uint8_t rcode = pUsb->inTransfer(devAddress, epInfo[epInterruptIndex].epAddr, &read, buf);
 
 	// if no interrupts pending - return false
@@ -615,7 +625,11 @@ uint16_t PTP::OpenSession()
 
 	params[0]	= idSession;
         
+<<<<<<< HEAD
         delay(10);   // kludge
+=======
+        delay(10); // kludge
+>>>>>>> 5b26e083ca3ddc13c2b2a052f1ccd392bad9e09a
 
 	while (1)
 	{
@@ -808,7 +822,7 @@ uint16_t PTP::GetDevicePropDesc(const uint16_t pcode, PTPReadParser *parser)
 	uint32_t	params[1];
 
 	params[0] = (uint32_t)pcode;
-
+        
 	return Transaction(PTP_OC_GetDevicePropDesc, &flags, params, parser);
 }
 
