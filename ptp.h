@@ -79,12 +79,12 @@ protected:
 	static const uint8_t	epDataOutIndex;		// DataOUT endpoint index
 	static const uint8_t	epInterruptIndex;	// Interrupt endpoint index
 
-	EpInfo				epInfo[4];
+	EpInfo epInfo[4];
 
 	struct OperFlags
 	{
-		uint16_t	opParams	:	3;			// 7	- maximum number of operation parameters
-		uint16_t	rsParams	:	3;			// 7	- maximum number of response parameters
+		uint16_t	opParams	:	3;			// 7 - maximum number of operation parameters
+		uint16_t	rsParams	:	3;			// 7 - maximum number of response parameters
 		uint16_t	txOperation	:	1;			// I->R operation if the flag is set
 		uint16_t	dataStage	:	1;			// operation has data stage if the flag is set
 		uint16_t	typeOfVoid	:	2;			// 0 - NULL, 1 - PTPReadParser/PTPDataSupplyer, 2 - WRITEPARSER, 3 - buffer pointer

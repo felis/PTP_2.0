@@ -1,4 +1,4 @@
-#include <usbhub.h>
+// #include <usbhub.h>
 
 #include <ptp.h>
 #include <ptpdebug.h>
@@ -16,8 +16,8 @@ public:
 } CamStates;
 
 USB      Usb;
-USBHub   Hub1(&Usb);
-PTP      Ptp(&Usb, &CamStates);
+// USBHub   Hub1(&Usb);
+PTP ptp_instance(&Usb, &CamStates);
 
 void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp
     __attribute__((unused)))
@@ -29,15 +29,16 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp
     }
 }
 
-void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
+void CamStateHandlers::OnDeviceInitializedState(PTP* ptp 
+    __attribute__((unused)))
 {
     if (stateConnected == stDisconnected || stateConnected == stInitial)
     {
         stateConnected = stConnected;
         E_Notify(PSTR("Camera connected\r\n"), 0x80);
 
-      	HexDump          dmp;
-      	ptp->GetStorageIDs(&dmp);
+      	HexDump dmp;
+      	ptp_instance.GetStorageIDs(&dmp);
         E_Notify(PSTR("\n"), 0x80);
     }
 }

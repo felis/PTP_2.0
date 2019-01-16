@@ -100,14 +100,15 @@ PTP::PTP(USB *pusb, PTPStateHandlers *s) :
     epInfo[2].epAttribs = 0;
     epInfo[2].bmNakPower = USB_NAK_MAX_POWER;
     
-        // Interrupt EP
-	epInfo[3].epAddr = 0;
-	epInfo[3].maxPktSize = 8;
-	epInfo[3].epAttribs = 0;
-        epInfo[3].bmNakPower = USB_NAK_MAX_POWER;
+    // Interrupt EP
+    epInfo[3].epAddr = 0;
+    epInfo[3].maxPktSize = 8;
+    epInfo[3].epAttribs = 0;
+    epInfo[3].bmNakPower = USB_NAK_MAX_POWER;
 
-	if (pUsb)
-		pUsb->RegisterDeviceClass(this);
+    if (pUsb) {
+	pUsb->RegisterDeviceClass(this);
+    }
 };
 
 
@@ -376,7 +377,8 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 		uint16_to_char(opcode,						(unsigned char*)(cmd + PTP_CONTAINER_OPCODE_OFF));			// code
 		uint32_to_char(++idTransaction,				(unsigned char*)(cmd + PTP_CONTAINER_TRANSID_OFF));			// transaction id
 		
-		uint8_t		n = flags->opParams, len;
+		uint8_t	n = flags->opParams;
+                uint8_t len;
 
 		if (params && *params)
 		{
@@ -620,7 +622,7 @@ uint16_t PTP::OpenSession()
 
 	params[0]	= idSession;
         
-        delay(10);   // kludge
+        delay(100);   // kludge
 
 	while (1)
 	{

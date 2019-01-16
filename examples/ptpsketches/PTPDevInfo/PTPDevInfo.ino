@@ -19,8 +19,9 @@ public:
 USB      Usb;
 // USBHub   Hub1(&Usb);
 //PTP      Ptp(&Usb, &CamStates);
+// PTP camera(&Usb, &CamStates);
 
-PTP      ptp_instance(&Usb, &CamStates);
+PTP ptp_instance(&Usb, &CamStates);
 
 void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp __attribute__((unused)))
 {
