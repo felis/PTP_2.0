@@ -478,11 +478,7 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 				PTPTRACE("Fatal USB Error\r\n");
 
 				// in some cases NAK handling might be necessary
-<<<<<<< HEAD
-				PTPTRACE2("Transaction: Response receive error", rcode);
-=======
 				PTPTRACE2("Transaction: Response receive error 1", rcode);
->>>>>>> 5b26e083ca3ddc13c2b2a052f1ccd392bad9e09a
 				return PTP_RC_GeneralError;
 			}
 
