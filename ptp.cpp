@@ -25,10 +25,10 @@ void PTP::SetInitialState()
 	SetState(PTP_STATE_SESSION_NOT_OPENED);
 }
 
-void PTPStateHandlers::OnDeviceDisconnectedState(PTP *ptp __attribute__ ((unused)))
+void PTPStateHandlers::OnDeviceDisconnectedState
+    (PTP *ptp __attribute__((unused)))
 {
 }
-
 void PTPStateHandlers::OnSessionNotOpenedState(PTP *ptp)
 {
 	if (ptp->OpenSession() == PTP_RC_OK)
@@ -82,23 +82,23 @@ PTP::PTP(USB *pusb, PTPStateHandlers *s) :
     numConf(0),
     pUsb(pusb)
 {
-        // Control EP
-	epInfo[0].epAddr = 0;
-	epInfo[0].maxPktSize = 8;
-	epInfo[0].epAttribs = 0;
-	epInfo[0].bmNakPower = USB_NAK_MAX_POWER;
+    // Control EP
+    epInfo[0].epAddr = 0;
+    epInfo[0].maxPktSize = 8;
+    epInfo[0].epAttribs = 0;
+    epInfo[0].bmNakPower = USB_NAK_MAX_POWER;
 
-	// Data-In EP
-	epInfo[1].epAddr = 0;
-	epInfo[1].maxPktSize = 8;
-	epInfo[1].epAttribs = 0;
-        epInfo[1].bmNakPower = USB_NAK_MAX_POWER;
+    // Data-In EP
+    epInfo[1].epAddr = 0;
+    epInfo[1].maxPktSize = 8;
+    epInfo[1].epAttribs = 0;
+    epInfo[1].bmNakPower = USB_NAK_MAX_POWER;
     
-        // Data-Out EP
-	epInfo[2].epAddr = 0;
-	epInfo[2].maxPktSize = 8;
-	epInfo[2].epAttribs = 0;
-        epInfo[2].bmNakPower = USB_NAK_MAX_POWER;
+    // Data-Out EP
+    epInfo[2].epAddr = 0;
+    epInfo[2].maxPktSize = 8;
+    epInfo[2].epAttribs = 0;
+    epInfo[2].bmNakPower = USB_NAK_MAX_POWER;
     
         // Interrupt EP
 	epInfo[3].epAddr = 0;
