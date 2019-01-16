@@ -115,20 +115,18 @@ uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed
     __attribute__ ((unused)))
 {
 	const uint8_t constBufSize = 39;
-
-	uint8_t		buf[constBufSize];
+	uint8_t	buf[constBufSize];
         USB_DEVICE_DESCRIPTOR *udd =
                 reinterpret_cast<USB_DEVICE_DESCRIPTOR*>(buf);
         USB_CONFIGURATION_DESCRIPTOR *ucd =
                 reinterpret_cast<USB_CONFIGURATION_DESCRIPTOR*>(buf);
         // USB_INTERFACE_DESCRIPTOR *uid =
         //        reinterpret_cast<USB_INTERFACE_DESCRIPTOR*>(buf);
-	uint8_t		rcode;
-	UsbDevice	*p = NULL;
-	EpInfo		*oldep_ptr = NULL;
-	uint8_t		len = 0;
-	uint16_t	cd_len = 0;
-
+	uint8_t rcode;
+	UsbDevice *p = NULL;
+	EpInfo *oldep_ptr = NULL;
+	uint8_t len = 0;
+	uint16_t cd_len = 0;
 	uint8_t		num_of_conf;	// number of configurations
 	// uint8_t		num_of_intf;	// number of interfaces
 
@@ -136,18 +134,19 @@ uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed
 
 	PTPTRACE("PTP Init\r\n");
 
-	if (devAddress)
+	if (devAddress) {
 		return USB_ERROR_CLASS_INSTANCE_ALREADY_IN_USE;
-
+        }
 	// Get pointer to pseudo device with address 0 assigned
 	p = addrPool.GetUsbDevicePtr(0);
 
-	if (!p)
+	if (!p) {
+                PTPTRACE("dev.address not set\r\n");
 		return USB_ERROR_ADDRESS_NOT_FOUND_IN_POOL;
-
-	if (!p->epinfo)
-	{
-		PTPTRACE("epinfo\r\n");
+        }
+        
+	if (!p->epinfo) {
+		PTPTRACE("epinfo not set\r\n");
 		return USB_ERROR_EPINFO_IS_NULL;
 	}
 
@@ -158,7 +157,7 @@ uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed
 	p->epinfo = epInfo;
 
 	// Get device descriptor
-	rcode = pUsb->getDevDescr( 0, 0, 8, (uint8_t*)buf );
+	rcode = pUsb->getDevDescr( 0, 0, 8, /* (uint8_t*) */ buf );
 
 	if  (!rcode)
 		len = (buf[0] > 32) ? 32 : buf[0];
@@ -1104,4 +1103,39 @@ uint16_t PTP::GetObjectHandles(uint32_t storage_id, uint16_t format, uint16_t as
 	params[2] = (uint32_t)assoc;
 
 	return Transaction(PTP_OC_GetObjectHandles, &flags, params, parser);
+}
+
+uint16_t PTP::SendObjectInfo(uint32_t handle, PTPDataSupplier *sup)
+{
+	(void)handle;
+        (void)sup;
+        
+        uint16_t ptp_error = PTP_RC_GeneralError;
+#if 0    
+        OperFlags flags = { 2, 3, 1, 1, 1, 0 /* sup->GetDataSize() */ };
+	uint32_t params[3];
+	
+	uint32_t store;
+        uint32_t parenthandle;
+              
+
+	params[0] = 0; // destination StorageID
+	params[1] = 0; // Parent ObjectHandle
+
+	if ((ptp_error = Transaction(PTP_OC_SendObjectInfo, &flags, params, sup)) == PTP_RC_OK) {
+            store = params[0];              //Responder StorageID in which object will be stored
+            parenthandle = params[1];       //Responder Parent ObjectHandle in which the object will be stored
+            handle = params[2];             //Responder's reserved ObjectHandle for the incoming object
+	}
+#endif
+	
+	return ptp_error;
+}
+
+uint16_t PTP::SendObject(uint32_t handle, PTPDataSupplier *sup) {
+        (void)handle;
+        
+	OperFlags flags = { 0, 0, 1, 1, 3, 0 /* sup->GetDataSize() */ };
+
+	return Transaction(PTP_OC_SendObject, &flags, NULL, sup);
 }

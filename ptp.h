@@ -100,7 +100,7 @@ protected:
 	// returns event on success or error code if timeout elapsed
 	bool EventWait(uint8_t size, uint8_t *event_buf, uint16_t timeout);
 
-	// returns true if event occured
+	// returns true if event occurred
 	// the actual data is stored in a buffer pointed by buf
 	bool CheckEvent(uint8_t size, uint8_t *buf);
 
@@ -164,10 +164,12 @@ public:
 	uint16_t TerminateOpenCapture(uint32_t trans_id);
 	uint16_t InitiateCapture(uint32_t storage_id = 0, uint16_t format = 0);
 
+        
+        uint16_t SendObjectInfo(uint32_t handle, PTPDataSupplier *sup);
+	uint16_t SendObject(uint32_t handle, PTPDataSupplier *sup);
+        
 	// To be implemented in future releases
 	//uint16_t GetPartialObject(uint32_t handle, PTPReadParser *parser);
-	//uint16_t SendObjectInfo(uint32_t handle, PTPDataSupplier *sup);
-	//uint16_t SendObject(uint32_t handle, PTPDataSupplier *sup);
 };
 
 #endif // __PTP_H__
