@@ -25,7 +25,7 @@ void PTP::SetInitialState()
 	SetState(PTP_STATE_SESSION_NOT_OPENED);
 }
 
-void PTPStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
+void PTPStateHandlers::OnDeviceDisconnectedState(PTP *ptp __attribute__ ((unused)))
 {
 }
 
@@ -43,15 +43,15 @@ void PTPStateHandlers::OnSessionOpenedState(PTP *ptp)
 	ptp->SetState(PTP_STATE_DEVICE_INITIALIZED);
 }
 
-void PTPStateHandlers::OnDeviceInitializedState(PTP *ptp)
+void PTPStateHandlers::OnDeviceInitializedState(PTP *ptp __attribute__ ((unused)))
 {
 }
 
-void PTPStateHandlers::OnDeviceNotRespondingState(PTP *ptp)
+void PTPStateHandlers::OnDeviceNotRespondingState(PTP *ptp __attribute__ ((unused)))
 {
 }
 
-void PTPStateHandlers::OnDeviceBusyState(PTP *ptp)
+void PTPStateHandlers::OnDeviceBusyState(PTP *ptp __attribute__ ((unused)))
 {
 }
 
@@ -74,13 +74,13 @@ const uint8_t		PTP::epDataOutIndex		= 2;
 const uint8_t		PTP::epInterruptIndex	= 3;
 
 PTP::PTP(USB *pusb, PTPStateHandlers *s) : 
-	pUsb(pusb),
-	theState(0),
-	idTransaction(~((transaction_id_t)0)), 
-	idSession(0), 
-	devAddress(0),
-	numConf(0),
-	stateMachine(s)
+    theState(0),
+    idTransaction(~((transaction_id_t)0)),
+    idSession(0),
+    stateMachine(s),
+    devAddress(0),
+    numConf(0),
+    pUsb(pusb)
 {
     // Control EP
 	epInfo[0].epAddr		= 0;
@@ -108,11 +108,18 @@ PTP::PTP(USB *pusb, PTPStateHandlers *s) :
 };
 
 
-uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed)
+uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed
+    __attribute__ ((unused)))
 {
 	const uint8_t constBufSize = 39;
 
 	uint8_t		buf[constBufSize];
+        USB_DEVICE_DESCRIPTOR *udd =
+                reinterpret_cast<USB_DEVICE_DESCRIPTOR*>(buf);
+        USB_CONFIGURATION_DESCRIPTOR *ucd =
+                reinterpret_cast<USB_CONFIGURATION_DESCRIPTOR*>(buf);
+        // USB_INTERFACE_DESCRIPTOR *uid =
+        //        reinterpret_cast<USB_INTERFACE_DESCRIPTOR*>(buf);
 	uint8_t		rcode;
 	UsbDevice	*p = NULL;
 	EpInfo		*oldep_ptr = NULL;
@@ -120,7 +127,7 @@ uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed)
 	uint16_t	cd_len = 0;
 
 	uint8_t		num_of_conf;	// number of configurations
-	uint8_t		num_of_intf;	// number of interfaces
+	// uint8_t		num_of_intf;	// number of interfaces
 
 	AddressPool	&addrPool = pUsb->GetAddressPool();
 
@@ -164,10 +171,10 @@ uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed)
 
 	// Extract device class from device descriptor
 	// If device class is not a hub return
-	if (   ((USB_DEVICE_DESCRIPTOR*)buf)->bDeviceClass != 0 
-		&& ((USB_DEVICE_DESCRIPTOR*)buf)->bDeviceClass != USB_CLASS_IMAGE 
-		&& ((USB_DEVICE_DESCRIPTOR*)buf)->bDeviceSubClass != 0x01
-		&& ((USB_DEVICE_DESCRIPTOR*)buf)->bDeviceProtocol != 0x01)
+	if ( udd->bDeviceClass != 0 
+            && udd->bDeviceClass != USB_CLASS_IMAGE 
+            && udd->bDeviceSubClass != 0x01
+            && udd->bDeviceProtocol != 0x01)
 
 		return USB_DEV_CONFIG_ERROR_DEVICE_NOT_SUPPORTED;
 
@@ -178,7 +185,7 @@ uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed)
 		return USB_ERROR_OUT_OF_ADDRESS_SPACE_IN_POOL;
 
 	// Extract Max Packet Size from the device descriptor
-	epInfo[0].maxPktSize = (uint8_t)((USB_DEVICE_DESCRIPTOR*)buf)->bMaxPacketSize0; 
+	epInfo[0].maxPktSize = udd->bMaxPacketSize0; 
 
 	// Assign new address to the device
 	rcode = pUsb->setAddr( 0, 0, devAddress );
@@ -204,7 +211,7 @@ uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed)
 	if(rcode) 
 		goto FailGetDevDescr;
 
-	num_of_conf = ((USB_DEVICE_DESCRIPTOR*)buf)->bNumConfigurations;
+	num_of_conf = udd->bNumConfigurations;
 
 	// Assign epInfo to epinfo pointer
 	rcode = pUsb->setEpInfoEntry(devAddress, 4, epInfo);
@@ -219,7 +226,7 @@ uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed)
 
 		if (!rcode)
 		{
-			cd_len = ((USB_CONFIGURATION_DESCRIPTOR*)buf)->wTotalLength;
+			cd_len = ucd->wTotalLength;
 			cd_len = (cd_len > constBufSize) ? constBufSize : cd_len;
 			rcode = pUsb->getConfDescr(devAddress, 0, cd_len, i, buf);
 		}
@@ -230,11 +237,11 @@ uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed)
 
 		PTPTRACE2("NI:", ((USB_CONFIGURATION_DESCRIPTOR*)buf)->bNumInterfaces);
 
-		if (((USB_CONFIGURATION_DESCRIPTOR*)buf)->bNumInterfaces > 0 
+		if (ucd->bNumInterfaces > 0 
 			&& pIntf->bInterfaceClass == 6 && pIntf->bInterfaceSubClass == 1 && pIntf->bInterfaceProtocol == 1) 
 		{
 			FillEPRecords((USB_ENDPOINT_DESCRIPTOR*)(buf + sizeof(USB_CONFIGURATION_DESCRIPTOR) + sizeof(USB_INTERFACE_DESCRIPTOR)));
-			numConf = ((USB_CONFIGURATION_DESCRIPTOR*)buf)->bConfigurationValue;
+			numConf = ucd->bConfigurationValue;
 			break;
 		}
 	} // for
@@ -314,6 +321,8 @@ uint8_t PTP::Poll()
 {
 	if (bPollEnable)
 		Task();
+        
+        return 0;   // kludge
 };
 
 void PTP::Task()
@@ -387,6 +396,7 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 	}
 	{
 		uint8_t		data[PTP_MAX_RX_BUFFER_LEN];
+                uint32_t* pd32  = reinterpret_cast<uint32_t*>(data);
 
 		if (flags->txOperation)
 		{
@@ -401,12 +411,12 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 							((flags->typeOfVoid == 1) ? PTP_USB_BULK_HDR_LEN + ((PTPDataSupplier*)pVoid)->GetDataSize() : 12);
 
 			// Make data PTP container header
-			*((uint32_t*)data) = bytes_left;
+			*pd32 = bytes_left;
 			uint16_to_char(PTP_USB_CONTAINER_DATA,	(unsigned char*)(data + PTP_CONTAINER_CONTYPE_OFF));		// type
 			uint16_to_char(opcode,					(unsigned char*)(data + PTP_CONTAINER_OPCODE_OFF));			// code
 			uint32_to_char(idTransaction,			(unsigned char*)(data + PTP_CONTAINER_TRANSID_OFF));		// transaction id
 
-			uint16_t	len;
+			uint16_t len = 0;
 
 			if (flags->typeOfVoid == 1)
 				len = (bytes_left < PTP_MAX_RX_BUFFER_LEN) ? bytes_left : PTP_MAX_RX_BUFFER_LEN;
@@ -450,7 +460,7 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 		uint32_t	total = 0, data_off = 0; 	// Total PTP data packet size, Data offset
 		uint8_t		inbuffer = 0;			// Number of bytes read into buffer
 		uint16_t	loops = 0;			// Number of loops necessary to get all the data from device
-		uint8_t		timeoutcnt = 0;
+		// uint8_t		timeoutcnt = 0;
 
 		while (1)
 		{
@@ -464,7 +474,7 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 				PTPTRACE("Fatal USB Error\r\n");
 
 				// in some cases NAK handling might be necessary
-				PTPTRACE2("Transaction: Response recieve error", rcode);
+				PTPTRACE2("Transaction: Response receive error", rcode);
 				return PTP_RC_GeneralError;
 			}
 
@@ -473,10 +483,10 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 			{
 				uint16_t	response = *((uint16_t*)(data + PTP_CONTAINER_OPCODE_OFF));
 
-				if (response == PTP_RC_OK && *((uint32_t*)data) > PTP_USB_BULK_HDR_LEN)
+				if (response == PTP_RC_OK && *pd32 > PTP_USB_BULK_HDR_LEN)
 				{
 					// number of params = (container length - 12) / 4
-					uint8_t	n = (*((uint32_t*)data) - PTP_USB_BULK_HDR_LEN) >> 2;
+					uint8_t	n = (*pd32 - PTP_USB_BULK_HDR_LEN) >> 2;
 
 					// BUG: n should be checked!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					flags->rsParams = n;
@@ -494,7 +504,7 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 
 			if (loops == 0)
 			{
-				total		=	*((uint32_t*)data);
+				total		=	*pd32;
 				inbuffer	=	(total < PTP_MAX_RX_BUFFER_LEN) ? (uint8_t)total : PTP_MAX_RX_BUFFER_LEN;
 			}
 			else
@@ -521,6 +531,7 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 uint16_t PTP::EventCheck(PTPReadParser *pParser)
 {
 	uint8_t		data[PTP_MAX_EV_BUFFER_LEN];
+        uint32_t* pd32  = reinterpret_cast<uint32_t*>(data);
 	uint8_t		rcode;
 
 	// Because inTransfer does not return the actual number of bytes recieved, it should be 
@@ -528,7 +539,7 @@ uint16_t PTP::EventCheck(PTPReadParser *pParser)
 	uint32_t	total = 0, data_off = 0;
 	uint8_t		inbuffer = 0;
 	uint16_t	loops = 0;
-	uint8_t		timeoutcnt = 0;
+	// uint8_t		timeoutcnt = 0;
 
 	while (1)
 	{
@@ -551,7 +562,7 @@ uint16_t PTP::EventCheck(PTPReadParser *pParser)
 
 		if (loops == 0)
 		{
-			total		=	*((uint32_t*)data);
+			total		=	*pd32;
 			inbuffer	=	(total < PTP_MAX_EV_BUFFER_LEN) ? (uint8_t)total : PTP_MAX_EV_BUFFER_LEN;
 		}
 		else
@@ -609,7 +620,7 @@ uint16_t PTP::OpenSession()
 		uint16_t ret = Transaction(PTP_OC_OpenSession, &flags, params);
 
 		if (ret == PTP_RC_SessionAlreadyOpened)
-			ret == CloseSession();
+			ret = CloseSession();
 		else
 			return ret;
 	}
@@ -621,7 +632,10 @@ uint16_t PTP::ResetDevice()
 	return Transaction(PTP_OC_ResetDevice, &flags);
 }
 
-uint16_t PTP::GetNumObjects(uint32_t &retval, uint32_t storage_id, uint16_t format, uint32_t assoc)
+uint16_t PTP::GetNumObjects(uint32_t &retval,
+        uint32_t storage_id __attribute__ ((unused)),
+        uint16_t format __attribute__ ((unused)),
+        uint32_t assoc __attribute__ ((unused)))
 {
 	uint16_t	ptp_error = PTP_RC_GeneralError;
 	OperFlags	flags = { 3, 1, 0, 0, 0, 0 };
@@ -751,7 +765,7 @@ uint16_t PTP::PowerDown()
 
 uint16_t PTP::SelfTest(uint16_t type = 0)
 {
-	OperFlags	flags = { 1, 0, 0, 0 };
+	OperFlags	flags = { 1, 0, 0, 0, 0, 0 };
 	uint32_t	params[1];
 	params[0]	= type;
 
@@ -971,7 +985,7 @@ uint16_t PTP::SetDevicePropValue(uint16_t pcode, int32_t val)
 
 uint16_t PTP::ResetDevicePropValue(const uint16_t pcode)
 {
-	OperFlags	flags		= { 1, 0, 0, 0 };
+	OperFlags	flags		= { 1, 0, 0, 0, 0, 0 };
 	uint32_t	params[1];
 
 	params[0] = (uint32_t)pcode;
@@ -1013,7 +1027,7 @@ uint16_t PTP::CaptureImage()
 {
 	uint16_t	ptp_error = PTP_RC_GeneralError;
 	uint32_t	params[2] = {0, 0x00003801};
-	OperFlags	flags = { 2, 0, 0, 0 };
+	OperFlags	flags = { 2, 0, 0, 0, 0, 0 };
 
 	if ( (ptp_error = Transaction(PTP_OC_InitiateCapture, &flags, params)) != PTP_RC_OK)
 	{

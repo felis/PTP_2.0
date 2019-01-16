@@ -16,7 +16,7 @@ e-mail   :  support@circuitsathome.com
 */
 #include "eoseventdump.h"
 
-void EOSEventDump::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t &offset)
+void EOSEventDump::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t &offset __attribute__ ((unused)))
 {
 	uint8_t		*p		= (uint8_t*)pbuf;
 	uint16_t	cntdn	= (uint16_t)len;

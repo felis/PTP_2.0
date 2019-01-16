@@ -60,9 +60,12 @@ public:
 
 class NKEventParser : public PTPReadParser
 {
-	const uint16_t			constInitialEventCode;
 
-	NKEventHandlers			*pHandler;
+    NKEventHandlers			*pHandler;
+    
+    const uint16_t			constInitialEventCode;
+
+	
 
 	uint8_t					paramsChanged;
 

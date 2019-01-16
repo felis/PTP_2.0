@@ -39,11 +39,12 @@ public:
 
 class EOSEventParser : public PTPReadParser
 {
-	const uint16_t			constInitialEventCode;
 
-	EOSEventHandlers		*pHandler;
+    EOSEventHandlers		*pHandler;
+    
+    const uint16_t			constInitialEventCode;
 
-	uint8_t					paramsChanged;
+	
 
 	uint8_t					nStage;
 	uint8_t					nRecStage;
@@ -53,6 +54,7 @@ class EOSEventParser : public PTPReadParser
 	EOSEvent				eosEvent;
 	uint16_t				paramCountdown;
 	uint16_t				paramCount;
+        uint8_t					paramsChanged;
 
 	MultiByteValueParser	valueParser;
 	ByteSkipper				byteSkipper;

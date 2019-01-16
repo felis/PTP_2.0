@@ -50,7 +50,7 @@ uint32_t ImgQualitySupplier::GetDataSize()
 	return ((pictFormat & 0xFFFF0000) ? 0x0000002C : 0x0000001C);
 }
 
-void ImgQualitySupplier::GetData(const uint16_t len, uint8_t *pbuf)
+void ImgQualitySupplier::GetData(const uint16_t len __attribute__ ((unused)), uint8_t *pbuf)
 {
 	uint8_t		num_files = (pictFormat & 0xFFFF0000) ? 2 : 1;
 
@@ -77,6 +77,8 @@ CanonEOS::CanonEOS(USB *pusb, PTPStateHandlers *s)
 uint8_t CanonEOS::Init(uint8_t parent, uint8_t port, bool lowspeed)
 {
 	uint8_t		buf[10];
+        USB_DEVICE_DESCRIPTOR *udd =
+                reinterpret_cast<USB_DEVICE_DESCRIPTOR*>(buf);
 	uint8_t		rcode;
 	UsbDevice	*p = NULL;
 	EpInfo		*oldep_ptr = NULL;
@@ -118,7 +120,7 @@ uint8_t CanonEOS::Init(uint8_t parent, uint8_t port, bool lowspeed)
 		return rcode;
 	}
 
-	if (((USB_DEVICE_DESCRIPTOR*)buf)->idVendor == 0x04A9)
+	if (udd->idVendor == 0x04A9)
 		return PTP::Init(parent, port, lowspeed);
 	else 
 	{

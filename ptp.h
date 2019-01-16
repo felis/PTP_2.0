@@ -109,8 +109,6 @@ protected:
 public:
 	PTP(USB *pusb, PTPStateHandlers *s);
 
-	//void PrintTransactionId() { Serial.println(idTransaction,HEX); };
-
 	// USBDeviceConfig implementation
 	virtual uint8_t Init(uint8_t parent, uint8_t port, bool lowspeed);
 	virtual uint8_t Release();

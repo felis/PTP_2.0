@@ -24,6 +24,8 @@ NikonDSLR::NikonDSLR(USB *pusb, PTPStateHandlers *s)
 uint8_t NikonDSLR::Init(uint8_t parent, uint8_t port, bool lowspeed)
 {
 	uint8_t		buf[10];
+        USB_DEVICE_DESCRIPTOR *udd =
+                reinterpret_cast<USB_DEVICE_DESCRIPTOR*>(buf);
 	uint8_t		rcode;
 	UsbDevice	*p = NULL;
 	EpInfo		*oldep_ptr = NULL;
@@ -65,7 +67,7 @@ uint8_t NikonDSLR::Init(uint8_t parent, uint8_t port, bool lowspeed)
 		return rcode;
 	}
 
-	if (((USB_DEVICE_DESCRIPTOR*)buf)->idVendor == 0x04B0)
+	if (udd->idVendor == 0x04B0)
 		return PTP::Init(parent, port, lowspeed);
 	else 
 	{
