@@ -5,31 +5,31 @@
 #include <ptp.h>
 
 // Storage Types
-const char msgUndefined		[] PROGMEM = "Undefined";
-const char msgFixedROM		[] PROGMEM = "FixedROM";
-const char msgRemovableROM	[] PROGMEM = "RemovableROM";
-const char msgFixedRAM		[] PROGMEM = "FixedRAM";
-const char msgRemovableRAM	[] PROGMEM = "RemovableRAM";
+const char msgUndefined	[] PROGMEM = "Undefined";
+const char msgFixedROM	[] PROGMEM = "FixedROM";
+const char msgRemovableROM [] PROGMEM = "RemovableROM";
+const char msgFixedRAM	[] PROGMEM = "FixedRAM";
+const char msgRemovableRAM [] PROGMEM = "RemovableRAM";
 
 // File System Types
-const char msgGenericFlat			[] PROGMEM = "GenericFlat";
-const char msgGenericHierarchical	[] PROGMEM = "GenericHierarchical";
-const char msgDCF					[] PROGMEM = "DCF";
+const char msgGenericFlat [] PROGMEM = "GenericFlat";
+const char msgGenericHierarchical [] PROGMEM = "GenericHierarchical";
+const char msgDCF [] PROGMEM = "DCF";
 
 // Access Capability
-const char msgReadWrite						[] PROGMEM = "ReadWrite";
-const char msgReadOnly						[] PROGMEM = "ReadOnly";
-const char msgReadOnly_with_Object_Deletion	[] PROGMEM = "ReadOnly with Object Deletion";
+const char msgReadWrite [] PROGMEM = "ReadWrite";
+const char msgReadOnly	[] PROGMEM = "ReadOnly";
+const char msgReadOnly_with_Object_Deletion [] PROGMEM = "ReadOnly with Object Deletion";
 
 
 class PTPStorageInfoParser : public PTPReadParser
 {
-	uint8_t							nStage;
-	uint8_t							strByteCountDown;
+	uint8_t nStage;
+	uint8_t	strByteCountDown;
 
-	static const char*				stNames[];
-	static const char*				fstNames[];
-	static const char*				acNames[];
+	static const char* const stNames[];
+	static const char* const fstNames[];
+	static const char* const acNames[];
 
 	void PrintStorageType(uint8_t **pp, uint16_t *pcntdn);
 	void PrintFileSystemType(uint8_t **pp, uint16_t *pcntdn);

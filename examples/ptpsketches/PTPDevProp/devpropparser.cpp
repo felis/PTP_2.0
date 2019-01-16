@@ -1,6 +1,6 @@
 #include "devpropparser.h"
 
-const char* DevPropParser::dtNames1[] PROGMEM = 
+const char* const DevPropParser::dtNames1[] PROGMEM = 
 {
 	msgUNDEF,
 	msgINT8,	
@@ -15,7 +15,7 @@ const char* DevPropParser::dtNames1[] PROGMEM =
 	msgUINT128
 };
 
-const char* DevPropParser::dtNames2[] PROGMEM = 
+const char* const DevPropParser::dtNames2[] PROGMEM = 
 {
 	msgUNDEF,
 	msgAINT8,
@@ -30,7 +30,7 @@ const char* DevPropParser::dtNames2[] PROGMEM =
 	msgAUINT128
 };
 
-const char* DevPropParser::prNames[] PROGMEM = 
+const char* const DevPropParser::prNames[] PROGMEM = 
 {
 	msgUndefined,					
 	msgBatteryLevel,				
@@ -273,7 +273,7 @@ bool DevPropParser::ParseEnumArray(uint8_t **pp, uint16_t *pcntdn)
     case 2:
         for (; enLenCntdn; enLenCntdn--)
         {
-            if (!enumParser.Parse(pp, pcntdn, (PTP_ARRAY_EL_FUNC)&PrintEnumValue), PTPListParser::modeArray, this)
+            if (!enumParser.Parse(pp, pcntdn, (PTP_ARRAY_EL_FUNC)&PrintEnumValue) /* , PTPListParser::modeArray, this */)
                 return false;
                 
             E_Notify(PSTR("\r\n"), 0x80);
@@ -300,7 +300,7 @@ bool DevPropParser::ParseEnumSingle(uint8_t **pp, uint16_t *pcntdn)
     return true;
 }
 
-void DevPropParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t &offset)
+void DevPropParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t &offset __attribute__((unused)))
 {
 	uint16_t	cntdn	= (uint16_t)len;
 	uint8_t		*p	= (uint8_t*)pbuf;
@@ -365,4 +365,3 @@ void DevPropParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_
 		nStage = 0;
 	}
 }
-

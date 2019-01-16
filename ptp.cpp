@@ -614,6 +614,8 @@ uint16_t PTP::OpenSession()
 	idTransaction	= ~((transaction_id_t)0);
 
 	params[0]	= idSession;
+        
+        delay(10);   // kludge
 
 	while (1)
 	{

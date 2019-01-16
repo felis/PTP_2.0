@@ -242,9 +242,11 @@ uint16_t PrintValueTitle(PTP *ptp, uint16_t prop, const ValueTitle<LIST_VALUE_TY
 {
 	const char	*title;
 
-	if (GetValueTitle<LIST_VALUE_TYPE, LIST_VALUE_TYPE, TABLE_SIZE, TEXT_SIZE>(ptp, prop, p, &title) == PTP_RC_OK)
+	if (GetValueTitle<LIST_VALUE_TYPE, LIST_VALUE_TYPE, TABLE_SIZE, TEXT_SIZE>(ptp, prop, p, &title) == PTP_RC_OK) {
 		E_Notify(title, 0x80);
-		//Serial.write(*title);
+        }
+        
+        return 0;
 }
 
 #endif // __PTPDPPARSER_H__

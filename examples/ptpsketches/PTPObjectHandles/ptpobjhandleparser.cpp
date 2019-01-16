@@ -1,7 +1,8 @@
 #include "ptpobjhandleparser.h"
 
 
-void PTPObjHandleParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t &offset)
+void PTPObjHandleParser::Parse(const uint16_t len, const uint8_t *pbuf,
+        const uint32_t &offset __attribute__((unused)))
 {
 	uint16_t	cntdn	= (uint16_t)len;
 	uint8_t		*p		= (uint8_t*)pbuf;

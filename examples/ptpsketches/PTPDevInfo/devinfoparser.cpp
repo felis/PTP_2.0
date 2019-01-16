@@ -1,6 +1,6 @@
 #include "devinfoparser.h"
 
-const char* DevInfoParser::ptpopNames[] PROGMEM = 
+const char* const DevInfoParser::ptpopNames[] PROGMEM = 
 {
 	msgUndefined,				
 	msgGetDeviceInfo,			
@@ -33,7 +33,7 @@ const char* DevInfoParser::ptpopNames[] PROGMEM =
 	msgInitiateOpenCapture	
 };
 
-const char* DevInfoParser::mtpopNames[] PROGMEM = 
+const char* const DevInfoParser::mtpopNames[] PROGMEM = 
 {
 	msgUndefined,				
 	msgGetObjectPropsSupported,	
@@ -46,7 +46,7 @@ const char* DevInfoParser::mtpopNames[] PROGMEM =
 	msgSendObjectPropList		
 };
 
-const char* DevInfoParser::ptpevNames[] PROGMEM = 
+const char* const DevInfoParser::ptpevNames[] PROGMEM = 
 {
 	msgUndefined,
 	msgCancelTransaction,
@@ -65,7 +65,7 @@ const char* DevInfoParser::ptpevNames[] PROGMEM =
 	msgUnreportedStatus
 };
 
-const char* DevInfoParser::mtpevNames[] PROGMEM = 
+const char* const DevInfoParser::mtpevNames[] PROGMEM = 
 {
 	msgUndefined,
 	msgObjectPropChanged,		
@@ -73,7 +73,7 @@ const char* DevInfoParser::mtpevNames[] PROGMEM =
 	msgObjectReferencesChanged
 };
 
-const char* DevInfoParser::ptpprNames[] PROGMEM = 
+const char* const DevInfoParser::ptpprNames[] PROGMEM = 
 {
 	msgUndefined,					
 	msgBatteryLevel,				
@@ -109,7 +109,7 @@ const char* DevInfoParser::ptpprNames[] PROGMEM =
 	msgCopyrightInfo				
 };
 
-const char* DevInfoParser::mtpprNames[] PROGMEM = 
+const char* const DevInfoParser::mtpprNames[] PROGMEM = 
 {
 	msgUndefined,					
 	msgSynchronization_Partner,		
@@ -124,7 +124,7 @@ const char* DevInfoParser::mtpprNames[] PROGMEM =
 	msgPlayback_Container			
 };
 
-const char* DevInfoParser::acNames[] PROGMEM = 
+const char* const DevInfoParser::acNames[] PROGMEM = 
 {
 	msgUndefined,
 	msgAssociation,	
@@ -142,7 +142,7 @@ const char* DevInfoParser::acNames[] PROGMEM =
 	msgQT			
 };
 
-const char* DevInfoParser::imNames[] PROGMEM = 
+const char* const DevInfoParser::imNames[] PROGMEM = 
 {
 	msgUndefined,
 	msgEXIF_JPEG,			
@@ -172,7 +172,9 @@ DevInfoParser::DevInfoParser() :
 	fmByteCountDown(0),
 	idVendor(0)
 {
-	for (uint8_t i=0; i<4; i++) waLen[i];
+	for (uint8_t i = 0; i < 4; i++) { 
+            waLen[i] = 0;
+        }
 	waWord.word = 0;
 	fmBytes[0] = 0;
 	fmBytes[1] = 0;
@@ -566,6 +568,8 @@ bool DevInfoParser::PrintString(uint8_t **pp, uint16_t &count)
 
 bool DevInfoParser::PrintWordArray(uint8_t **pp, uint16_t &count, PRINTFUNC pf = NULL)
 {
+    uint32_t* pd32  = reinterpret_cast<uint32_t*>(waLen);
+    
 	switch (waStage)
 	{
 	case 0:
@@ -581,7 +585,7 @@ bool DevInfoParser::PrintWordArray(uint8_t **pp, uint16_t &count, PRINTFUNC pf =
 		waStage ++;
 
 	case 1:
-		for (waByteCountDown = (waByteCountDown) ? waByteCountDown : ((*((uint32_t*)waLen) << 1)); 
+		for (waByteCountDown = (waByteCountDown) ? waByteCountDown : (*pd32 << 1); 
 			 waByteCountDown && count; waByteCountDown--, count--, (*pp)++)
 		{
 			if (waByteCountDown & 1)
@@ -603,7 +607,7 @@ bool DevInfoParser::PrintWordArray(uint8_t **pp, uint16_t &count, PRINTFUNC pf =
 	return true;
 }
 
-void DevInfoParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t &offset)
+void DevInfoParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t &offset __attribute__((unused)))
 {
 	uint16_t	count	= (uint16_t)len;
 	uint8_t		*p		= (uint8_t*)pbuf;

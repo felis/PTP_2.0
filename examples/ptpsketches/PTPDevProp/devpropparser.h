@@ -66,9 +66,9 @@ const char msgSTR	[] PROGMEM = "STR";
 
 class DevPropParser : public PTPReadParser
 {
-	static const char* dtNames1[];
-	static const char* dtNames2[];
-	static const char* prNames[];
+	static const char* const dtNames1[];
+	static const char* const dtNames2[];
+	static const char* const prNames[];
 
 	uint8_t				nStage;
         uint8_t                         enStage;
@@ -91,37 +91,45 @@ class DevPropParser : public PTPReadParser
 	bool ParseEnumSingle	(uint8_t **pp, uint16_t *pcntdn);
 	bool ParseEnumArray	(uint8_t **pp, uint16_t *pcntdn);
 
-	static void PrintChar(const MultiValueBuffer * const p, uint32_t count, const void *me)
+	static void PrintChar(const MultiValueBuffer * const p,
+            uint32_t count __attribute__((unused)),
+            const void *me __attribute__((unused)))
 	{
 		if (((unsigned char*)p->pValue)[0])
 			Serial.print(((unsigned char*)p->pValue)[0]);
 	};
-	static void PrintByte(const MultiValueBuffer * const p, uint32_t count, const void *me)
+	static void PrintByte(const MultiValueBuffer * const p, uint32_t count,
+            const void *me __attribute__((unused)))
 	{
 		if (count)
 			E_Notify(PSTR(","), 0x80);
 		PrintHex<uint8_t>(((uint8_t*)p->pValue)[0], 0x80);
 	};
-	static void PrintTwoBytes(const MultiValueBuffer * const p, uint32_t count, const void *me)
+	static void PrintTwoBytes(const MultiValueBuffer * const p,
+            uint32_t count,
+            const void *me __attribute__((unused)))
 	{
 		if (count)
 			E_Notify(PSTR(","), 0x80);
 		PrintHex<uint16_t>(((uint16_t*)p->pValue)[0], 0x80);
 	};
-	static void PrintFourBytes(const MultiValueBuffer * const p, uint32_t count, const void *me)
+	static void PrintFourBytes(const MultiValueBuffer * const p,
+            uint32_t count, const void *me __attribute__((unused)))
 	{
 		if (count)
 			E_Notify(PSTR(","), 0x80);
 		PrintHex<uint32_t>(((uint32_t*)p->pValue)[0], 0x80);
 	};
-	static void PrintEightBytes(const MultiValueBuffer * const p, uint32_t count, const void *me)
+	static void PrintEightBytes(const MultiValueBuffer * const p,
+            uint32_t count, const void *me __attribute__((unused)))
 	{
 		if (count)
 			E_Notify(PSTR(","), 0x80);
     		for (uint8_t i=p->valueSize; i; i--)
     	  	    PrintHex<uint8_t>(((uint8_t*)p->pValue)[i-1], 0x80);
 	};
-	static void PrintEnumValue(const MultiValueBuffer * const p, uint32_t count, const void *me)
+	static void PrintEnumValue(const MultiValueBuffer * const p,
+            uint32_t count, const void *me __attribute__((unused)))
         {
             if (count)
                 Serial.print(", ");

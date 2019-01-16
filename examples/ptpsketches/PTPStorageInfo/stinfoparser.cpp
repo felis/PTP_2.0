@@ -1,6 +1,6 @@
 #include "stinfoparser.h"
 
-const char* PTPStorageInfoParser::stNames[] PROGMEM =
+const char* const PTPStorageInfoParser::stNames[] PROGMEM =
 {
 	msgUndefined,
 	msgFixedROM,
@@ -9,7 +9,7 @@ const char* PTPStorageInfoParser::stNames[] PROGMEM =
 	msgRemovableRAM	
 };
 
-const char* PTPStorageInfoParser::fstNames[] PROGMEM =
+const char* const PTPStorageInfoParser::fstNames[] PROGMEM =
 {
 	msgUndefined,
 	msgGenericFlat,			
@@ -17,7 +17,7 @@ const char* PTPStorageInfoParser::fstNames[] PROGMEM =
 	msgDCF					
 };
 
-const char* PTPStorageInfoParser::acNames[] PROGMEM =
+const char* const PTPStorageInfoParser::acNames[] PROGMEM =
 {
 	msgUndefined,
 	msgReadWrite,						
@@ -26,7 +26,8 @@ const char* PTPStorageInfoParser::acNames[] PROGMEM =
 };
 
 
-void PTPStorageInfoParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t &offset)
+void PTPStorageInfoParser::Parse(const uint16_t len, const uint8_t *pbuf,
+        const uint32_t &offset __attribute((unused)))
 {
 	uint16_t	cntdn	= (uint16_t)len;
 	uint8_t		*p		= (uint8_t*)pbuf;
@@ -80,10 +81,12 @@ void PTPStorageInfoParser::PrintStorageType(uint8_t **pp, uint16_t *pcntdn)
 	E_Notify(PSTR("\nStorage Type:\t\t"), 0x80);
 	uint16_t	type = *((uint16_t*)*pp);
 
-	if (type >= 0 && type <= PTP_ST_RemovableRAM)
+	if (type <= PTP_ST_RemovableRAM) {
 		E_Notify((char*)pgm_read_word(&stNames[type]), 0x80);
-	else
+        }
+	else {
 		E_Notify(PSTR("Vendor Defined"), 0x80);
+        }
 
 	E_Notify(PSTR(" (0x"), 0x80);
 	PrintHex<uint16_t>(type, 0x80);
@@ -98,11 +101,12 @@ void PTPStorageInfoParser::PrintFileSystemType(uint8_t **pp, uint16_t *pcntdn)
 	E_Notify(PSTR("File System Type:\t"), 0x80);
 	uint16_t	type = *((uint16_t*)*pp);
 
-	if (type >= 0 && type <= PTP_FST_DCF)
+	if (type <= PTP_FST_DCF) {
 		E_Notify((char*)pgm_read_word(&fstNames[type]), 0x80);
-	else
+        }
+	else {
 		E_Notify(PSTR("Vendor Defined"), 0x80);
-
+        }
 	E_Notify(PSTR(" (0x"), 0x80);
 	PrintHex<uint16_t>(type, 0x80);
 	E_Notify(PSTR(")\n"), 0x80);
@@ -116,10 +120,12 @@ void PTPStorageInfoParser::PrintAccessCapability(uint8_t **pp, uint16_t *pcntdn)
 	E_Notify(PSTR("Access Capability:\t"), 0x80);
 	uint16_t	type = *((uint16_t*)*pp);
 
-	if (type >= 0 && type <= PTP_AC_ReadOnly_with_Object_Deletion)
+	if (type <= PTP_AC_ReadOnly_with_Object_Deletion) {
 		E_Notify((char*)pgm_read_word(&acNames[type]), 0x80);
-	else
+        }
+	else {
 		E_Notify(PSTR("Vendor Defined"), 0x80);
+        }
 
 	E_Notify(PSTR(" (0x"), 0x80);
 	PrintHex<uint16_t>(type, 0x80);

@@ -21,8 +21,14 @@ class PTPObjHandleParser : public PTPReadParser
 	};
 
 public:
-	PTPObjHandleParser() : nStage(0) { theBuffer.valueSize = 4; theBuffer.pValue = &varBuffer; arrayParser.Initialize(4, 4, &theBuffer); };
-	virtual void Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t &offset);
+	PTPObjHandleParser() : nStage(0) 
+        {   
+            theBuffer.valueSize = 4;
+            theBuffer.pValue = &varBuffer;
+            arrayParser.Initialize(4, 4, &theBuffer);
+        };
+	virtual void Parse(const uint16_t len, const uint8_t *pbuf,
+                const uint32_t &offset);
 };
 
 
