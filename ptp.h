@@ -90,9 +90,11 @@ protected:
 		uint16_t	typeOfVoid	:	2;			// 0 - NULL, 1 - PTPReadParser/PTPDataSupplyer, 2 - WRITEPARSER, 3 - buffer pointer
 		uint16_t	dataSize	:	6;			// size of data buffer (64 bytes maximum)
 	};
+        
 	typedef void (*READPARSER)(const uint16_t len, const uint8_t *pbuf, const uint32_t &offset);
-
-	void FillEPRecords(USB_ENDPOINT_DESCRIPTOR *pep);
+        
+        
+        void FillEPRecords(USB_ENDPOINT_DESCRIPTOR *pep);
 
 	void ZerroMemory(uint8_t size, uint8_t *mem) { for (uint8_t i=0; i<size; i++) mem[i] = 0; };
 
