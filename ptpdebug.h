@@ -19,11 +19,12 @@ e-mail   :  support@circuitsathome.com
 
 #include <Usb.h>
 
-// #define PTPDEBUG
+#define PTPDEBUG
 
 //#define Message(m,r) (ErrorMessage<uint16_t>((m),(r)))
 
 #if defined( PTPDEBUG )
+// #define DEBUG_USB_HOST
 // #define PTPTRACE(s)(E_Notify(PSTR(s)),0x80)
 #define PTPTRACE(s)(ErrorMessage<uint16_t>(PSTR((s)),0x80))
 #define PTPTRACE2(s,r)(ErrorMessage<uint16_t>(PSTR((s)),(r)))
