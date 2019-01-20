@@ -238,7 +238,7 @@ uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed
 
 		USB_INTERFACE_DESCRIPTOR	*pIntf = (USB_INTERFACE_DESCRIPTOR*)(buf + sizeof(USB_CONFIGURATION_DESCRIPTOR));
 
-		PTPTRACE2("NI:", ((USB_CONFIGURATION_DESCRIPTOR*)buf)->bNumInterfaces);
+		PTPTRACE2("NI:", ucd->bNumInterfaces);
 
 		if (ucd->bNumInterfaces > 0 
 			&& pIntf->bInterfaceClass == 6 && pIntf->bInterfaceSubClass == 1 && pIntf->bInterfaceProtocol == 1) 

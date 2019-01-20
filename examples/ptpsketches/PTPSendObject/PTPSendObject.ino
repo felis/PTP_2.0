@@ -41,11 +41,21 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp
         // Ptp.CaptureImage();
         // delay(100);
 
-        PTPFileInfoSupplier fileinfo(PSTR("TEST.JPG"), 12);
+        PTPFileInfoSupplier fileinfo(0x00010001, 0, PSTR("TEST.JPG"), 12);
         E_Notify(PSTR("Sending ObjectInfo...\r\n"),0x80);
         // Serial.println(fileinfo.GetDataSize());
         Ptp.SendObjectInfo(0, &fileinfo);
         E_Notify(PSTR("ObjectInfo sent\r\n"),0x80);
+        
+        PTPTextFileSupplier file;
+        file.SetText(PSTR("Dummy string"));
+
+        E_Notify(PSTR("Sending Object...\r\n"),0x80);
+        // Ptp.SendObject(0, &file);
+        E_Notify(PSTR("Object sent\r\n"),0x80);
+                
+        E_Notify(PSTR("\n"),0x80);
+
         Ptp.CloseSession();
     }
 }
