@@ -22,7 +22,8 @@ e-mail   :  support@circuitsathome.com
 /* PTP USB Bulk-Pipe container */
 /* USB bulk max max packet length for full speed endpoints */
 #define PTP_USB_BULK_FS_MAX_PACKET_LEN						64
-#define PTP_USB_BULK_HDR_LEN								(2*sizeof(uint32_t)+2*sizeof(uint16_t))
+// #define PTP_USB_BULK_HDR_LEN								(2*sizeof(uint32_t)+2*sizeof(uint16_t))
+#define PTP_USB_BULK_HDR_LEN 12
 #define PTP_USB_BULK_PAYLOAD_LEN							(PTP_USB_BULK_FS_MAX_PACKET_LEN-PTP_USB_BULK_HDR_LEN)
 #define PTP_USB_BULK_REQ_LEN								(PTP_USB_BULK_HDR_LEN+5*sizeof(uint32_t))
 
@@ -304,7 +305,7 @@ struct PTPUSBEventContainer
 #define PTP_DPFF_Enumeration				0x02
 
 /* Device Property GetSet type */
-#define PTP_DPGS_Get						0x00
-#define PTP_DPGS_GetSet						0x01
+#define PTP_DPGS_Get 0x00
+#define PTP_DPGS_GetSet 0x01
 
 #endif //__PTPCONST_H__ 

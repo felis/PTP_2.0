@@ -1,7 +1,8 @@
 // #include <usbhub.h>
 
 #include <ptp.h>
-#include <ptpdebug.h>
+// #include <ptpdebug.h>
+#include "ptpobject.h"
 
 class CamStateHandlers : public PTPStateHandlers
 {
@@ -17,10 +18,10 @@ public:
 
 USB      Usb;
 // USBHub   Hub1(&Usb);
-PTP ptp_instance(&Usb, &CamStates);
+PTP      Ptp(&Usb, &CamStates);
 
 void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp
-    __attribute__((unused)))
+    __attribute__ ((unused)))
 {
     if (stateConnected == stConnected || stateConnected == stInitial)
     {
@@ -29,7 +30,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp
     }
 }
 
-void CamStateHandlers::OnDeviceInitializedState(PTP* ptp 
+void CamStateHandlers::OnDeviceInitializedState(PTP *ptp
     __attribute__((unused)))
 {
     if (stateConnected == stDisconnected || stateConnected == stInitial)
@@ -37,9 +38,25 @@ void CamStateHandlers::OnDeviceInitializedState(PTP* ptp
         stateConnected = stConnected;
         E_Notify(PSTR("Camera connected\r\n"), 0x80);
 
-      	HexDump dmp;
-      	ptp_instance.GetStorageIDs(&dmp);
-        E_Notify(PSTR("\n"), 0x80);
+        // Ptp.CaptureImage();
+        // delay(100);
+
+        PTPFileInfoSupplier fileinfo(0x00010001, 0, PSTR("TEST.JPG"), 12);
+        E_Notify(PSTR("Sending ObjectInfo...\r\n"),0x80);
+        // Serial.println(fileinfo.GetDataSize());
+        Ptp.SendObjectInfo(0, &fileinfo);
+        E_Notify(PSTR("ObjectInfo sent\r\n"),0x80);
+        
+        PTPTextFileSupplier file;
+        file.SetText(PSTR("Dummy string"));
+
+        E_Notify(PSTR("Sending Object...\r\n"),0x80);
+        // Ptp.SendObject(0, &file);
+        E_Notify(PSTR("Object sent\r\n"),0x80);
+                
+        E_Notify(PSTR("\n"),0x80);
+
+        Ptp.CloseSession();
     }
 }
 

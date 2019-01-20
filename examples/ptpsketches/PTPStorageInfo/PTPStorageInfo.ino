@@ -42,7 +42,7 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
         if (ptp->GetStorageIDs(48, data) == PTP_RC_OK)
         {
               uint32_t    cntdn = *((uint32_t*)(data+12)), *p = (uint32_t*)(data+16);
-              Serial.println(cntdn, DEC);
+              // Serial.println(cntdn, DEC);
 
               for (; cntdn; cntdn--, p++)
               {
@@ -56,6 +56,8 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
                     PTPStorageInfoParser  stiParser;
                     ptp->GetStorageInfo(*p, &stiParser);
                     E_Notify(PSTR("\n"), 0x80);
+
+                    delay(10);  // kludge
               }
         }
     }

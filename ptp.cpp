@@ -25,10 +25,10 @@ void PTP::SetInitialState()
 	SetState(PTP_STATE_SESSION_NOT_OPENED);
 }
 
-void PTPStateHandlers::OnDeviceDisconnectedState(PTP *ptp __attribute__ ((unused)))
+void PTPStateHandlers::OnDeviceDisconnectedState
+    (PTP *ptp __attribute__((unused)))
 {
 }
-
 void PTPStateHandlers::OnSessionNotOpenedState(PTP *ptp)
 {
 	if (ptp->OpenSession() == PTP_RC_OK)
@@ -82,32 +82,33 @@ PTP::PTP(USB *pusb, PTPStateHandlers *s) :
     numConf(0),
     pUsb(pusb)
 {
-        // Control EP
-	epInfo[0].epAddr = 0;
-	epInfo[0].maxPktSize = 8;
-	epInfo[0].epAttribs = 0;
-	epInfo[0].bmNakPower = USB_NAK_MAX_POWER;
+    // Control EP
+    epInfo[0].epAddr = 0;
+    epInfo[0].maxPktSize = 8;
+    epInfo[0].epAttribs = 0;
+    epInfo[0].bmNakPower = USB_NAK_MAX_POWER;
 
-	// Data-In EP
-	epInfo[1].epAddr = 0;
-	epInfo[1].maxPktSize = 8;
-	epInfo[1].epAttribs = 0;
-        epInfo[1].bmNakPower = USB_NAK_MAX_POWER;
+    // Data-In EP
+    epInfo[1].epAddr = 0;
+    epInfo[1].maxPktSize = 8;
+    epInfo[1].epAttribs = 0;
+    epInfo[1].bmNakPower = USB_NAK_MAX_POWER;
     
-        // Data-Out EP
-	epInfo[2].epAddr = 0;
-	epInfo[2].maxPktSize = 8;
-	epInfo[2].epAttribs = 0;
-        epInfo[2].bmNakPower = USB_NAK_MAX_POWER;
+    // Data-Out EP
+    epInfo[2].epAddr = 0;
+    epInfo[2].maxPktSize = 8;
+    epInfo[2].epAttribs = 0;
+    epInfo[2].bmNakPower = USB_NAK_MAX_POWER;
     
-        // Interrupt EP
-	epInfo[3].epAddr = 0;
-	epInfo[3].maxPktSize = 8;
-	epInfo[3].epAttribs = 0;
-        epInfo[3].bmNakPower = USB_NAK_MAX_POWER;
+    // Interrupt EP
+    epInfo[3].epAddr = 0;
+    epInfo[3].maxPktSize = 8;
+    epInfo[3].epAttribs = 0;
+    epInfo[3].bmNakPower = USB_NAK_MAX_POWER;
 
-	if (pUsb)
-		pUsb->RegisterDeviceClass(this);
+    if (pUsb) {
+	pUsb->RegisterDeviceClass(this);
+    }
 };
 
 
@@ -115,20 +116,18 @@ uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed
     __attribute__ ((unused)))
 {
 	const uint8_t constBufSize = 39;
-
-	uint8_t		buf[constBufSize];
+	uint8_t	buf[constBufSize];
         USB_DEVICE_DESCRIPTOR *udd =
                 reinterpret_cast<USB_DEVICE_DESCRIPTOR*>(buf);
         USB_CONFIGURATION_DESCRIPTOR *ucd =
                 reinterpret_cast<USB_CONFIGURATION_DESCRIPTOR*>(buf);
         // USB_INTERFACE_DESCRIPTOR *uid =
         //        reinterpret_cast<USB_INTERFACE_DESCRIPTOR*>(buf);
-	uint8_t		rcode;
-	UsbDevice	*p = NULL;
-	EpInfo		*oldep_ptr = NULL;
-	uint8_t		len = 0;
-	uint16_t	cd_len = 0;
-
+	uint8_t rcode;
+	UsbDevice *p = NULL;
+	EpInfo *oldep_ptr = NULL;
+	uint8_t len = 0;
+	uint16_t cd_len = 0;
 	uint8_t		num_of_conf;	// number of configurations
 	// uint8_t		num_of_intf;	// number of interfaces
 
@@ -136,18 +135,19 @@ uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed
 
 	PTPTRACE("PTP Init\r\n");
 
-	if (devAddress)
+	if (devAddress) {
 		return USB_ERROR_CLASS_INSTANCE_ALREADY_IN_USE;
-
+        }
 	// Get pointer to pseudo device with address 0 assigned
 	p = addrPool.GetUsbDevicePtr(0);
 
-	if (!p)
+	if (!p) {
+                PTPTRACE("dev.address not set\r\n");
 		return USB_ERROR_ADDRESS_NOT_FOUND_IN_POOL;
-
-	if (!p->epinfo)
-	{
-		PTPTRACE("epinfo\r\n");
+        }
+        
+	if (!p->epinfo) {
+		PTPTRACE("epinfo not set\r\n");
 		return USB_ERROR_EPINFO_IS_NULL;
 	}
 
@@ -158,7 +158,7 @@ uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed
 	p->epinfo = epInfo;
 
 	// Get device descriptor
-	rcode = pUsb->getDevDescr( 0, 0, 8, (uint8_t*)buf );
+	rcode = pUsb->getDevDescr( 0, 0, 8, /* (uint8_t*) */ buf );
 
 	if  (!rcode)
 		len = (buf[0] > 32) ? 32 : buf[0];
@@ -238,7 +238,7 @@ uint8_t PTP::Init(uint8_t parent, uint8_t port, bool lowspeed
 
 		USB_INTERFACE_DESCRIPTOR	*pIntf = (USB_INTERFACE_DESCRIPTOR*)(buf + sizeof(USB_CONFIGURATION_DESCRIPTOR));
 
-		PTPTRACE2("NI:", ((USB_CONFIGURATION_DESCRIPTOR*)buf)->bNumInterfaces);
+		PTPTRACE2("NI:", ucd->bNumInterfaces);
 
 		if (ucd->bNumInterfaces > 0 
 			&& pIntf->bInterfaceClass == 6 && pIntf->bInterfaceSubClass == 1 && pIntf->bInterfaceProtocol == 1) 
@@ -367,42 +367,48 @@ void PTP::Task()
 uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = NULL, void *pVoid = NULL)
 {
 	uint8_t		rcode;
-	{
-		uint8_t		cmd[PTP_USB_BULK_HDR_LEN + 12];		// header + 3 uint32_t parameters
+	{   // send command block
+            PTPTRACE("Transaction: Send Command\r\n");
+		uint8_t	cmd[PTP_USB_BULK_HDR_LEN + 12];		// header + 3 uint32_t parameters
 
 		ZerroMemory(PTP_USB_BULK_HDR_LEN + 12, cmd);
 
 		// Make command PTP container header
-		uint16_to_char(PTP_USB_CONTAINER_COMMAND,	(unsigned char*)(cmd + PTP_CONTAINER_CONTYPE_OFF));			// type
-		uint16_to_char(opcode,						(unsigned char*)(cmd + PTP_CONTAINER_OPCODE_OFF));			// code
-		uint32_to_char(++idTransaction,				(unsigned char*)(cmd + PTP_CONTAINER_TRANSID_OFF));			// transaction id
+		uint16_to_char(PTP_USB_CONTAINER_COMMAND, (unsigned char*)(cmd + PTP_CONTAINER_CONTYPE_OFF));	// type
+		uint16_to_char(opcode, (unsigned char*)(cmd + PTP_CONTAINER_OPCODE_OFF));			// code
+		uint32_to_char(++idTransaction,	(unsigned char*)(cmd + PTP_CONTAINER_TRANSID_OFF));		// transaction id
 		
-		uint8_t		n = flags->opParams, len;
+		uint8_t	n = flags->opParams;    // number of parameters
+                uint8_t len;
 
-		if (params && *params)
-		{
-			*((uint8_t*)cmd) = len = PTP_USB_BULK_HDR_LEN + (n << 2);
+		if (params && *params ) {
+			*((uint8_t*)cmd) = PTP_USB_BULK_HDR_LEN + (n << 2);
+                        len = PTP_USB_BULK_HDR_LEN + (n << 2);
 
-			for (uint32_t *p1 = (uint32_t*)(cmd + PTP_CONTAINER_PAYLOAD_OFF), *p2 = (uint32_t*)params; n--; p1++, p2++)
+			for (uint32_t *p1 = (uint32_t*)(cmd + PTP_CONTAINER_PAYLOAD_OFF), *p2 = (uint32_t*)params; n--; p1++, p2++) {
 				uint32_to_char(*p2, (unsigned char*)p1);
+                        }
 		}
-		else
-			*((uint8_t*)cmd) = len = PTP_USB_BULK_HDR_LEN;
+		else {
+			*((uint8_t*)cmd) = PTP_USB_BULK_HDR_LEN;
+                        len = PTP_USB_BULK_HDR_LEN;
+                }
                 
 		rcode = pUsb->outTransfer(devAddress, epInfo[epDataOutIndex].epAddr, len, cmd);
 
-		if (rcode)
-		{
+		if (rcode) {
 			PTPTRACE2("Transaction: Command block send error", rcode);
 			return PTP_RC_GeneralError;
 		}
 	}
-	{
+        
+        // return 0;
+        
+	{   // send data block
 		uint8_t		data[PTP_MAX_RX_BUFFER_LEN];
                 uint32_t* pd32  = reinterpret_cast<uint32_t*>(data);
 
-		if (flags->txOperation)
-		{
+		if (flags->txOperation) {
 			if (flags->typeOfVoid && !pVoid)
 			{
 				PTPTRACE("Transaction: pVoid is NULL\n");
@@ -410,22 +416,24 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 			}
 			ZerroMemory(PTP_MAX_RX_BUFFER_LEN, data);
 
-			uint32_t	bytes_left =	(flags->typeOfVoid == 3) ? PTP_USB_BULK_HDR_LEN + flags->dataSize :
-							((flags->typeOfVoid == 1) ? PTP_USB_BULK_HDR_LEN + ((PTPDataSupplier*)pVoid)->GetDataSize() : 12);
+			uint32_t bytes_left = (flags->typeOfVoid == 3) ? PTP_USB_BULK_HDR_LEN + flags->dataSize :
+					      ((flags->typeOfVoid == 1) ? PTP_USB_BULK_HDR_LEN + ((PTPDataSupplier*)pVoid)->GetDataSize() : 12);
+                        
+                        PTPTRACE2("Data block: Bytes Left ", bytes_left);
 
 			// Make data PTP container header
 			*pd32 = bytes_left;
-			uint16_to_char(PTP_USB_CONTAINER_DATA,	(unsigned char*)(data + PTP_CONTAINER_CONTYPE_OFF));		// type
-			uint16_to_char(opcode,					(unsigned char*)(data + PTP_CONTAINER_OPCODE_OFF));			// code
-			uint32_to_char(idTransaction,			(unsigned char*)(data + PTP_CONTAINER_TRANSID_OFF));		// transaction id
+			uint16_to_char(PTP_USB_CONTAINER_DATA,	(unsigned char*)(data + PTP_CONTAINER_CONTYPE_OFF));	// type
+			uint16_to_char(opcode, (unsigned char*)(data + PTP_CONTAINER_OPCODE_OFF));			// code
+			uint32_to_char(idTransaction, (unsigned char*)(data + PTP_CONTAINER_TRANSID_OFF));		// transaction id
 
 			uint16_t len = 0;
 
-			if (flags->typeOfVoid == 1)
+			if (flags->typeOfVoid == 1) {
 				len = (bytes_left < PTP_MAX_RX_BUFFER_LEN) ? bytes_left : PTP_MAX_RX_BUFFER_LEN;
+                        }
 			
-			if (flags->typeOfVoid == 3)
-			{
+			if (flags->typeOfVoid == 3) {
 				uint8_t		*p1 = (data + PTP_USB_BULK_HDR_LEN);
 				uint8_t		*p2 = (uint8_t*)pVoid;
 
@@ -433,19 +441,18 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 					*p1 = *p2;
 
 				len = PTP_USB_BULK_HDR_LEN + flags->dataSize;
-			}
+			} // if (flags->typeOfVoid == 3...
+                        
 			bool first_time = true;
 
-			while (bytes_left)
-			{
+			while (bytes_left) {
 				if (flags->typeOfVoid == 1)
 					((PTPDataSupplier*)pVoid)->GetData(	(first_time) ? len - PTP_USB_BULK_HDR_LEN : len, 
 														(first_time) ? (data + PTP_USB_BULK_HDR_LEN) : data);
 				
 				rcode = pUsb->outTransfer(devAddress, epInfo[epDataOutIndex].epAddr, len, data);
 
-				if (rcode)
-				{
+				if (rcode) {
 					PTPTRACE2("Transaction: Data block send error.", rcode);
 					return PTP_RC_GeneralError;
 				}
@@ -455,8 +462,8 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 				len = (bytes_left < PTP_MAX_RX_BUFFER_LEN) ? bytes_left : PTP_MAX_RX_BUFFER_LEN;
 
 				first_time = false;
-			}
-		}
+			} // while(bytes_left...
+		} // if (flags->txOperation...
 
 		// Because inTransfer does not return the actual number of bytes received, it should be 
 		// calculated here.
@@ -621,7 +628,7 @@ uint16_t PTP::OpenSession()
 
 	params[0]	= idSession;
         
-        delay(10);   // kludge
+        delay(100);   // kludge
 
 	while (1)
 	{
@@ -1104,4 +1111,38 @@ uint16_t PTP::GetObjectHandles(uint32_t storage_id, uint16_t format, uint16_t as
 	params[2] = (uint32_t)assoc;
 
 	return Transaction(PTP_OC_GetObjectHandles, &flags, params, parser);
+}
+
+uint16_t PTP::SendObjectInfo(uint32_t handle, PTPDataSupplier *sup)
+{
+	(void)handle;
+        // (void)sup;
+        
+        uint16_t ptp_error = PTP_RC_GeneralError;
+   
+        OperFlags flags = { 0, 3, 1, 1, 1, 0/* sup->GetDataSize() */};
+	uint32_t params[3];
+	
+	uint32_t store;
+        uint32_t parenthandle;
+              
+
+	params[0] = 0x00001001; // destination StorageID
+	params[1] = 0; // Parent ObjectHandle
+
+	if ((ptp_error = Transaction(PTP_OC_SendObjectInfo, &flags, params, sup)) == PTP_RC_OK) {
+            store = params[0];              // Responder StorageID in which object will be stored
+            parenthandle = params[1];       // Responder Parent ObjectHandle in which the object will be stored
+            handle = params[2];             // Responder's reserved ObjectHandle for the incoming object
+	}
+
+	return ptp_error;
+}
+
+uint16_t PTP::SendObject(uint32_t handle, PTPDataSupplier *sup) {
+        (void)handle;
+        
+	OperFlags flags = { 0, 0, 1, 1, 3, 0 /* sup->GetDataSize() */ };
+
+	return Transaction(PTP_OC_SendObject, &flags, NULL, sup);
 }

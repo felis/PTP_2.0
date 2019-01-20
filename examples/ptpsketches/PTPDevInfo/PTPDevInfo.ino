@@ -18,7 +18,10 @@ public:
 
 USB      Usb;
 // USBHub   Hub1(&Usb);
-PTP      Ptp(&Usb, &CamStates);
+//PTP      Ptp(&Usb, &CamStates);
+// PTP camera(&Usb, &CamStates);
+
+PTP ptp_instance(&Usb, &CamStates);
 
 void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp
     __attribute__((unused)))
@@ -30,21 +33,21 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp
     }
 }
 
-void CamStateHandlers::OnDeviceInitializedState(PTP *ptp __attribute__((unused)))
+void CamStateHandlers::OnDeviceInitializedState(PTP *ptp /* __attribute__((unused)) */)
 {
     if (stateConnected == stDisconnected || stateConnected == stInitial)
     {
         stateConnected = stConnected;
        E_Notify(PSTR("Camera connected\r\n"), 0x80);
-       //Serial.print("Camera Connected\r\n");
         {
         	HexDump          dmp;
-        	Ptp.GetDeviceInfo(&dmp);
+        	ptp_instance.GetDeviceInfo(&dmp);
                 E_Notify(PSTR("\n"), 0x80);
         }
+
         {
                 DevInfoParser    prs;
-        	Ptp.GetDeviceInfo(&prs);
+        	ptp_instance.GetDeviceInfo(&prs);
         }
     }
 }

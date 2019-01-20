@@ -79,20 +79,22 @@ protected:
 	static const uint8_t	epDataOutIndex;		// DataOUT endpoint index
 	static const uint8_t	epInterruptIndex;	// Interrupt endpoint index
 
-	EpInfo				epInfo[4];
+	EpInfo epInfo[4];
 
 	struct OperFlags
 	{
-		uint16_t	opParams	:	3;			// 7	- maximum number of operation parameters
-		uint16_t	rsParams	:	3;			// 7	- maximum number of response parameters
+		uint16_t	opParams	:	3;			// 7 - maximum number of operation parameters
+		uint16_t	rsParams	:	3;			// 7 - maximum number of response parameters
 		uint16_t	txOperation	:	1;			// I->R operation if the flag is set
 		uint16_t	dataStage	:	1;			// operation has data stage if the flag is set
 		uint16_t	typeOfVoid	:	2;			// 0 - NULL, 1 - PTPReadParser/PTPDataSupplyer, 2 - WRITEPARSER, 3 - buffer pointer
 		uint16_t	dataSize	:	6;			// size of data buffer (64 bytes maximum)
 	};
+        
 	typedef void (*READPARSER)(const uint16_t len, const uint8_t *pbuf, const uint32_t &offset);
-
-	void FillEPRecords(USB_ENDPOINT_DESCRIPTOR *pep);
+        
+        
+        void FillEPRecords(USB_ENDPOINT_DESCRIPTOR *pep);
 
 	void ZerroMemory(uint8_t size, uint8_t *mem) { for (uint8_t i=0; i<size; i++) mem[i] = 0; };
 
@@ -100,7 +102,7 @@ protected:
 	// returns event on success or error code if timeout elapsed
 	bool EventWait(uint8_t size, uint8_t *event_buf, uint16_t timeout);
 
-	// returns true if event occured
+	// returns true if event occurred
 	// the actual data is stored in a buffer pointed by buf
 	bool CheckEvent(uint8_t size, uint8_t *buf);
 
@@ -164,10 +166,12 @@ public:
 	uint16_t TerminateOpenCapture(uint32_t trans_id);
 	uint16_t InitiateCapture(uint32_t storage_id = 0, uint16_t format = 0);
 
+        
+        uint16_t SendObjectInfo(uint32_t handle, PTPDataSupplier *sup);
+	uint16_t SendObject(uint32_t handle, PTPDataSupplier *sup);
+        
 	// To be implemented in future releases
 	//uint16_t GetPartialObject(uint32_t handle, PTPReadParser *parser);
-	//uint16_t SendObjectInfo(uint32_t handle, PTPDataSupplier *sup);
-	//uint16_t SendObject(uint32_t handle, PTPDataSupplier *sup);
 };
 
 #endif // __PTP_H__
