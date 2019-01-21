@@ -36,6 +36,7 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
 
         ptp->CaptureImage();
         delay(1000);
+        ptp->CloseSession();
     }
 }
 

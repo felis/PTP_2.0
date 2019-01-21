@@ -541,37 +541,63 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 
 uint16_t PTP::EventCheck(PTPReadParser *pParser)
 {
-	uint8_t		data[PTP_MAX_EV_BUFFER_LEN];
-        uint32_t* pd32  = reinterpret_cast<uint32_t*>(data);
-	uint8_t		rcode;
+	// uint8_t	data[PTP_MAX_EV_BUFFER_LEN];
+    uint8_t data[sizeof(PTPUSBEventContainer)];
+    uint32_t* pd32  = reinterpret_cast<uint32_t*>(data);
+    uint8_t rcode;
 
-	// Because inTransfer does not return the actual number of bytes recieved, it should be 
-	// calculated here.
-	uint32_t	total = 0, data_off = 0;
-	uint8_t		inbuffer = 0;
-	uint16_t	loops = 0;
-	// uint8_t		timeoutcnt = 0;
+    // Because inTransfer does not return the actual number of bytes received, it should be 
+    // calculated here.
+    uint32_t total = 0;
+    uint32_t data_off = 0;
+    uint8_t inbuffer = 0;
+    uint16_t loops = 0;
 
-	while (1)
-	{
-		ZerroMemory(PTP_MAX_EV_BUFFER_LEN, data);
+	while (1) {
+		ZerroMemory(sizeof(PTPUSBEventContainer), data);
 
-		uint16_t	read = PTP_MAX_EV_BUFFER_LEN;
+		uint16_t read = sizeof(PTPUSBEventContainer);
                 
 		rcode = pUsb->inTransfer(devAddress, epInfo[epInterruptIndex].epAddr, &read, data);
 
-		switch (rcode)
-		{
-		// In case of no event occured
-		case 0xFF:
+		switch (rcode) {
+		
+                case 0x00:  // event data in incoming buffer
+                    PTPTRACE2("EventCheck length: ", *data);
+                    if (loops == 0) {
+                        // first pass of the parser
+			total =	*pd32;  // total event length
+                                        // read from IN packet
+			inbuffer = (total < sizeof(PTPUSBEventContainer)) ?
+                            (uint8_t)total : sizeof(PTPUSBEventContainer);
+                    }
+                    else {
+			inbuffer = ((total - data_off) > sizeof(PTPUSBEventContainer)) ? sizeof(PTPUSBEventContainer) : (uint8_t)(total - data_off);
+                    }
+		if (pParser) {
+			pParser->Parse(inbuffer, data, (const uint32_t&)data_off);
+                }
+		data_off += inbuffer;
+		loops++;
+		delay(50);
+                return(PTP_RC_OK);
+                
+                    
+                // In case of no event occurred    
+                case 0x04:  // NAK
+                    PTPTRACE2("EventCheck NAK: ", rcode);
+                    return PTP_EC_Undefined;
+                    
+                case 0xFF:
 				return PTP_EC_Undefined;
 
 		default:
 			// in case of a usb error
 			PTPTRACE2("EventCheck USB error: ", rcode);
 			return PTP_RC_GeneralError;
-		}
+		} // switch(rcode...
 
+#if 0
 		if (loops == 0)
 		{
 			total		=	*pd32;
@@ -587,6 +613,8 @@ uint16_t PTP::EventCheck(PTPReadParser *pParser)
 
 		loops ++;
 		delay(50);
+#endif
+                
 	} // while(1)
 }
 
@@ -1050,7 +1078,7 @@ uint16_t PTP::CaptureImage()
 		return ptp_error;
 	}
 	PTPUSBEventContainer	evnt;
-	bool					occured;
+	bool occured;
 
 	while (1)
 	{
@@ -1060,7 +1088,7 @@ uint16_t PTP::CaptureImage()
 		{
 		if (!occured)
 		{
-			PTPTRACE("CaptureImage: Timeout ellapsed.\r\n");
+			PTPTRACE("CaptureImage: Timeout elapsed.\r\n");
 			return PTP_RC_Undefined;
 		}
 		switch (evnt.code)
@@ -1125,6 +1153,9 @@ uint16_t PTP::SendObjectInfo(uint32_t handle, PTPDataSupplier *sup)
 	
 	uint32_t store;
         uint32_t parenthandle;
+        
+        (void)store;
+        (void)parenthandle;
               
 
 	params[0] = 0x00001001; // destination StorageID
