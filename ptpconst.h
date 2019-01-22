@@ -105,6 +105,10 @@ typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 #define PTP_OC_CopyObject					0x101A
 #define PTP_OC_GetPartialObject				0x101B
 #define PTP_OC_InitiateOpenCapture			0x101C
+#define PTP_OC_GetObjectPropValue			0x9803
+
+/* object property codes */
+#define PTP_PC_Name			0xDC44
 
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK				0xF000

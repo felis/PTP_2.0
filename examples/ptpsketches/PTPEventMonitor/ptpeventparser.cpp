@@ -50,29 +50,21 @@ void PTPEventParser::Parse(const uint16_t len, const uint8_t *pbuf,
 	uint8_t* p = (uint8_t*)pbuf;
 	uint16_t cntdn	= len;
         
-        PTPTRACE2("PTPEventParser: len: ", len);
-        PTPTRACE2("PTPEventParser: buf[0]: ", *pbuf);
-
 	switch (nStage) {   
-	case 0: // read container length
-		// p += 12;
-		// cntdn	-= 12;
-            p += 4; // point past length
-            cntdn -= 4;
-            evt_container.length = *pbuf;
-            PTPTRACE2("PTPEventParser: len ", evt_container.length);
-            nStage	= 1;
+        	case 0: // read container length
+                p += 4; // point past length
+                cntdn -= 4;
+                evt_container.length = *pbuf;
+                PTPTRACE2("PTPEventParser: len ", evt_container.length);
+                nStage	= 1;
 	case 1: // read container type 
-		// theBuffer.valueSize = 2;
-		// valueParser.Initialize(&theBuffer);
-            uint8_to_uint16(p, &evt_container.type);
-            if (evt_container.type != PTP_USB_CONTAINER_EVENT) {
-                PTPTRACE2("PTPEventParser: containter type mismatch", evt_container.type);
-            }
-            // PTPTRACE2("PTPEventParser: type ", evt_container.type);
-            p += 2; // next field
-            cntdn -= 2;
-            nStage = 2;
+                uint8_to_uint16(p, &evt_container.type);
+                if (evt_container.type != PTP_USB_CONTAINER_EVENT) {
+                    PTPTRACE2("PTPEventParser: containter type mismatch", evt_container.type);
+                }
+                p += 2; // next field
+                cntdn -= 2;
+                nStage = 2;
 	case 2: // read event code
             uint8_to_uint16(p, &evt_container.code);
             PTPTRACE2("PTPEventParser: code ", evt_container.code);
@@ -107,11 +99,62 @@ void PTPEventParser::Parse(const uint16_t len, const uint8_t *pbuf,
                 p += 4;
                 cntdn -= 4;
             }
+            nStage = 0;
             
             if (evt_container.code == PTP_EC_ObjectAdded ) {
-                PTPTRACE("PTPEventParser: object added ");
-                
+                Serial.println("PTPEventParser: object added.");
+                PTPStringParser psp;
+                ptpdevice->GetObjectPropValue(evt_container.params[0],PTP_PC_Name,&psp);
+                psp.GetFilename();
             }
-            nStage = 0;
 	} // switch(nStage...
+}
+
+void PTPStringParser::Parse(const uint16_t len, const uint8_t *pbuf,
+        const uint32_t &offset __attribute__ ((unused)))
+{
+	uint8_t* p = (uint8_t*)pbuf;
+	uint16_t cntdn	= len;
+        
+	switch (nStage) {   
+	case 0: // read container length
+            p += 4; // point past length
+            cntdn -= 4;
+            container_length = *pbuf;
+            PTPTRACE2("PTPStringParser: len ", container_length);
+            nStage	= 1;
+	case 1: // read container type
+        {
+            uint16_t tmpdata;
+            uint8_to_uint16(p, &tmpdata);
+            if (tmpdata != PTP_USB_CONTAINER_DATA) {
+                PTPTRACE2("PTPStringParser: container type mismatch", tmpdata);
+            }
+            p += 8; // advance to string length field
+            cntdn -= 8;
+            nStage = 2;
+        } // case 1
+	case 2: // read string length
+            ptpstring_length = *p;
+            PTPTRACE8("PTPStringParser: string length ", ptpstring_length);
+            p += 1;
+            cntdn -= 1;
+            nStage = 3;
+            PTPTRACE2("PTPEventParser: countdown ", cntdn);
+	case 3: // read string
+        {
+            uint8_t i = 0;
+            while(ptpstring_length) {   //read string
+                string_buf[i++] = *p;
+                p += 2; // step over zero
+                ptpstring_length -= 1;
+            } 
+            nStage = 0;
+        } // case 3...   
+	} // switch(nStage...
+}
+
+void PTPStringParser::GetFilename() {
+    Serial.print("Object Name: ");
+    Serial.println(pstr);
 }

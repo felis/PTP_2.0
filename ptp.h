@@ -153,6 +153,7 @@ public:
 	uint16_t GetStorageInfo(uint32_t storage_id, PTPReadParser *parser);
 	uint16_t GetObjectHandles(uint32_t storage_id, uint16_t format, uint16_t assoc, PTPReadParser *parser);
 	uint16_t GetObjectInfo(uint32_t handle, PTPReadParser *parser);
+        uint16_t GetObjectPropValue(uint32_t handle, uint32_t prop, PTPReadParser* parser);
 	uint16_t FormatStore(uint32_t storage_id, uint32_t fsformat);
 	uint16_t GetObject(uint32_t handle, PTPReadParser *parser);
 	uint16_t GetThumb(uint32_t handle, PTPReadParser *parser);

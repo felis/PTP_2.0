@@ -368,7 +368,7 @@ uint16_t PTP::Transaction(uint16_t opcode, OperFlags *flags, uint32_t *params = 
 {
 	uint8_t		rcode;
 	{   // send command block
-            PTPTRACE("Transaction: Send Command\r\n");
+            // PTPTRACE("Transaction: Send Command\r\n");
 		uint8_t	cmd[PTP_USB_BULK_HDR_LEN + 12];		// header + 3 uint32_t parameters
 
 		ZerroMemory(PTP_USB_BULK_HDR_LEN + 12, cmd);
@@ -841,6 +841,16 @@ uint16_t PTP::GetObjectInfo(uint32_t handle, PTPReadParser *parser)
 	params[0] = handle;
 
 	return Transaction(PTP_OC_GetObjectInfo, &flags, params, parser);
+}
+
+uint16_t PTP::GetObjectPropValue(uint32_t handle, uint32_t prop, PTPReadParser* parser) {
+    
+    OperFlags flags = { 2, 0, 0, 1, 1, 0 };
+    uint32_t params[2];
+    params[0] = handle;
+    params[1] = prop;
+    
+    return Transaction(PTP_OC_GetObjectPropValue, &flags, params, parser);
 }
 
 uint16_t PTP::GetDevicePropDesc(const uint16_t pcode, PTPReadParser *parser)

@@ -33,7 +33,7 @@ public:
 	virtual void OnPropertyChanged(const EOSEvent *evt) = 0;
 	virtual void OnAcceptedListSize(const EOSEvent *evt, const uint16_t size) = 0;
 	virtual void OnPropertyValuesAccepted(const EOSEvent *evt, const uint16_t index, const uint32_t &val) = 0;
-	virtual void OnObjectCreated(const EOSEvent *evt) = 0;
+	virtual void OnObjectCreated(const EOSEvent *evt, uint8_t* buf) = 0;
 	//void OnCaptureComplete() = 0;
 };
 

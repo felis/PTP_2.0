@@ -60,10 +60,24 @@ public:
 	//void OnCaptureComplete() = 0;
 };
 
+class PTPStringParser : public PTPReadParser
+{
+    uint8_t nStage;
+    uint32_t container_length;
+    uint8_t ptpstring_length;
+    uint8_t string_buf[64]; // kludge
+    const char* pstr = reinterpret_cast<const char*>(string_buf);
+    
+public:
+    PTPStringParser() : nStage(0), container_length(0), ptpstring_length(0) {};
+    void Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t &offset);
+    void GetFilename();
+};
+
 class PTPEventParser : public PTPReadParser
 {
 
-    // PTPEventHandlers *pHandler;
+    PTP* ptpdevice;
     
     const uint16_t constInitialEventCode;
     
@@ -91,8 +105,8 @@ class PTPEventParser : public PTPReadParser
     
 
 public:
-	PTPEventParser(/* PTPEventHandlers *p */) :
-		// pHandler(p),
+	PTPEventParser(PTP* ptpdevice) :
+		ptpdevice(ptpdevice),
 		constInitialEventCode(0xFFFF),
                 // eventLength(0),
                 // evt_container(0),
@@ -114,6 +128,7 @@ public:
 	};
 
 	void Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t &offset);
+        void GetFilename();
 };
 
 #endif // __PTPEVENTPARSER_H__

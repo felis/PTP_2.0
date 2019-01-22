@@ -19,7 +19,7 @@ e-mail   :  support@circuitsathome.com
 
 #include <Usb.h>
 
-#define PTPDEBUG
+// #define PTPDEBUG
 
 //#define Message(m,r) (ErrorMessage<uint16_t>((m),(r)))
 
