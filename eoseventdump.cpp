@@ -21,9 +21,8 @@ void EOSEventDump::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t
 	uint8_t		*p		= (uint8_t*)pbuf;
 	uint16_t	cntdn	= (uint16_t)len;
 
-	switch (parseStage)
-	{
-	case 0:
+	switch (parseStage) {
+            case 0:
 		// Get PTP data packet size
 		ptppktSize = *((uint32_t*)p);
 
@@ -33,22 +32,21 @@ void EOSEventDump::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t
 
 		Serial.println("\r\n");
 
-		for (uint8_t i=0; i<4; i++) 
-		{
-			PrintHex<uint8_t>(((uint8_t*)&ptppktSize)[i], 0x80);
-			Serial.print(" ");
+		for (uint8_t i=0; i<4; i++) {
+                    // Serial.println("Print Packet Size");
+                    PrintHex<uint8_t>(((uint8_t*)&ptppktSize)[i], 0x80);
+                    Serial.print(" ");
 		}
 
 		// Skip PTP packet header
 		p		+= 12;
 		cntdn	-= 12;
 		parseStage ++;
-	case 1:
+            case 1:
 		parseSubstage = 0;
 		parseStage ++;
-	case 2:
-		while (1)
-		{
+            case 2:
+		while (1) {
 			switch (parseSubstage)
 			{
 			// CR after each event record
@@ -62,6 +60,7 @@ void EOSEventDump::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t
 				if (!valueParser.Parse(&p, &cntdn))
 					return;
 				recordSize = (uint32_t)theBuffer;
+                                // Serial.println("\r\nPrint Record Size\r\n");
 				for (uint8_t i=0; i<4; i++) 
 				{
 					PrintHex<uint8_t>(((uint8_t*)&theBuffer)[i], 0x80);
@@ -75,7 +74,8 @@ void EOSEventDump::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t
 			case 2:
 				if (!valueParser.Parse(&p, &cntdn))
 					return;
-
+                                
+                                Serial.println("\r\nPrint Property Code");
 				for (uint8_t i=0; i<4; i++) 
 				{
 					PrintHex<uint8_t>(((uint8_t*)&theBuffer)[i], 0x80);
@@ -94,8 +94,8 @@ void EOSEventDump::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_t
 
 			// Print the rest of the record
 			case 3:
-				for (; recordSize && cntdn; recordSize--, cntdn--, p++)
-				{
+                                Serial.println("\r\nPrint Record");
+				for (; recordSize && cntdn; recordSize--, cntdn--, p++) {
 					PrintHex<uint8_t>(*p, 0x80);
 					Serial.print(" ");
 				}

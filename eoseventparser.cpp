@@ -18,15 +18,21 @@ e-mail   :  support@circuitsathome.com
 
 bool EOSEventParser::EventRecordParse(uint8_t **pp, uint16_t *pcntdn)
 {
-	switch (nRecStage)
-	{
+	switch (nRecStage) {
 	case 0:
 		// Retrieves the size of the event record
 		if (!valueParser.Parse(pp, pcntdn))
 			return false;
 
 		nRecSize = (uint16_t)varBuffer;
+                
+                // if (nRecSize == 8) {    // empty event
+                //     PTPTRACE("Skipping Empty Event\r\n");
+                //     return true;
+                // }
 
+                PTPTRACE2("Event Record Size: ",nRecSize);
+                
 		// calculates the number of event parameters ( size / 4 - 1 )
 		paramCountdown	= (nRecSize >> 2) - 1;
                 
@@ -34,16 +40,19 @@ bool EOSEventParser::EventRecordParse(uint8_t **pp, uint16_t *pcntdn)
 		nRecSize		-= 4;
 		nRecStage ++;
 	case 1:
-		for (; paramCountdown; paramCountdown--, paramCount++, nRecSize -= 4)
-		{
-			if (!valueParser.Parse(pp, pcntdn))
-				return false;
+		for (; paramCountdown; paramCountdown--, paramCount++, nRecSize -= 4) {
+			if (!valueParser.Parse(pp, pcntdn)) {
+                            PTPTRACE("EvtRecordParse: Value Parser stopped.\r\n");
+                            return false;
+                        }
 
-			switch (paramCount)
-			{
+			switch (paramCount) {
 			// Event Code
 			case 1:
 				eosEvent.eventCode = (uint16_t)varBuffer;
+                                // if (eosEvent.eventCode == EOS_EC_ObjectCreated) {
+                                //    PTPTRACE2("Object Created: ",eosEvent.eventCode);
+                                // }
 				break;
 			// Property Code
 			case 2:
@@ -55,10 +64,15 @@ bool EOSEventParser::EventRecordParse(uint8_t **pp, uint16_t *pcntdn)
                                         
 				if (pHandler)
 				{
-					if (eosEvent.eventCode == EOS_EC_DevPropChanged)
+                                    
+					if (eosEvent.eventCode == EOS_EC_DevPropChanged) {
 							pHandler->OnPropertyChanged(&eosEvent);
-					if (eosEvent.eventCode == EOS_EC_ObjectCreated)
-							pHandler->OnObjectCreated(&eosEvent);
+                                        }
+					if (eosEvent.eventCode == EOS_EC_ObjectCreated) {
+                                            uint8_t* pbuf = valueParser.GetBuffer();
+                                            pHandler->OnObjectCreated(&eosEvent, pbuf);
+                                        }
+					
 				}
 				break;
 			// C18A/enumType == 3 - Size of enumerator array
@@ -82,7 +96,7 @@ bool EOSEventParser::EventRecordParse(uint8_t **pp, uint16_t *pcntdn)
 
 		nRecSize = 0;
 		nRecStage = 0;
-	}
+	} // switch(nRecStage...
 	return true;
 }
 
@@ -97,29 +111,30 @@ void EOSEventParser::InitEOSEventStruct()
 void EOSEventParser::Parse(const uint16_t len, const uint8_t *pbuf,
         const uint32_t &offset __attribute__ ((unused)))
 {
-	uint8_t		*p	= (uint8_t*) pbuf;
-	uint16_t	cntdn	= len;
+	uint8_t	*p = (uint8_t*) pbuf;
+	uint16_t cntdn = len;
 
-	switch (nStage)
-	{
+	switch (nStage) {
 	case 0:
-		p		+= 12;
-		cntdn	-= 12;
-		nStage	++;
+		p += 12;
+		cntdn -= 12;
+		nStage ++;
 	case 1:
 		theBuffer.valueSize = 4;
 		valueParser.Initialize(&theBuffer);
 		InitEOSEventStruct();
 		nStage ++;
 	case 2:
-		while (1)
-		{
-			if (!EventRecordParse(&p, &cntdn))
-				return;
-			if (IsLastEventRecord())
+		while (1) {
+			if (!EventRecordParse(&p, &cntdn)) {
+                            PTPTRACE("Event Record Parse finished\r\n");
+                            return;
+                        }
+			if (IsLastEventRecord()) {
 				break;
+                        }
 			InitEOSEventStruct();
 		}
 		nStage = 0;
-	}
+	} //switch(nStage...
 }

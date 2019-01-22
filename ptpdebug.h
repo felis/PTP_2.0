@@ -19,7 +19,7 @@ e-mail   :  support@circuitsathome.com
 
 #include <Usb.h>
 
-#define PTPDEBUG
+// #define PTPDEBUG
 
 //#define Message(m,r) (ErrorMessage<uint16_t>((m),(r)))
 
@@ -27,9 +27,12 @@ e-mail   :  support@circuitsathome.com
 // #define DEBUG_USB_HOST
 // #define PTPTRACE(s)(E_Notify(PSTR(s)),0x80)
 #define PTPTRACE(s)(ErrorMessage<uint16_t>(PSTR((s)),0x80))
+#define PTPTRACE8(s,r)(ErrorMessage<uint8_t>(PSTR((s)),(r)))
 #define PTPTRACE2(s,r)(ErrorMessage<uint16_t>(PSTR((s)),(r)))
+#define PTPTRACE32(s,r)(ErrorMessage<uint32_t>(PSTR((s)),(r)))
 #else
 #define PTPTRACE(s)((void)0)
+#define PTPTRACE32(s,r)((void)0)
 #define PTPTRACE2(s,r)(delay(1))	// necessary for some PowerShot cameras to work properly
 #endif
 

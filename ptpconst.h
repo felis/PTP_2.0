@@ -38,16 +38,19 @@ e-mail   :  support@circuitsathome.com
 #define PTP_USB_INT_PACKET_LEN	8
 
 /* PTP USB Asynchronous Event Interrupt Data Format */
-struct PTPUSBEventContainer 
+struct _PTPUSBEventContainer 
 {
 	uint32_t length;
 	uint16_t type;
 	uint16_t code;
 	uint32_t trans_id;
-	uint32_t param1;
-	uint32_t param2;
-	uint32_t param3;
+        uint32_t params[3];  // max.number of parameters
+	// uint32_t param1;
+	// uint32_t param2;
+	// uint32_t param3;
 };
+
+typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 
 /* USB container types */
 #define PTP_USB_CONTAINER_UNDEFINED			0x0000
@@ -102,6 +105,10 @@ struct PTPUSBEventContainer
 #define PTP_OC_CopyObject					0x101A
 #define PTP_OC_GetPartialObject				0x101B
 #define PTP_OC_InitiateOpenCapture			0x101C
+#define PTP_OC_GetObjectPropValue			0x9803
+
+/* object property codes */
+#define PTP_PC_Name			0xDC44
 
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK				0xF000
