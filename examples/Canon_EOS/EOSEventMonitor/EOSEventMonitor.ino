@@ -2,8 +2,7 @@
 
 #include <ptp.h>
 #include <canoneos.h>
-#include <eoseventparser.h>
-#include "eoseventhandler.h"
+#include "eoseventname.h"
 
 class CamStateHandlers : public EOSStateHandlers
 {
@@ -27,9 +26,7 @@ public:
     CanonEos(USB *pusb, PTPStateHandlers *pstates) : CanonEOS(pusb, pstates), nextPollTime(0), bPollEnabled(false)
     {
     };
-
-    virtual uint8_t Poll()
-    {
+    virtual uint8_t Poll() {
         PTP::Poll();
 
         if (!bPollEnabled)
@@ -37,20 +34,14 @@ public:
 
         uint32_t  current_time = millis();
 
-        if (current_time >= nextPollTime)
-        {
-            Serial.println("\r\n");
-
-            EosEventHandlers  hnd;
-            EOSEventParser    prs(&hnd);
-
-            // EOSEventDump  hex;
+        if (current_time >= nextPollTime) {
+            // Serial.println("\r\n");
+            EOSEventName prs;
             EventCheck(&prs);
-
             nextPollTime = current_time + 500;
         }
         return 0;
-    };
+    }; // Poll(...
 };
 
 CamStateHandlers    CamStates;

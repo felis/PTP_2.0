@@ -28,39 +28,39 @@ e-mail   :  support@circuitsathome.com
 // PTP Operation Codes (EOS specific)
 #define EOS_OC_GetStorageIDs				0x9101
 #define EOS_OC_GetStorageInfo				0x9102
-#define EOS_OC_GetObject					0x9107
+#define EOS_OC_GetObject				0x9107
 #define EOS_OC_GetDeviceInfoEx				0x9108
-#define EOS_OC_GetObjectIDs					0x9109
-#define EOS_OC_Capture						0x910f
+#define EOS_OC_GetObjectIDs				0x9109
+#define EOS_OC_Capture					0x910f
 #define EOS_OC_SetDevicePropValue			0x9110
 #define EOS_OC_SetPCConnectMode				0x9114
 #define EOS_OC_SetExtendedEventInfo			0x9115
-#define EOS_OC_GetEvent						0x9116
+#define EOS_OC_GetEvent					0x9116
 #define EOS_OC_TransferComplete				0x9117
 #define EOS_OC_CancelTransfer				0x9118
 #define EOS_OC_ResetTransfer				0x9119
 #define EOS_OC_GetDevicePropValue 			0x9127
 #define EOS_OC_GetLiveViewPicture			0x9153
-#define EOS_OC_MoveFocus					0x9155
+#define EOS_OC_MoveFocus				0x9155
 
 // PTP Device Properties
 #define EOS_DPC_CameraDescription			0xD402
 
 // Non-PTP Device properties
-#define EOS_DPC_Aperture					0xD101
+#define EOS_DPC_Aperture				0xD101
 #define EOS_DPC_ShutterSpeed				0xD102
-#define EOS_DPC_Iso							0xD103
-#define EOS_DPC_ExposureCompensation		0xD104
+#define EOS_DPC_Iso					0xD103
+#define EOS_DPC_ExposureCompensation                    0xD104
 #define EOS_DPC_ShootingMode				0xD105
-#define EOS_DPC_DriveMode					0xD106
+#define EOS_DPC_DriveMode				0xD106
 #define EOS_DPC_ExpMeterringMode			0xD107
-#define EOS_DPC_AFMode						0xD108
+#define EOS_DPC_AFMode					0xD108
 #define EOS_DPC_WhiteBalance				0xD109
 #define EOS_DPC_PictureStyle				0xD110
 #define EOS_DPC_TransferOption				0xD111
-#define EOS_DPC_UnixTime					0xD113
+#define EOS_DPC_UnixTime				0xD113
 #define EOS_DPC_ImageQuality				0xD120
-#define EOS_DPC_LiveView					0xD1B0
+#define EOS_DPC_LiveView				0xD1B0
 #define EOS_DPC_AvailableShots  			0xD11B
 #define EOS_DPC_CaptureDestination    		0xD11C
 #define EOS_DPC_BracketMode           		0xD11D
